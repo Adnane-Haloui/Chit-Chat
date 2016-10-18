@@ -33,15 +33,16 @@ import io.fabric.sdk.android.Fabric;
 
 public class Login extends AppCompatActivity {
     private static final String TOKEN_URL="https://chit-chat-token-generator.azurewebsites.net/token";
-    private static final String TWITTER_KEY = "TWITTER KEY";
-    private static final String TWITTER_SECRET = "SECRET KEY";
+    private static final String TWITTER_KEY = "TWITTER_KEY";
+    private static final String TWITTER_SECRET = "TWITTER_SECRET";
     private final AuthCallback callback=new AuthCallback() {
         @Override
         public void success(final DigitsSession session, final String phoneNumber) {
             final Intent intent_result=new Intent();
+            String ph_no=phoneNumber.substring(1);
             intent_result.putExtra(User_Metadata.O_AUTH_TOKEN,session.getAuthToken().token);
             intent_result.putExtra(User_Metadata.O_AUTH_SECRET,session.getAuthToken().secret);
-            intent_result.putExtra(User_Metadata.PHONE_NUMBER,phoneNumber);
+            intent_result.putExtra(User_Metadata.PHONE_NUMBER,ph_no);
             RequestQueue queue = Volley.newRequestQueue(Login.this);
             StringRequest stringRequest = new StringRequest(Request.Method.POST, TOKEN_URL,
                     new Response.Listener<String>() {
@@ -61,7 +62,7 @@ public class Login extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String,String> params = new HashMap<String, String>();
-                    params.put("number",phoneNumber);
+                    params.put("number",phoneNumber.substring(1));
                     params.put("token",session.getAuthToken().token);
                     params.put("secret", session.getAuthToken().secret);
                     return params;
@@ -113,8 +114,6 @@ public class Login extends AppCompatActivity {
     public void authenticate(){
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new TwitterCore(authConfig), new Digits.Builder().build());
-        Digits.clearActiveSession();
-
         AuthConfig.Builder mAuthConfig=new AuthConfig.Builder()
                 .withAuthCallBack(callback);
         Digits.authenticate(mAuthConfig.build());

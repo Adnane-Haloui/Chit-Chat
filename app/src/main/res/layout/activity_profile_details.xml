@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.rajora.arun.chat.chit.chitchat.activities.ProfileDetailsActivity"
+    android:layout_width="wrap_content"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_height="wrap_content"
+        android:elevation="12dp">
+        <LinearLayout
+            android:id="@+id/activity_profile_details"
+            android:layout_width="wrap_content"
+            android:minWidth="400dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <android.support.v7.widget.CardView
+                android:layout_gravity="center"
+                app:cardCornerRadius="150dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/empty_profile_pic"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp" />
+            </android.support.v7.widget.CardView>
+            <TextView
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:textSize="48sp"
+                android:text="Arun Rajora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:textSize="32sp"
+                android:text="+918743981649"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:textSize="24sp"
+                android:text="developer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</ScrollView>

@@ -17,7 +17,7 @@
         </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="fabric api key here"
+            android:value="FABRIC Key HERE"
             />
     </application>
 

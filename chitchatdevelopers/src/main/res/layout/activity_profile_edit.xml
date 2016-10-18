@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_vertical|center_horizontal"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+tools:context="com.rajora.arun.chat.chit.chitchatdevelopers.activities.ProfileEditActivity">
+<android.support.v7.widget.CardView
+    android:layout_gravity="center"
+    app:cardCornerRadius="150dp"
+    app:cardElevation="12dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/profile_pic_holder"
+        android:scaleType="centerCrop"
+        android:src="@drawable/empty_profile_pic"
+        android:layout_width="300dp"
+        android:layout_height="300dp" />
+    <Button
+        android:id="@+id/upload_profile_pic_button"
+        android:layout_width="300dp"
+        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
+        android:fontFamily="Times New Roman"
+        android:textColor="@android:color/white"
+        android:background="#43434313"
+        android:text="Change"/>
+</android.support.v7.widget.CardView>
+<android.support.design.widget.TextInputLayout
+    android:layout_gravity="center"
+    android:id="@+id/name_textInputLayout"
+    app:counterMaxLength="60"
+    app:counterEnabled="true"
+    android:paddingTop="30dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <EditText
+        android:id="@+id/profile_name"
+        android:hint="Name"
+        android:inputType="text"
+        android:maxLines="1"
+        android:maxLength="60"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+</android.support.design.widget.TextInputLayout>
+<android.support.design.widget.TextInputLayout
+    android:layout_gravity="center"
+    app:counterMaxLength="100"
+    app:counterEnabled="true"
+    android:paddingTop="30dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <EditText
+        android:id="@+id/profile_about"
+        android:maxLines="1"
+        android:inputType="text"
+        android:maxLength="100"
+        android:hint="About"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content" />
+</android.support.design.widget.TextInputLayout>
+<ImageButton
+    android:visibility="gone"
+    android:src="@drawable/ic_done_white"
+    android:paddingLeft="20dp"
+    android:paddingTop="5dp"
+    android:elevation="12dp"
+    android:layout_marginTop="10dp"
+    android:paddingBottom="5dp"
+    android:paddingRight="20dp"
+    android:id="@+id/finish_button_profile_upload"
+    android:layout_gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
+
+</LinearLayout>
