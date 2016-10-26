@@ -41,6 +41,7 @@ public class fragment_chat_lists extends Fragment {
             mViewPager= ((ViewPager) view.findViewById(R.id.view_pager_chat_list));
         mViewPagerAdapter=new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         mTabLayout= ((TabLayout) view.findViewById(R.id.tabs_chat_list));
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mViewPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPagerAdapter.notifyDataSetChanged();

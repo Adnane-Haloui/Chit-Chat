@@ -1,13 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_bot_edit"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:scrollbars="none"
+    android:layout_margin="20dp"
+    android:layout_gravity="center"
     tools:context="com.rajora.arun.chat.chit.chitchatdevelopers.activities.BotEditActivity">
+    <android.support.v7.widget.CardView
+        android:elevation="12dp"
+        android:padding="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:padding="20dp"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.CardView
+                android:layout_gravity="center"
+                app:cardCornerRadius="150dp"
+                app:cardElevation="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/bot_pic_holder"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/empty_profile_pic"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp" />
+                <Button
+                    android:id="@+id/upload_bot_pic_button"
+                    android:layout_width="300dp"
+                    android:layout_gravity="bottom"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="Times New Roman"
+                    android:textColor="@android:color/white"
+                    android:background="#43434313"
+                    android:text="Change"/>
+            </android.support.v7.widget.CardView>
+            <android.support.design.widget.TextInputLayout
+                android:layout_gravity="center"
+                android:id="@+id/bot_name_textInputLayout"
+                app:counterMaxLength="60"
+                app:counterEnabled="true"
+                android:paddingTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/bot_name"
+                    android:hint="Bot Name"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:maxLength="60"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_gravity="center"
+                app:counterEnabled="true"
+                android:paddingTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/bot_link"
+                    android:maxLines="1"
+                    android:inputType="textUri"
+                    android:hint="Bot API Endpoint"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_gravity="center"
+                app:counterMaxLength="200"
+                app:counterEnabled="true"
+                android:paddingTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/bot_secret"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:maxLength="200"
+                    android:hint="Bot Secret Key(optional)"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_gravity="center"
+                app:counterMaxLength="100"
+                app:counterEnabled="true"
+                android:paddingTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/bot_about"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:hint="About the bot"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardCornerRadius="30dp"
+                android:elevation="12dp">
+                <ImageButton
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_done_white"
+                    android:id="@+id/finish_button_bot_upload"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp" />
+            </android.support.v7.widget.CardView>
 
-</RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</ScrollView>

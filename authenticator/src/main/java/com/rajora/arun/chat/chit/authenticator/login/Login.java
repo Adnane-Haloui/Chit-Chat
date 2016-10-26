@@ -68,7 +68,6 @@ public class Login extends AppCompatActivity {
                     return params;
                 }
             };
-// Add the request to the RequestQueue.
             queue.add(stringRequest);
         }
         @Override

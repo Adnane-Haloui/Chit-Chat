@@ -1,4 +1,4 @@
-package com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters;
+package com.rajora.arun.chat.chit.chitchatdevelopers.recyclerview_adapters;
 
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -10,17 +10,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.rajora.arun.chat.chit.chitchat.R;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_bots;
+import com.rajora.arun.chat.chit.chitchatdevelopers.R;
+import com.rajora.arun.chat.chit.chitchatdevelopers.database.BotContracts;
 
 /**
- * Created by arc on 17/10/16.
+ * Created by arc on 19/10/16.
  */
 
 public class adapter_bot_item extends CursorRecyclerViewAdapter<adapter_bot_item.VH>{
 
     public onItemClickListener mItemClickListener;
-    public adapter_bot_item(onItemClickListener listener, Cursor cursor, String idColumn)
+    public adapter_bot_item(onItemClickListener listener,Cursor cursor,String idColumn)
     {
         super(cursor,idColumn);
         mItemClickListener=listener;
@@ -34,28 +34,25 @@ public class adapter_bot_item extends CursorRecyclerViewAdapter<adapter_bot_item
 
     @Override
     public void onBindViewHolder(adapter_bot_item.VH holder, Cursor cursor) {
-        byte[] img=cursor.getBlob(cursor.getColumnIndex(contract_bots.COLUMN_PIC));
+        byte[] img=cursor.getBlob(cursor.getColumnIndex(BotContracts.COLUMN_PIC));
         if(img!=null && img.length>20)
             holder.mImage.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
-        holder.mName.setText(cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_NAME)));
-        holder.mAbout.setText(cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_ABOUT)));
-        holder.mDeveloperName.setText(cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_DEVELOPER_NAME)));
-        holder.bind(mItemClickListener);
+        holder.mName.setText(cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_BOT_NAME)));
+        holder.mAbout.setText(cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_ABOUT)));
+
     }
 
     public static class VH extends RecyclerView.ViewHolder{
-        CardView mImageContainerCardView;
-        ImageView mImage;
-        TextView mName;
-        TextView mDeveloperName;
-        TextView mAbout;
+        public CardView mImageContainerCardView;
+        public ImageView mImage;
+        public TextView mName;
+        public TextView mAbout;
 
         public VH(View itemView) {
             super(itemView);
             mImageContainerCardView = ((CardView) itemView.findViewById(R.id.bot_item_image_container));
             mImage = ((ImageView) itemView.findViewById(R.id.bot_item_image));
             mName = ((TextView) itemView.findViewById(R.id.bot_item_name));
-            mDeveloperName = ((TextView) itemView.findViewById(R.id.bot_item_developer_name));
             mAbout = ((TextView) itemView.findViewById(R.id.bot_item_about));
 
         }
@@ -82,3 +79,4 @@ public class adapter_bot_item extends CursorRecyclerViewAdapter<adapter_bot_item
         void onImageClick(int position);
     }
 }
+

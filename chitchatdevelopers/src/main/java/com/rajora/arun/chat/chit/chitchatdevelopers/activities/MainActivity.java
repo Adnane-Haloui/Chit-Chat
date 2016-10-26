@@ -1,14 +1,20 @@
 package com.rajora.arun.chat.chit.chitchatdevelopers.activities;
 
 import android.app.Activity;
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -17,7 +23,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.rajora.arun.chat.chit.authenticator.login.Login;
 import com.rajora.arun.chat.chit.authenticator.login.User_Metadata;
 import com.rajora.arun.chat.chit.chitchatdevelopers.R;
+import com.rajora.arun.chat.chit.chitchatdevelopers.contentProviders.BotContentProvider;
+import com.rajora.arun.chat.chit.chitchatdevelopers.database.BotContracts;
+import com.rajora.arun.chat.chit.chitchatdevelopers.database.BotDatabase;
 import com.rajora.arun.chat.chit.chitchatdevelopers.fragments.BotsListFragment;
+import com.rajora.arun.chat.chit.chitchatdevelopers.recyclerview_adapters.adapter_bot_item;
 
 public class MainActivity extends AppCompatActivity {
     final static int REQUEST_CODE_LOGIN=100;
@@ -30,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Stetho.initializeWithDefaults(this);
+        BotDatabase db=new BotDatabase(this);
+        db.getWritableDatabase();
+
         SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
         if(sharedPreferences.contains("name"))
         {

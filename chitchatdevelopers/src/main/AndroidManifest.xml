@@ -31,7 +31,20 @@
             android:name=".services.UploadProfileDetails"
             android:exported="false" />
 
-        <activity android:name=".activities.BotEditActivity"></activity>
+        <activity
+            android:name=".activities.BotEditActivity"
+            android:theme="@style/Theme.AppCompat.Dialog"
+            android:windowSoftInputMode="stateHidden" />
+
+        <service
+            android:name=".services.UploadBotDetails"
+            android:exported="false" />
+
+        <provider
+            android:name=".contentProviders.BotContentProvider"
+            android:authorities="com.rajora.arun.chit.chatdevelopers.bots.provider"
+            android:enabled="true"
+            android:exported="false"></provider>
     </application>
 
 </manifest>

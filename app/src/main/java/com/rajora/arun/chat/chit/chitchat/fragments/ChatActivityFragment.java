@@ -1,5 +1,6 @@
 package com.rajora.arun.chat.chit.chitchat.fragments;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,15 @@ import com.rajora.arun.chat.chit.chitchat.R;
 public class ChatActivityFragment extends Fragment {
 
     public ChatActivityFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle extras=getActivity().getIntent().getExtras();
+        if(extras!=null){
+
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.rajora.arun.chat.chit.chitchat.utils.ImageUtils;
+import com.rajora.arun.chat.chit.chitchat.utils.utils;
 
 import java.util.HashMap;
 
@@ -69,7 +70,7 @@ public class UploadProfileDetails extends IntentService {
             DatabaseReference databaseReference=mFirebaseDatabase.getReference("users/"+ph_no);
             databaseReference.updateChildren(values, new DatabaseReference.CompletionListener() {
                 @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                public void onComplete(DatabaseError databaseError, final DatabaseReference databaseReference) {
                     if(databaseError==null){
                         StorageReference storageRef = mStorage.getReferenceFromUrl("gs://chit-chat-2e791.appspot.com");
                         StorageReference ProfilePicRef = storageRef.child(ph_no+"/profile/profilepic.png");
@@ -83,6 +84,9 @@ public class UploadProfileDetails extends IntentService {
                         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                HashMap<String,Object> picValues=new HashMap<String, Object>();
+                                picValues.put("profilePic_timestamp", utils.getCurrentTimestamp());
+                                databaseReference.updateChildren(picValues);
                             }
                         });
 

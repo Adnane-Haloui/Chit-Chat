@@ -26,11 +26,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/details_image"
                     android:src="@drawable/empty_profile_pic"
                     android:layout_width="300dp"
                     android:layout_height="300dp" />
             </android.support.v7.widget.CardView>
             <TextView
+                android:id="@+id/details_text1"
                 android:gravity="center"
                 android:layout_margin="10dp"
                 android:textSize="48sp"
@@ -38,6 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
+                android:id="@+id/details_text2"
                 android:gravity="center"
                 android:layout_margin="10dp"
                 android:textSize="32sp"
@@ -45,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
+                android:id="@+id/details_text3"
                 android:gravity="center"
                 android:layout_margin="10dp"
                 android:textSize="24sp"

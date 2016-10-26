@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -16,11 +17,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.rajora.arun.chat.chit.authenticator.login.Login;
 import com.rajora.arun.chat.chit.authenticator.login.User_Metadata;
 import com.rajora.arun.chat.chit.chitchat.R;
+import com.rajora.arun.chat.chit.chitchat.dataBase.Helper.chat_database;
 import com.rajora.arun.chat.chit.chitchat.fragments.fragment_chat_lists;
 
 public class MainActivity extends AppCompatActivity {
 
     final static int REQUEST_CODE_LOGIN=100;
+    final static int REQUEST_CODE_PROFILE=200;
 
     final static String FRAGMENT_TAG_CHAT_LIST="chat_list_fragment_tag";
 
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Stetho.initializeWithDefaults(this);
         SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
         if(sharedPreferences.contains("name"))
         {
@@ -42,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         else{
             startFirebaseForAuthentication();
         }
-
     }
 
     @Override
@@ -91,10 +94,31 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else{
                                     Intent intent=new Intent(MainActivity.this,ProfileEditActivity.class);
-                                    startActivity(intent);
+                                    startActivityForResult(intent,REQUEST_CODE_PROFILE);
                             }
                         }
                     });
+        }
+        else if(requestCode==REQUEST_CODE_PROFILE){
+            final SharedPreferences sPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+            if(sPreferences.contains("name") && getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_CHAT_LIST)==null)
+            {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_chat_list_holder,new fragment_chat_lists(),FRAGMENT_TAG_CHAT_LIST).commit();
+            }
+            else{
+                sPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+                    @Override
+                    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                        if(sharedPreferences.contains("name") && getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_CHAT_LIST)==null)
+                        {
+                            sPreferences.unregisterOnSharedPreferenceChangeListener(this);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_chat_list_holder,new fragment_chat_lists(),FRAGMENT_TAG_CHAT_LIST).commit();
+
+                        }
+                    }
+                });
+
+            }
         }
     }
 }
