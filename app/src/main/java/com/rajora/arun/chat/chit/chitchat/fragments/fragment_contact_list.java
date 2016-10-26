@@ -39,7 +39,6 @@ public class fragment_contact_list extends Fragment implements LoaderManager.Loa
     private RecyclerView.LayoutManager mLayoutManager;
     private int position;
     private static final int CURSOR_LOADER_ID=3;
-    private int refreshed=0;
 
     public fragment_contact_list() {
     }
@@ -66,8 +65,7 @@ public class fragment_contact_list extends Fragment implements LoaderManager.Loa
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS},200);
         }
-        else if(refreshed==0){
-            refreshed=1;
+        else{
             updateContactsDbFromPhoneDb.startContactDbUpdate(getContext());
         }
         View view=inflater.inflate(R.layout.fragment_contact_list, container, false);
@@ -83,10 +81,7 @@ public class fragment_contact_list extends Fragment implements LoaderManager.Loa
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode==200 && grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-            if(refreshed==0){
-                refreshed=1;
                 updateContactsDbFromPhoneDb.startContactDbUpdate(getContext());
-            }
         }
     }
 

@@ -44,7 +44,7 @@
         </activity>
         <activity
             android:name=".activities.ProfileDetailsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".activities.AboutActivity" />
 
         <provider
@@ -55,6 +55,9 @@
 
         <service
             android:name=".services.updateContactsDbFromPhoneDb"
+            android:exported="false" />
+        <service
+            android:name=".services.SendMessageService"
             android:exported="false"></service>
     </application>
 

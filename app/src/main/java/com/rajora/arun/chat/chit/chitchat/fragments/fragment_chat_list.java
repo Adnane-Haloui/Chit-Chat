@@ -14,12 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.storage.FirebaseStorage;
 import com.rajora.arun.chat.chit.chitchat.activities.ChatActivity;
 import com.rajora.arun.chat.chit.chitchat.activities.ProfileDetailsActivity;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.adapter_chat_item;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chats;
+import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
 
 public class fragment_chat_list extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,adapter_chat_item.onItemClickListener{
     private RecyclerView mRecyclerView;
@@ -58,7 +60,7 @@ public class fragment_chat_list extends Fragment implements LoaderManager.Loader
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null,this);
-        mAdapter = new adapter_chat_item(this,null,contract_chats.COLUMN_ID);
+        mAdapter = new adapter_chat_item(getContext(), FirebaseStorage.getInstance(),this,null,contract_chats.COLUMN_ID);
         mRecyclerView.setAdapter(mAdapter);
         return view;
     }
@@ -66,6 +68,22 @@ public class fragment_chat_list extends Fragment implements LoaderManager.Loader
     @Override
     public void onItemClick(int position,Cursor cursor) {
         Intent intent=new Intent(getContext(), ChatActivity.class);
+        if(cursor.getInt(cursor.getColumnIndex(contract_chats.COLUMN_IS_BOT))>0){
+            intent.putExtra("type","bot");
+            intent.putExtra("imageurl",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_BOT_PIC_URL)));
+            intent.putExtra("name",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_NAME)));
+            intent.putExtra("dev_name",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_BOT_DEV_NAME)));
+            intent.putExtra("about",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_ABOUT)));
+            intent.putExtra("Gid",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_BOT_ID)));
+
+        }
+        else{
+            intent.putExtra("type","contact");
+            intent.putExtra("profilePic",cursor.getBlob(cursor.getColumnIndex(contract_chats.COLUMN_PIC)));
+            intent.putExtra("name",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_NAME)));
+            intent.putExtra("number",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_PH_NUMBER)));
+            intent.putExtra("about",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_ABOUT)));
+        }
 
         startActivity(intent);
     }
@@ -94,7 +112,9 @@ public class fragment_chat_list extends Fragment implements LoaderManager.Loader
                         contract_chats.COLUMN_IS_BOT,
                         contract_chats.COLUMN_PIC,
                         contract_chats.COLUMN_ID,
-                        contract_chats.COLUMN_ABOUT},null,null,null);
+                        contract_chats.COLUMN_ABOUT,
+                        contract_chats.COLUMN_BOT_PIC_URL,
+                        contract_chats.COLUMN_BOT_DEV_NAME},null,null,null);
     }
 
     @Override

@@ -18,5 +18,7 @@ public class contract_chats implements BaseColumns{
     public static final String COLUMN_LAST_MESSAGE="LAST_MESSAGE";
     public static final String COLUMN_LAST_MESSAGE_TIME="TIME";
     public static final String COLUMN_IS_BOT="IS_BOT";
+    public static final String COLUMN_BOT_DEV_NAME="BOT_DEV_NAME";
+    public static final String COLUMN_BOT_PIC_URL="BOT_PIC_URL";
 
 }

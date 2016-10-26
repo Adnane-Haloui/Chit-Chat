@@ -122,10 +122,7 @@ public class fragment_bot_list extends Fragment{
                         intent.putExtra("name",model.getName());
                         intent.putExtra("dev_name",model.getDev_name());
                         intent.putExtra("about",model.getDesc());
-                        intent.putExtra("timestamp",model.getTimestamp());
-                        intent.putExtra("imgTimestamp",model.getImage_last_update_timestamp());
                         intent.putExtra("Gid",model.getGid());
-                        intent.putExtra("dev_no",model.getDev_no());
                         startActivity(intent);
 
                     }

@@ -34,7 +34,6 @@ public class ChatActivity extends AppCompatActivity {
     String name;
     String number;
     String about;
-    int is_user;
     String Gid;
     String image_url;
     String dev_name;
@@ -76,7 +75,6 @@ public class ChatActivity extends AppCompatActivity {
                 name=extras.getString("name","");
                 number=extras.getString("number","");
                 about=extras.getString("about","");
-                is_user=extras.getInt("is_user",0);
                 mcursorAbout=getContentResolver().query(ChatContentProvider.CONTACTS_URI,new String[]{
                         contract_contacts.COLUMN_PIC,
                         contract_contacts.COLUMN_PIC_TIMESTAMP,

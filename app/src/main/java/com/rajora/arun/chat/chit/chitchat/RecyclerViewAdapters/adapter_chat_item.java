@@ -1,5 +1,6 @@
 package com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.CardView;
@@ -10,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_bots;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chats;
+import com.rajora.arun.chat.chit.chitchat.utils.utils;
 
 /**
  * Created by arc on 17/10/16.
@@ -21,9 +26,13 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chats;
 public class adapter_chat_item extends CursorRecyclerViewAdapter<adapter_chat_item.VH>{
 
     public onItemClickListener mItemClickListener;
-    public adapter_chat_item(onItemClickListener listener, Cursor cursor, String idColumn)
+    public Context mContext;
+    public FirebaseStorage firebaseStorage;
+    public adapter_chat_item(Context context,FirebaseStorage fs,onItemClickListener listener, Cursor cursor, String idColumn)
     {
         super(cursor,idColumn);
+        mContext=context;
+        firebaseStorage=fs;
         mItemClickListener=listener;
     }
 
@@ -37,12 +46,22 @@ public class adapter_chat_item extends CursorRecyclerViewAdapter<adapter_chat_it
     @Override
     public void onBindViewHolder(adapter_chat_item.VH holder, Cursor cursor) {
         byte[] img=cursor.getBlob(cursor.getColumnIndex(contract_chats.COLUMN_PIC));
+        String imgUrl=cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_BOT_PIC_URL));
         if(img!=null && img.length>20)
             holder.mImage.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
-
+        else if(imgUrl!=null){
+            Glide.with(mContext)
+                    .using(new FirebaseImageLoader())
+                    .load(firebaseStorage.getReference(imgUrl))
+                    .into(holder.mImage);
+        }
+        else{
+            holder.mImage.setImageResource(R.drawable.empty_profile_pic);
+        }
         holder.mName.setText(cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_NAME)));
         holder.mAbout.setText(cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE)));
-        holder.mTime.setText(cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE_TIME)));
+        holder.mTime.setText(utils.getTimeFromTimestamp(
+                cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE_TIME)),true));
         bind(holder,mItemClickListener);
     }
 
