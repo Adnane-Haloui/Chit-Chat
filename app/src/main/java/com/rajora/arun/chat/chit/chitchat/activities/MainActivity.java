@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             final SharedPreferences sPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
             if(sPreferences.contains("name") && getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_CHAT_LIST)==null)
             {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_chat_list_holder,new fragment_chat_lists(),FRAGMENT_TAG_CHAT_LIST).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_chat_list_holder,new fragment_chat_lists(),FRAGMENT_TAG_CHAT_LIST).commitAllowingStateLoss();
             }
             else{
                 sPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                         if(sharedPreferences.contains("name") && getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_CHAT_LIST)==null)
                         {
                             sPreferences.unregisterOnSharedPreferenceChangeListener(this);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_chat_list_holder,new fragment_chat_lists(),FRAGMENT_TAG_CHAT_LIST).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_chat_list_holder,new fragment_chat_lists(),FRAGMENT_TAG_CHAT_LIST).commitAllowingStateLoss();
 
                         }
                     }

@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.ContactsContract;
@@ -20,10 +21,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.rajora.arun.chat.chit.chitchat.activities.AboutActivity;
 import com.rajora.arun.chat.chit.chitchat.activities.ProfileEditActivity;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.services.FetchNewChatData;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class fragment_chat_lists extends Fragment {
 
@@ -37,6 +43,35 @@ public class fragment_chat_lists extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setFCMToken();
+    }
+
+    private void setFCMToken(){
+        SharedPreferences sharedPreferences=getContext().getSharedPreferences("user-details",MODE_PRIVATE);
+        String ph_no=sharedPreferences.getString("phone",null);
+        String refreshedToken = sharedPreferences.getString("fcm-token",null);
+        String oldToken=null;
+
+        if(refreshedToken!=null && ph_no!=null){
+            DatabaseReference ref= FirebaseDatabase.getInstance().getReference("fcmTokens/"+ph_no+"/");
+
+            if(sharedPreferences.contains("fcm-token")){
+                oldToken=sharedPreferences.getString("fcm-token",null);
+            }
+            String id_on_server=sharedPreferences.getString("id-for-fcm",null);
+            if(id_on_server!=null){
+                ref=ref.child(id_on_server);
+                ref.setValue(refreshedToken);
+            }
+            else{
+                id_on_server=ref.push().getKey().substring(1);
+                DatabaseReference reference=ref.child(id_on_server);
+                reference.setValue(refreshedToken);
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.putString("id-for-fcm",id_on_server);
+                editor.commit();
+            }
+        }
     }
 
     FetchNewChatData mBoundService;

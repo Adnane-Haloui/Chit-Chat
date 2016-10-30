@@ -63,7 +63,7 @@ public class fragment_contact_list extends Fragment implements LoaderManager.Loa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS},200);
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},200);
         }
         else{
             updateContactsDbFromPhoneDb.startContactDbUpdate(getContext());
