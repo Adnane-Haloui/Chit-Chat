@@ -1,7 +1,11 @@
 package com.rajora.arun.chat.chit.chitchat.fragments;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,6 +23,7 @@ import android.view.ViewGroup;
 import com.rajora.arun.chat.chit.chitchat.activities.AboutActivity;
 import com.rajora.arun.chat.chit.chitchat.activities.ProfileEditActivity;
 import com.rajora.arun.chat.chit.chitchat.R;
+import com.rajora.arun.chat.chit.chitchat.services.FetchNewChatData;
 
 public class fragment_chat_lists extends Fragment {
 
@@ -33,6 +38,25 @@ public class fragment_chat_lists extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
+    FetchNewChatData mBoundService;
+    boolean service_connected=false;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            service_connected=false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            service_connected=true;
+            FetchNewChatData.customBinder myBinder = (FetchNewChatData.customBinder) service;
+            mBoundService = myBinder.getService();
+            mBoundService.setCurrentItemId(null);
+        }
+
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,5 +133,19 @@ public class fragment_chat_lists extends Fragment {
             }
             return "";
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Intent intent = new Intent(getContext(), FetchNewChatData.class);
+        getContext().bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onPause() {
+        if(service_connected )
+            getContext().unbindService(mServiceConnection);
+        super.onPause();
     }
 }

@@ -121,7 +121,7 @@ public class SendMessageService extends IntentService {
         }
 
         DatabaseReference itemDatabaseReference=mFirebaseDatabase.getReference("botChatItems/"+to_id+"/");
-        DatabaseReference revItemReference=mFirebaseDatabase.getReference("chatItems/"+from_number+"/");
+        DatabaseReference revItemReference=mFirebaseDatabase.getReference("chatItems/"+from_number.substring(1)+"/");
         final String id_on_server=itemDatabaseReference.push().getKey().substring(1);
         itemDatabaseReference=itemDatabaseReference.child(id_on_server);
 
@@ -146,7 +146,7 @@ public class SendMessageService extends IntentService {
         fbvalues.put("id",id_on_server);
         fbvalues.put("timestamp",timestamp);
         fbvalues.put("g_timestamp", ServerValue.TIMESTAMP);
-        revItemReference.updateChildren(fbvalues);
+        revItemReference.push().updateChildren(fbvalues);
         itemDatabaseReference.updateChildren(fbvalues, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -201,8 +201,8 @@ public class SendMessageService extends IntentService {
                     getContentResolver().insert(ChatContentProvider.CHATS_URI,values);
                 }
             }
-            DatabaseReference itemDatabaseReference=mFirebaseDatabase.getReference("chatItems/"+to_id+"/");
-            DatabaseReference revItemReference=mFirebaseDatabase.getReference("chatItems/"+from_number+"/");
+            DatabaseReference itemDatabaseReference=mFirebaseDatabase.getReference("chatItems/"+to_id.substring(1)+"/");
+            DatabaseReference revItemReference=mFirebaseDatabase.getReference("chatItems/"+from_number.substring(1)+"/");
             final String id_on_server=itemDatabaseReference.push().getKey().substring(1);
             itemDatabaseReference=itemDatabaseReference.child(id_on_server);
 
@@ -227,7 +227,7 @@ public class SendMessageService extends IntentService {
             values.put("id",id_on_server);
             values.put("timestamp",timestamp);
             values.put("g_timestamp", ServerValue.TIMESTAMP);
-            revItemReference.updateChildren(values);
+            revItemReference.push().updateChildren(values);
             itemDatabaseReference.updateChildren(values, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

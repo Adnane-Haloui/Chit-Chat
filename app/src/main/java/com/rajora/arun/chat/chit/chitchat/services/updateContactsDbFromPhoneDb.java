@@ -7,9 +7,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,6 +29,7 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 public class updateContactsDbFromPhoneDb extends IntentService {
 
@@ -57,7 +60,22 @@ public class updateContactsDbFromPhoneDb extends IntentService {
             do{
                 String name=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String about="";
-                final String ph_no=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER));
+                String temp_Ph_No=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER));
+                if(temp_Ph_No!=null && temp_Ph_No.length()>2){
+                    if(temp_Ph_No.startsWith("0")){
+                        temp_Ph_No=temp_Ph_No.substring(1);
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        PhoneNumberUtils.formatNumberToE164(temp_Ph_No, Locale.getDefault().getCountry());
+                    }
+                    if(temp_Ph_No.length()==10){
+                        temp_Ph_No=Locale.getDefault().getCountry()+temp_Ph_No;
+                    }
+                    if(!temp_Ph_No.startsWith("+")){
+                        temp_Ph_No="+"+temp_Ph_No;
+                    }
+                }
+                final String ph_no=temp_Ph_No;
                 String photo_uri=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
                 boolean is_user=false;
                 Bitmap img=null;

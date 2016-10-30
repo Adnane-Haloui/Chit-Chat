@@ -1,33 +1,44 @@
 package com.rajora.arun.chat.chit.chitchat.activities;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.IBinder;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.rajora.arun.chat.chit.chitchat.R;
+import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.adapter_sidebar_contact_item;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_bots;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
+import com.rajora.arun.chat.chit.chitchat.services.FetchNewChatData;
+import com.rajora.arun.chat.chit.chitchat.services.SendMessageService;
+import com.rajora.arun.chat.chit.chitchat.utils.utils;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor>,adapter_sidebar_contact_item.onItemClickListener{
 
     String type;
     byte[] img;
@@ -39,7 +50,32 @@ public class ChatActivity extends AppCompatActivity {
     String dev_name;
     boolean is_bot;
     Cursor mcursorAbout;
+    private String my_ph_no;
     private FirebaseStorage firebaseStorage;
+
+    private RecyclerView mRecyclerView;
+    private adapter_sidebar_contact_item mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private static final int CURSOR_LOADER_ID=300;
+
+    FetchNewChatData mBoundService;
+    boolean service_connected=false;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            service_connected=false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            service_connected=true;
+            FetchNewChatData.customBinder myBinder = (FetchNewChatData.customBinder) service;
+            mBoundService = myBinder.getService();
+            mBoundService.setCurrentItemId(is_bot?Gid:number);
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +146,30 @@ public class ChatActivity extends AppCompatActivity {
             }
 
         }
+        SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+        my_ph_no=sharedPreferences.getString("phone","");
 
+        mRecyclerView = (RecyclerView)findViewById(R.id.sidebar_recycler_view);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        getSupportLoaderManager().initLoader(CURSOR_LOADER_ID, null,this);
+        mAdapter=new adapter_sidebar_contact_item(this,this,null, contract_contacts.COLUMN_PH_NUMBER);
+        mRecyclerView.setAdapter(mAdapter);
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = new Intent(this, FetchNewChatData.class);
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
 
+    @Override
+    protected void onPause() {
+        if(service_connected )
+            unbindService(mServiceConnection);
+        super.onPause();
     }
 
     @Override
@@ -152,5 +208,43 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_chat,menu);
         return true;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this,ChatContentProvider.CONTACTS_URI,
+                new String[]{
+                        contract_contacts.COLUMN_NAME,
+                        contract_contacts.COLUMN_PIC,
+                        contract_contacts.COLUMN_PIC_URL,
+                        contract_contacts.COLUMN_PH_NUMBER,
+                        contract_contacts.COLUMN_IS_USER,
+                        contract_contacts.COLUMN_ABOUT,
+                        contract_contacts.COLUMN_PIC_TIMESTAMP},
+                null,null,contract_contacts.COLUMN_NAME+" COLLATE NOCASE ");
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.swapCursor(null);
+
+    }
+
+
+    @Override
+    public void onSendClick(int position, Cursor cursor, adapter_sidebar_contact_item.VH holder) {
+        String to_id=cursor.getString(cursor.getColumnIndex(contract_contacts.COLUMN_PH_NUMBER));
+        SendMessageService.startSendTextMessageToUser(this,"+"+my_ph_no,to_id,"text",holder.mMessage.getText().toString(), utils.getCurrentTimestamp());
+        holder.mMessage.setText("");
+    }
+
+    @Override
+    public void onContactClick(int position, adapter_sidebar_contact_item.VH holder) {
+        holder.sidebarPanel.setVisibility(holder.sidebarPanel.getVisibility()==View.VISIBLE?View.GONE:View.VISIBLE);
     }
 }
