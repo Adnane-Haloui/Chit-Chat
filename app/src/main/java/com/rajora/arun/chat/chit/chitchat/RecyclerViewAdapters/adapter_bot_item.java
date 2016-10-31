@@ -19,7 +19,7 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_bots;
 
 public class adapter_bot_item extends CursorRecyclerViewAdapter<adapter_bot_item.VH>{
 
-    public onItemClickListener mItemClickListener;
+    private onItemClickListener mItemClickListener;
     public adapter_bot_item(onItemClickListener listener, Cursor cursor, String idColumn)
     {
         super(cursor,idColumn);
@@ -40,6 +40,16 @@ public class adapter_bot_item extends CursorRecyclerViewAdapter<adapter_bot_item
         holder.mName.setText(cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_NAME)));
         holder.mAbout.setText(cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_ABOUT)));
         holder.mDeveloperName.setText(cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_DEVELOPER_NAME)));
+
+        holder.itemView.setContentDescription("Bot item "+cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_NAME))+" , developed by "+
+                cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_DEVELOPER_NAME)));
+        holder.mDeveloperName.setContentDescription("Bot developed by "+
+                cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_DEVELOPER_NAME)));
+        holder.mName.setContentDescription("Bot name is "+cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_NAME)));
+        holder.mAbout.setContentDescription(cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_ABOUT)));
+        holder.mImage.setContentDescription("Profile picture of "+
+                cursor.getString(cursor.getColumnIndex(contract_bots.COLUMN_NAME)));
+
         holder.bind(mItemClickListener);
     }
 

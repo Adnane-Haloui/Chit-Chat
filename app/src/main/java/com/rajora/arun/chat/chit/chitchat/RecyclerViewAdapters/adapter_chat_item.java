@@ -58,10 +58,20 @@ public class adapter_chat_item extends CursorRecyclerViewAdapter<adapter_chat_it
         else{
             holder.mImage.setImageResource(R.drawable.empty_profile_pic);
         }
-        holder.mName.setText(cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_NAME)));
-        holder.mAbout.setText(cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE)));
-        holder.mTime.setText(utils.getTimeFromTimestamp(
-                cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE_TIME)),true));
+        String name=cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_NAME));
+        String about=cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE));
+        String time=utils.getTimeFromTimestamp(
+                cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE_TIME)),true);
+        holder.mName.setText(name);
+        holder.mAbout.setText(about);
+        holder.mTime.setText(time);
+
+        holder.itemView.setContentDescription("Contact "+ name);
+        holder.mImage.setContentDescription("Profile picture of "+name);
+        holder.mTime.setContentDescription("Last message at "+time);
+        holder.mAbout.setContentDescription("Last message is "+about);
+        holder.mName.setContentDescription("Contact "+name);
+
         bind(holder,mItemClickListener);
     }
 

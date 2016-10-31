@@ -1,6 +1,56 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="sidebar_padding">12dp</dimen>
+
+    <dimen name="cardview_corner_radius_small">32dp</dimen>
+    <dimen name="imageview_circular_small">64dp</dimen>
+
+    <dimen name="sidebar_message_edittext_margin_side">12dp</dimen>
+    <dimen name="sidebar_message_padding">12dp</dimen>
+    <dimen name="sidebar_message_height">52dp</dimen>
+    <dimen name="sidebar_contact_name_text_size">24sp</dimen>
+
+    <dimen name="send_message_padding">12dp</dimen>
+    <dimen name="send_message_margin_left">12dp</dimen>
+    <dimen name="send_message_margin_top">4dp</dimen>
+    <dimen name="send_message_edit_text_height">52dp</dimen>
+    <dimen name="send_message_margin_bottom">12dp</dimen>
+    <dimen name="send_message_margin_right">12dp</dimen>
+
+    <dimen name="chat_item_margin">12dp</dimen>
+    <dimen name="chat_item_corner_radius">12dp</dimen>
+    <dimen name="chat_item_card_elevation">4dp</dimen>
+    <dimen name="chat_item_linearlayout_margin">12dp</dimen>
+    <dimen name="chat_item_text_size">24sp</dimen>
+
+    <dimen name="chatlist_padding">4dp</dimen>
+    <dimen name="chatlist_image_container_margin">4dp</dimen>
+    <dimen name="chatlist_linearlayout_padding_top">8dp</dimen>
+    <dimen name="chatlist_linearlayout_padding_left">16dp</dimen>
+    <dimen name="chatlist_name_textsize">24sp</dimen>
+    <dimen name="chatlist_time_padding_right">4dp</dimen>
+    <dimen name="chatlist_about_margin_top">4dp</dimen>
+    <dimen name="chatlist_about_padding_left">4dp</dimen>
+
+    <dimen name="botlist_padding">4dp</dimen>
+    <dimen name="botlist_image_container_margin">4dp</dimen>
+    <dimen name="botlist_linearlayout_padding_top">8dp</dimen>
+    <dimen name="botlist_linearlayout_padding_end">16dp</dimen>
+    <dimen name="botlist_name_textsize">24sp</dimen>
+    <dimen name="botlist_dev_name_padding_left">4dp</dimen>
+    <dimen name="botlist_about_margin_top">4dp</dimen>
+    <dimen name="botlist_about_padding_left">4dp</dimen>
+
+    <dimen name="contactlist_margin">4dp</dimen>
+    <dimen name="contactlist_image_container_margin">4dp</dimen>
+    <dimen name="contactlist_linearlayout_padding_top">8dp</dimen>
+    <dimen name="contactlist_linearlayout_padding_left">16dp</dimen>
+    <dimen name="contactlist_name_textsize">24sp</dimen>
+    <dimen name="contactlist_about_margin_top">4dp</dimen>
+    <dimen name="contactlist_about_padding_left">4dp</dimen>
+    <dimen name="contactlist_number_padding_right">8dp</dimen>
+
 </resources>

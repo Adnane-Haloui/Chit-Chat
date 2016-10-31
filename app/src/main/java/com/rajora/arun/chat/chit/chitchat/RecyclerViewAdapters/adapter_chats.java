@@ -25,6 +25,9 @@ public class adapter_chats extends CursorRecyclerViewAdapter<adapter_chats.VH>{
     @Override
     public void onBindViewHolder(VH holder, Cursor cursor) {
         if(cursor.getString(cursor.getColumnIndex(contract_chat.COLUMN_MESSAGE_TYPE)).equals("text")){
+            holder.itemView.setContentDescription("message "+cursor.getColumnIndex(contract_chat.COLUMN_MESSAGE)+
+                    " . Time "+ utils.getTimeFromTimestamp(
+                            cursor.getString(cursor.getColumnIndex(contract_chat.COLUMN_TIMESTAMP)),false));
             holder.mMessage.setText(cursor.getString(cursor.getColumnIndex(contract_chat.COLUMN_MESSAGE)));
             holder.mTime.setText(utils.getTimeFromTimestamp(
                     cursor.getString(cursor.getColumnIndex(contract_chat.COLUMN_TIMESTAMP)),false));

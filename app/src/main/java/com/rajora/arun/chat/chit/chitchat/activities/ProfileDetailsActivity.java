@@ -77,6 +77,9 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                 textView2.setText(text2);
                 textView3.setText(text3);
 
+                textView1.setContentDescription("name is "+text1);
+                textView2.setContentDescription("description "+text2);
+                textView3.setContentDescription("description "+text3);
             }
             else if(type.equals("bot")){
                 imgUrl=extras.getString("imageurl");
@@ -94,6 +97,9 @@ public class ProfileDetailsActivity extends AppCompatActivity {
                 textView1.setText(text1);
                 textView2.setText(text2);
                 textView3.setText(text3);
+                textView1.setContentDescription("name is "+text1);
+                textView2.setContentDescription("description "+text2);
+                textView3.setContentDescription("description "+text3);
             }
 
         }

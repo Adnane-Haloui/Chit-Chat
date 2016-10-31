@@ -26,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:contentDescription="@string/profile_pic_content_description"
                     android:id="@+id/details_image"
                     android:src="@drawable/empty_profile_pic"
                     android:layout_width="300dp"
@@ -36,7 +37,6 @@
                 android:gravity="center"
                 android:layout_margin="10dp"
                 android:textSize="48sp"
-                android:text="Arun Rajora"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
@@ -44,7 +44,6 @@
                 android:gravity="center"
                 android:layout_margin="10dp"
                 android:textSize="32sp"
-                android:text="+918743981649"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
@@ -52,7 +51,6 @@
                 android:gravity="center"
                 android:layout_margin="10dp"
                 android:textSize="24sp"
-                android:text="developer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

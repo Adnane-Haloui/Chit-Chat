@@ -75,7 +75,7 @@ public class fragment_bot_list extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view=inflater.inflate(R.layout.fragment_bot_list, container, false);
+        final View view=inflater.inflate(R.layout.fragment_bot_list, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.bot_recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -90,6 +90,14 @@ public class fragment_bot_list extends Fragment{
                 TextView mName = ((TextView) viewHolder.itemView.findViewById(R.id.bot_item_name));
                 TextView mDeveloperName = ((TextView) viewHolder.itemView.findViewById(R.id.bot_item_developer_name));
                 TextView mAbout = ((TextView) viewHolder.itemView.findViewById(R.id.bot_item_about));
+
+                viewHolder.itemView.setContentDescription("Bot item "+model.getName()+" by "+
+                        ((model.getDev_name()==null || model.getDev_name().isEmpty())?"Unknown":model.getDev_name()));
+                mImageContainerCardView.setContentDescription("Image of "+model.getName()+" bot");
+                mName.setContentDescription("Bot item "+model.getName());
+                mDeveloperName.setContentDescription("Bot developed by "+model.getDev_name());
+                mAbout.setContentDescription("About "+model.getName()+" is "+
+                        ((model.getDesc()==null || model.getDesc().isEmpty())?"Unknown":model.getDesc()));
 
                 mName.setText(model.getName());
                 mDeveloperName.setText(model.getDev_name());

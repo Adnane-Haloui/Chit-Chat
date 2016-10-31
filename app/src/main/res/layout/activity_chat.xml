@@ -36,6 +36,7 @@
                     android:layout_margin="0dp"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:contentDescription="@string/go_back_content_description"
                         android:padding="10dp"
                         android:id="@+id/go_back"
                         android:layout_width="wrap_content"

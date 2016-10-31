@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="4dp">
+    android:padding="@dimen/chatlist_padding">
     <android.support.v7.widget.CardView
         android:id="@+id/chat_item_image_container"
-        android:layout_margin="4dp"
-        app:cardCornerRadius="30dp"
+        android:layout_margin="@dimen/chatlist_image_container_margin"
+        app:cardCornerRadius="@dimen/cardview_corner_radius_small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/chat_item_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/imageview_circular_small"
+            android:layout_height="@dimen/imageview_circular_small"
             android:src="@drawable/empty_profile_pic"/>
     </android.support.v7.widget.CardView>
     <LinearLayout
-        android:paddingTop="8dp"
-        android:paddingLeft="16dp"
+        android:paddingTop="@dimen/chatlist_linearlayout_padding_top"
+        android:paddingLeft="@dimen/chatlist_linearlayout_padding_left"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
@@ -32,30 +31,27 @@
             android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
-                android:textSize="24sp"
+                android:textSize="@dimen/chatlist_name_textsize"
                 android:id="@+id/chat_item_name"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:layout_height="wrap_content"
-                android:text="Arun Rajora"/>
+                android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/chat_item_about"
-                android:layout_marginTop="4dp"
-                android:paddingLeft="4dp"
+                android:layout_marginTop="@dimen/chatlist_about_margin_top"
+                android:paddingLeft="@dimen/chatlist_about_padding_left"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Programmer"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
         <TextView
-            android:paddingRight="8dp"
+            android:paddingRight="@dimen/chatlist_time_padding_right"
             android:lines="2"
             android:gravity="top"
             android:textAlignment="center"
             android:id="@+id/chat_item_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="12:03 pm\n26 oct"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </LinearLayout>

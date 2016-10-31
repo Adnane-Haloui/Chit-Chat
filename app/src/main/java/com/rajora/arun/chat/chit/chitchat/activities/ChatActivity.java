@@ -124,7 +124,8 @@ public class ChatActivity extends AppCompatActivity implements android.support.v
                     ((ImageView) findViewById(R.id.chat_image)).setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
                 }
                 ((TextView) findViewById(R.id.chat_name)).setText((name==null || name.length()<=0)?number:name);
-
+                findViewById(R.id.chat_name).setContentDescription("Chatting with "+((name==null || name.length()<=0)?number:name));
+                findViewById(R.id.chat_image).setContentDescription("Profile Picture of "+((name==null || name.length()<=0)?number:name));
             }
             else if(type.equals("bot")){
                 is_bot=true;
@@ -142,7 +143,8 @@ public class ChatActivity extends AppCompatActivity implements android.support.v
                             .into(((ImageView) findViewById(R.id.chat_image)));
                 }
                 ((TextView) findViewById(R.id.chat_name)).setText((name==null || name.length()<=0)?number:name);
-
+                findViewById(R.id.chat_name).setContentDescription("Chatting with bot "+((name==null || name.length()<=0)?number:name));
+                findViewById(R.id.chat_image).setContentDescription("Profile Picture of bot "+((name==null || name.length()<=0)?number:name));
             }
 
         }

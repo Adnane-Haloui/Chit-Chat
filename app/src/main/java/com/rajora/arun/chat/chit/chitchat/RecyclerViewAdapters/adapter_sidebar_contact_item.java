@@ -43,7 +43,6 @@ public class adapter_sidebar_contact_item extends CursorRecyclerViewAdapter<adap
     public void onBindViewHolder(final VH holder, Cursor cursor) {
 
         String name=cursor.getString(cursor.getColumnIndex(contract_contacts.COLUMN_NAME));
-        String about=cursor.getString(cursor.getColumnIndex(contract_contacts.COLUMN_ABOUT));
         byte[] img=cursor.getBlob(cursor.getColumnIndex(contract_contacts.COLUMN_PIC));
 
         holder.mName.setText(name==null?"":name);
@@ -55,6 +54,9 @@ public class adapter_sidebar_contact_item extends CursorRecyclerViewAdapter<adap
         else{
             holder.mImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.empty_profile_pic));
         }
+        holder.mName.setContentDescription("Contact "+(name==null?"Unknown":name));
+        holder.mImageContainerCardView.setContentDescription("Profile pic of "+(name==null?"Unknown":name));
+
         bind(holder,mItemClickListener);
 
     }

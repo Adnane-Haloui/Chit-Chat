@@ -66,6 +66,13 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
         else{
             holder.mImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.empty_profile_pic));
         }
+
+        holder.itemView.setContentDescription("Contact item with name "+(name==null?"Unknown":name)+" and number "+(ph_no));
+        holder.mNumber.setContentDescription("Contact phone number "+ph_no);
+        holder.mName.setContentDescription("Contact name "+(name==null?"Unknown":name));
+        holder.mAbout.setContentDescription("About "+name+" : "+(about==null?"":about));
+        holder.mImage.setContentDescription("Profile picture of "+name);
+
         bind(holder,mItemClickListener);
     }
 

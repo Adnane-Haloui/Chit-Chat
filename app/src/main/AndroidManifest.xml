@@ -72,6 +72,9 @@
         <service
             android:name=".services.FetchNewChatData"
             android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".services.FetchNewDataOnce"
             android:exported="false"></service>
     </application>
 
