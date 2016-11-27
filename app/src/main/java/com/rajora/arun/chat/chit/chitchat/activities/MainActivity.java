@@ -1,11 +1,14 @@
 package com.rajora.arun.chat.chit.chitchat.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,11 +17,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.rajora.arun.chat.chit.authenticator.login.Login;
 import com.rajora.arun.chat.chit.authenticator.login.User_Metadata;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Helper.chat_database;
 import com.rajora.arun.chat.chit.chitchat.fragments.fragment_chat_lists;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 

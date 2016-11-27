@@ -12,8 +12,10 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.telephony.PhoneNumberUtils;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.digits.sdk.android.models.PhoneNumber;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +26,9 @@ import com.google.firebase.database.Logger;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
 
@@ -61,20 +66,24 @@ public class updateContactsDbFromPhoneDb extends IntentService {
                 String name=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 String about="";
                 String temp_Ph_No=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER));
-                if(temp_Ph_No!=null && temp_Ph_No.length()>2){
-                    if(temp_Ph_No.startsWith("0")){
-                        temp_Ph_No=temp_Ph_No.substring(1);
+                PhoneNumberUtil phoneNumberUtil=PhoneNumberUtil.getInstance();
+                Phonenumber.PhoneNumber pn = null;
+                try {
+                    Phonenumber.PhoneNumber numberProto = phoneNumberUtil.parse(temp_Ph_No, "");
+                    temp_Ph_No = phoneNumberUtil.format(pn, PhoneNumberUtil.PhoneNumberFormat.E164);
+                } catch (Exception e) {
+                    try {
+                        pn = phoneNumberUtil.parse(temp_Ph_No,((TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE)).getSimCountryIso().toUpperCase());
+                    } catch (Exception ee) {
+                        ee.printStackTrace();
                     }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        PhoneNumberUtils.formatNumberToE164(temp_Ph_No, Locale.getDefault().getCountry());
-                    }
-                    if(temp_Ph_No.length()==10){
-                        temp_Ph_No=Locale.getDefault().getCountry()+temp_Ph_No;
-                    }
-                    if(!temp_Ph_No.startsWith("+")){
-                        temp_Ph_No="+"+temp_Ph_No;
+                    try{
+                        temp_Ph_No = phoneNumberUtil.format(pn, PhoneNumberUtil.PhoneNumberFormat.E164);
+                    } catch (Exception ee){
+                        ee.printStackTrace();
                     }
                 }
+
                 final String ph_no=temp_Ph_No;
                 String photo_uri=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
                 boolean is_user=false;
