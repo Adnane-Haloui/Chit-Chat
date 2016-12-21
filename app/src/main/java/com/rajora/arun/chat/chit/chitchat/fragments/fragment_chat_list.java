@@ -27,29 +27,14 @@ public class fragment_chat_list extends Fragment implements LoaderManager.Loader
     private RecyclerView mRecyclerView;
     private adapter_chat_item mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private int position;
     private static final int CURSOR_LOADER_ID=2;
 
     public fragment_chat_list() {
     }
 
-    public static fragment_chat_list newInstance(int position) {
-        fragment_chat_list fragment = new fragment_chat_list();
-        Bundle bundle=new Bundle();
-        bundle.putInt("position",position);
-        fragment.setArguments(bundle);
-        return fragment;
+    public static fragment_chat_list newInstance() {
+        return new fragment_chat_list();
     }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            position = getArguments().getInt("position");
-        }
-
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

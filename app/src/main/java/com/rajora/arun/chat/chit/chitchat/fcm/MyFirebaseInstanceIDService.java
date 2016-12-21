@@ -13,38 +13,58 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  */
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
+
     @Override
     public void onTokenRefresh() {
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        String oldToken=null;
         SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+        updateTokens(sharedPreferences);
+    }
+    public static void updateTokens(SharedPreferences sharedPreferences){
+        SharedPreferences.Editor edit=sharedPreferences.edit();
+
+        String oldToken=null;
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         String ph_no=sharedPreferences.getString("phone",null);
 
-        if(ph_no!=null){
+        if(ph_no!=null && sharedPreferences.contains("login_status") &&
+                sharedPreferences.getString("login_status","").equals("complete")){
+            ph_no=ph_no.substring(1);
             DatabaseReference ref=FirebaseDatabase.getInstance().getReference("fcmTokens/"+ph_no+"/");
 
             if(sharedPreferences.contains("fcm-token")){
                 oldToken=sharedPreferences.getString("fcm-token",null);
             }
             if(oldToken==null){
-                final String id_on_server=ref.push().getKey().substring(1);
-                DatabaseReference reference=ref.child(id_on_server);
-                reference.setValue(refreshedToken);
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.putString("id-for-fcm",id_on_server);
-                editor.commit();
+                pushNewToken(refreshedToken,ref,sharedPreferences);
             }
             else{
-                final String id_on_server=sharedPreferences.getString("id-for-fcm",null);
-                if(id_on_server!=null){
-                    ref=ref.child(id_on_server);
-                    ref.setValue(refreshedToken);
-                }
+                updateOldToken(refreshedToken,ref,sharedPreferences);
             }
         }
-    SharedPreferences.Editor edit=sharedPreferences.edit();
+        else{
+            edit.putBoolean("updateFirebaseInstanceIdOnAuth",true);
+        }
         edit.putString("fcm-token",refreshedToken);
         edit.commit();
+    }
+    private static void pushNewToken(String token,DatabaseReference ref,SharedPreferences sharedPreferences){
+        final String id_on_server=ref.push().getKey().substring(1);
+        DatabaseReference reference=ref.child(id_on_server);
+        reference.setValue(token);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString("id-for-fcm",id_on_server);
+        editor.putBoolean("updateFirebaseInstanceIdOnAuth",false);
+        editor.commit();
 
+    }
+    private static void updateOldToken(String token,DatabaseReference ref,SharedPreferences sharedPreferences){
+        final String id_on_server=sharedPreferences.getString("id-for-fcm",null);
+        if(id_on_server!=null){
+            ref=ref.child(id_on_server);
+            ref.setValue(token);
+        }
+        else{
+            pushNewToken(token,ref,sharedPreferences);
+        }
     }
 }

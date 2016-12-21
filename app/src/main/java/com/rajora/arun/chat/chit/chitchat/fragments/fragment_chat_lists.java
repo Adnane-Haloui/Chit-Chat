@@ -33,9 +33,12 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class fragment_chat_lists extends Fragment {
 
+    private final int TAG_ADD_CONTACT=100;
+
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private ViewPagerAdapter mViewPagerAdapter;
+
     public fragment_chat_lists() {
     }
 
@@ -43,36 +46,8 @@ public class fragment_chat_lists extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        setFCMToken();
     }
 
-    private void setFCMToken(){
-        SharedPreferences sharedPreferences=getContext().getSharedPreferences("user-details",MODE_PRIVATE);
-        String ph_no=sharedPreferences.getString("phone",null);
-        String refreshedToken = sharedPreferences.getString("fcm-token",null);
-        String oldToken=null;
-
-        if(refreshedToken!=null && ph_no!=null){
-            DatabaseReference ref= FirebaseDatabase.getInstance().getReference("fcmTokens/"+ph_no+"/");
-
-            if(sharedPreferences.contains("fcm-token")){
-                oldToken=sharedPreferences.getString("fcm-token",null);
-            }
-            String id_on_server=sharedPreferences.getString("id-for-fcm",null);
-            if(id_on_server!=null){
-                ref=ref.child(id_on_server);
-                ref.setValue(refreshedToken);
-            }
-            else{
-                id_on_server=ref.push().getKey().substring(1);
-                DatabaseReference reference=ref.child(id_on_server);
-                reference.setValue(refreshedToken);
-                SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.putString("id-for-fcm",id_on_server);
-                editor.commit();
-            }
-        }
-    }
 
     FetchNewChatData mBoundService;
     boolean service_connected=false;
@@ -97,9 +72,10 @@ public class fragment_chat_lists extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_chat_lists, container, false);
-            mViewPager= ((ViewPager) view.findViewById(R.id.view_pager_chat_list));
+        mViewPager= ((ViewPager) view.findViewById(R.id.view_pager_chat_list));
         mViewPagerAdapter=new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         mTabLayout= ((TabLayout) view.findViewById(R.id.tabs_chat_list));
+
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mViewPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -124,7 +100,7 @@ public class fragment_chat_lists extends Fragment {
             case R.id.menu_add_contact:
                 Intent add_contact_intent = new Intent(ContactsContract.Intents.Insert.ACTION);
                 add_contact_intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
-                startActivity(add_contact_intent);
+                startActivityForResult(add_contact_intent,TAG_ADD_CONTACT);
                 break;
             case R.id.menu_about:
                 Intent about_intent=new Intent(getActivity(),AboutActivity.class);
@@ -146,9 +122,9 @@ public class fragment_chat_lists extends Fragment {
         {
             Log.d("findme","got position "+position);
            switch (position){
-               case 0:return fragment_bot_list.newInstance(0);
-               case 1:return fragment_chat_list.newInstance(1);
-               case 2: return fragment_contact_list.newInstance(2);
+               case 0:return fragment_bot_list.newInstance();
+               case 1:return fragment_chat_list.newInstance();
+               case 2: return fragment_contact_list.newInstance();
            }
             return null;
         }

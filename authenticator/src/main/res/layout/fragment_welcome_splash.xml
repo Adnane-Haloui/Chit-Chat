@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.rajora.arun.chat.chit.authenticator.login.Fragments.SplashFragments.WelcomeSplashFragment"
+android:background="@android:color/holo_red_light">
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_alignParentTop="true"
+    android:textAlignment="center"
+    android:textAllCaps="false"
+    android:layout_margin="48dp"
+    android:text="Welcome to Chit-Chat"
+    android:textColor="@android:color/white"
+    android:textSize="36sp"
+    android:layout_marginBottom="18dp"/>
+<Button
+    android:id="@+id/splash_get_started_button"
+    android:layout_centerVertical="true"
+    android:layout_centerInParent="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Get Started"
+    android:padding="18dp"
+    android:elevation="4dp"
+    android:textSize="12sp"
+    android:textColor="@android:color/white"
+    android:background="@android:color/holo_red_dark"/>
+
+</RelativeLayout>

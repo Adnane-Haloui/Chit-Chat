@@ -16,7 +16,6 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chat;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chats;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
 
-import java.sql.Ref;
 import java.util.HashMap;
 
 public class SendMessageService extends IntentService {
@@ -85,9 +84,9 @@ public class SendMessageService extends IntentService {
     private void sendTextMessageToBot(String from_number,String to_id,String content_type,String content,long timestamp,Bundle bot_details){
         bot_details.keySet();
         String bot_name=bot_details.getString("botName","");
-        String bot_number=bot_details.getString("botNumber","");
+        //String bot_number=bot_details.getString("botNumber","");
         String bot_about=bot_details.getString("botAbout","");
-        String bot_gid=bot_details.getString("botGid","");
+        //String bot_gid=bot_details.getString("botGid","");
         String bot_image_url=bot_details.getString("botImageUrl","");
         String bot_dev_name=bot_details.getString("botDevName","");
 
@@ -115,6 +114,7 @@ public class SendMessageService extends IntentService {
         if(historyStatusCursor!=null && historyStatusCursor.getCount()>0 && historyStatusCursor.moveToFirst()
                 && historyStatusCursor.getLong(historyStatusCursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE_TIME))<=timestamp){
             getContentResolver().update(ChatContentProvider.CHATS_URI,values,contract_chats.COLUMN_ID+" = ? ",new String[]{to_id});
+            historyStatusCursor.close();
         }
         else{
             getContentResolver().insert(ChatContentProvider.CHATS_URI,values);
@@ -137,7 +137,7 @@ public class SendMessageService extends IntentService {
         chatValues.put(contract_chat.COLUMN_TIMESTAMP,timestamp);
         getContentResolver().insert(ChatContentProvider.CHAT_URI,chatValues);
 
-        HashMap<String,Object> fbvalues=new HashMap<String, Object>();
+        HashMap<String,Object> fbvalues=new HashMap<>();
         fbvalues.put("sender",from_number);
         fbvalues.put("receiver",to_id);
         fbvalues.put("is_bot",true);
@@ -184,6 +184,7 @@ public class SendMessageService extends IntentService {
                     values.put(contract_chats.COLUMN_LAST_MESSAGE_TIME,timestamp);
                     getContentResolver().update(ChatContentProvider.CHATS_URI,values,contract_chats.COLUMN_ID+" = ? ",new String[]{to_id});
                 }
+                historyStatusCursor.close();
 
             }
             else{
@@ -199,6 +200,7 @@ public class SendMessageService extends IntentService {
                     values.put(contract_chats.COLUMN_PIC,valueCursor.getBlob(valueCursor.getColumnIndex(contract_contacts.COLUMN_PIC)));
                     values.put(contract_chats.COLUMN_PH_NUMBER,valueCursor.getString(valueCursor.getColumnIndex(contract_contacts.COLUMN_PH_NUMBER)));
                     getContentResolver().insert(ChatContentProvider.CHATS_URI,values);
+                    valueCursor.close();
                 }
             }
             DatabaseReference itemDatabaseReference=mFirebaseDatabase.getReference("chatItems/"+to_id.substring(1)+"/");
@@ -218,7 +220,7 @@ public class SendMessageService extends IntentService {
             chatValues.put(contract_chat.COLUMN_TIMESTAMP,timestamp);
             getContentResolver().insert(ChatContentProvider.CHAT_URI,chatValues);
 
-            HashMap<String,Object> values=new HashMap<String, Object>();
+            HashMap<String,Object> values=new HashMap<>();
             values.put("sender",from_number);
             values.put("receiver",to_id);
             values.put("is_bot",false);

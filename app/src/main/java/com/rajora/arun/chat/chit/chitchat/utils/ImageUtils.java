@@ -20,6 +20,7 @@ public class ImageUtils {
         byte[] bytes = baos.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
+
     public static Bitmap stringToBitmap(String base64Image) {
         byte[] imageAsBytes = Base64.decode(base64Image.getBytes(), Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);

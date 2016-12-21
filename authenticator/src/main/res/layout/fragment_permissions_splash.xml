@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.rajora.arun.chat.chit.authenticator.login.Fragments.SplashFragments.PermissionsSplashFragment"
+android:background="@android:color/holo_red_light">
+    <TextView
+        android:id="@+id/splash_permission_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:layout_margin="48dp"
+        android:text="Chit-Chat needs Permission"
+        android:textColor="@android:color/white"
+        android:textSize="34sp"
+        android:layout_marginBottom="18dp"/>
+    <TextView
+        android:id="@+id/splash_permission_subtext"
+        android:layout_below="@id/splash_permission_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:text="Chit-Chat needs permission to know your phone number and automatically read OTP that we send through Messages."
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+    android:id="@+id/splash_permission_button"
+    android:layout_below="@id/splash_permission_subtext"
+    android:layout_centerInParent="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Give Permissions"
+    android:padding="12dp"
+    android:elevation="4dp"
+    android:textSize="20sp"
+    android:textColor="@android:color/white"
+    android:background="@android:color/holo_red_dark"/>
+
+</RelativeLayout>

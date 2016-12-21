@@ -15,7 +15,7 @@ public class utils {
         long timestamp=Long.parseLong(sTimestamp);
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(timestamp);
-        SimpleDateFormat format = new SimpleDateFormat("mm:hh a"+(newLine?"\n":"")+" d-MMM");
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm a"+(newLine?"\n":"")+" d-MMM");
         return format.format(c.getTime());
     }
 }

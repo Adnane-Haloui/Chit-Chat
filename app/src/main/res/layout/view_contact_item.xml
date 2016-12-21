@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
+                tools:text="User Name"
                 android:textSize="@dimen/contactlist_name_textsize"
                 android:id="@+id/contact_item_name"
                 android:layout_width="0dp"
@@ -41,6 +42,7 @@
                 android:ellipsize="end"
                 android:layout_height="wrap_content"/>
             <TextView
+                tools:text="+911234567890"
                 android:paddingEnd="@dimen/contactlist_number_padding_right"
                 android:paddingRight="@dimen/contactlist_number_padding_right"
                 android:paddingLeft="0dp"
@@ -51,16 +53,42 @@
                 android:maxLines="1"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-        <TextView
-            android:id="@+id/contact_item_about"
-            android:layout_marginTop="@dimen/contactlist_about_margin_top"
-            android:paddingLeft="@dimen/contactlist_about_padding_left"
-            android:paddingStart="@dimen/contactlist_about_padding_left"
-            android:paddingRight="0dp"
-            android:paddingEnd="0dp"
-            android:maxLines="1"
-            android:ellipsize="end"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <TextView
+                tools:text="About Me!"
+                android:id="@+id/contact_item_about"
+                android:layout_marginTop="@dimen/contactlist_about_margin_top"
+                android:paddingLeft="@dimen/contactlist_about_padding_left"
+                android:paddingStart="@dimen/contactlist_about_padding_left"
+                android:paddingRight="0dp"
+                android:paddingEnd="0dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <android.support.v7.widget.CardView
+                android:id="@+id/contact_is_user_cardview"
+                android:elevation="4dp"
+                app:cardCornerRadius="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/contactlist_about_margin_top"
+                android:paddingLeft="12dp"
+                android:paddingStart="12dp"
+                android:paddingRight="12dp"
+                android:paddingEnd="12dp">
+                <TextView
+                    android:paddingLeft="12dp"
+                    android:paddingStart="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingEnd="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User"/>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

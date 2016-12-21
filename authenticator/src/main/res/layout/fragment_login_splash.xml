@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.rajora.arun.chat.chit.authenticator.login.Fragments.SplashFragments.LoginSplashFragment"
+    android:background="@android:color/holo_red_light">
+
+
+    <Button
+        android:id="@+id/splash_login_button"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:padding="18dp"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_red_dark"/>
+    <TextView
+        android:id="@+id/splash_login_error_message_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:layout_centerInParent="true"
+        android:layout_above="@id/splash_login_button"
+        android:paddingBottom="12dp"
+        android:visibility="gone"/>
+    <ProgressBar
+        style="@android:style/Widget.ProgressBar.Inverse"
+        android:id="@+id/splash_login_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+</RelativeLayout>

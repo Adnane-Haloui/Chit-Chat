@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.IBinder;
@@ -24,6 +25,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.services.FetchNewChatData;
 import com.rajora.arun.chat.chit.chitchat.services.UploadProfileDetails;
@@ -36,13 +44,10 @@ public class ProfileEditActivity extends AppCompatActivity{
 
     private ImageView mProfilePicHolder;
     private Button mButtonChangeProfilePic;
-    private ImageButton mSubmitDetails;
+    private Button mSubmitDetails;
     private EditText mProfileName;
     private EditText mProfileAbout;
-    private TextInputLayout mNameTextInputLayout;
     private Bitmap mProfilePic;
-    private String mName;
-    private String mAbout;
 
     final static int REQUEST_CAPTURE_IMAGE=1;
     final static int REQUEST_PICK_IMAGE=2;
@@ -70,43 +75,12 @@ public class ProfileEditActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
+
         mProfilePicHolder=(ImageView)findViewById(R.id.profile_pic_holder);
         mButtonChangeProfilePic=(Button)findViewById(R.id.upload_profile_pic_button);
-        mSubmitDetails=(ImageButton) findViewById(R.id.finish_button_profile_upload);
+        mSubmitDetails=(Button) findViewById(R.id.finish_button_profile_upload);
         mProfileName=(EditText) findViewById(R.id.profile_name);
         mProfileAbout=(EditText) findViewById(R.id.profile_about);
-        mNameTextInputLayout=(TextInputLayout)findViewById(R.id.name_textInputLayout);
-        mProfileName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(count==0 && mSubmitDetails.getVisibility()!= View.GONE){
-                    mSubmitDetails.setVisibility(View.GONE);
-                }
-                else if(count!=0 && mSubmitDetails.getVisibility()!=View.VISIBLE){
-                    mSubmitDetails.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(count==0 && mSubmitDetails.getVisibility()!= View.GONE){
-                    mSubmitDetails.setVisibility(View.GONE);
-                }
-                else if(count!=0 && mSubmitDetails.getVisibility()!=View.VISIBLE){
-                    mSubmitDetails.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length()==0 && mSubmitDetails.getVisibility()!= View.GONE){
-                    mSubmitDetails.setVisibility(View.GONE);
-                }
-                else if(s.length()!=0 && mSubmitDetails.getVisibility()!=View.VISIBLE){
-                    mSubmitDetails.setVisibility(View.VISIBLE);
-                }
-            }
-        });
         mProfilePicHolder.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -120,45 +94,60 @@ public class ProfileEditActivity extends AppCompatActivity{
                 changeProfilePic();
             }
         });
+
+        restoreLayoutValues(savedInstanceState);
+
         mSubmitDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mProfileName.getText().toString()!=null && mProfileName.getText().toString().length()>0){
-                    mName=mProfileName.getText().toString();
-                    mAbout=mProfileAbout.getText().toString();
                     SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
-                    final String ph_no=sharedPreferences.getString("phone","null");
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    String profilePicString=null;
                     if(mProfilePic!=null)
-                        mProfilePic.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    byte[] data = baos.toByteArray();
-                    SharedPreferences preferences=getSharedPreferences("user-details",MODE_PRIVATE);
-                    SharedPreferences.Editor editor=preferences.edit();
-                    editor.putString("failed","0");
-                    editor.commit();
-                    UploadProfileDetails.startUploadProfile(ProfileEditActivity.this,ph_no,data,mName,mAbout);
-                    ProfileEditActivity.this.finish();
-                }
-                else{
-                    mNameTextInputLayout.setError("Required!");
-                }
+                        profilePicString=ImageUtils.bitmapToString(mProfilePic);
+                    FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(ProfileEditActivity.this));
+                Bundle extrasBundle = new Bundle();
+                extrasBundle.putString(UploadProfileDetails.PARAM_NAME, mProfileName.getText().toString());
+                extrasBundle.putString(UploadProfileDetails.PARAM_ABOUT, mProfileAbout.getText().toString());
+                extrasBundle.putString(UploadProfileDetails.PARAM_PIC, profilePicString);
+                Job myJob = dispatcher.newJobBuilder()
+                        .setService(UploadProfileDetails.class)
+                        .setTag("profile-upload")
+                        .setRecurring(false)
+                        .setLifetime(Lifetime.FOREVER)
+                        .setTrigger(Trigger.NOW)
+                        .setReplaceCurrent(false)
+                        .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                        .setConstraints(Constraint.ON_ANY_NETWORK)
+                        .setExtras(extrasBundle)
+                        .build();
+                dispatcher.mustSchedule(myJob);
+                ProfileEditActivity.this.finish();
             }
         });
-        restoreLayoutValues(savedInstanceState);
     }
     private void restoreLayoutValues(Bundle savedInstanceState){
-        if(true){
-            SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+        SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+        if(savedInstanceState!=null && savedInstanceState.containsKey("name")){
+            mProfileName.setText(savedInstanceState.getString("name"));
+        }
+        else{
+            mProfileName.setText(sharedPreferences.getString("name",""));
+        }
+        if(savedInstanceState!=null && savedInstanceState.containsKey("about")){
+            mProfileAbout.setText(savedInstanceState.getString("about"));
+        }
+        else{
+            mProfileAbout.setText(sharedPreferences.getString("about",""));
+        }
+        if(savedInstanceState!=null && savedInstanceState.containsKey("profile_pic")){
+            mProfilePic=ImageUtils.stringToBitmap(savedInstanceState.getString("name"));
+        }
+        else{
             String imageString=sharedPreferences.getString("pic",null);
             if(imageString!=null && imageString.length()!=0)
                 mProfilePicHolder.setImageBitmap(ImageUtils.stringToBitmap(imageString));
-            mProfileName.setText(sharedPreferences.getString("name",""));
-            mProfileAbout.setText(sharedPreferences.getString("about",""));
-            if(mProfileName.getText().toString().length()!=0)
-                mSubmitDetails.setVisibility(View.VISIBLE);
-
         }
-
     }
     private void changeProfilePic(){
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
@@ -217,5 +206,16 @@ public class ProfileEditActivity extends AppCompatActivity{
         if(service_connected )
             unbindService(mServiceConnection);
         super.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mProfileName!=null)
+        outState.putString("name",mProfileName.getText().toString());
+        if(mProfileAbout!=null)
+            outState.putString("about",mProfileAbout.getText().toString());
+        if(mProfilePic!=null)
+            outState.putString("profile_pic", ImageUtils.bitmapToString(mProfilePic));
     }
 }

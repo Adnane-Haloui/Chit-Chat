@@ -37,27 +37,13 @@ public class fragment_contact_list extends Fragment implements LoaderManager.Loa
     private RecyclerView mRecyclerView;
     private adapter_contact_item mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private int position;
     private static final int CURSOR_LOADER_ID=3;
 
     public fragment_contact_list() {
     }
-    public static fragment_contact_list newInstance(int position) {
-        fragment_contact_list fragment = new fragment_contact_list();
-        Bundle bundle=new Bundle();
-        bundle.putInt("position",position);
-        fragment.setArguments(bundle);
-        return fragment;
+    public static fragment_contact_list newInstance() {
+        return new fragment_contact_list();
     }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            position = getArguments().getInt("position");
-        }
-
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

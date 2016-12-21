@@ -54,7 +54,13 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
         String ph_no=cursor.getString(cursor.getColumnIndex(contract_contacts.COLUMN_PH_NUMBER));
         String about=cursor.getString(cursor.getColumnIndex(contract_contacts.COLUMN_ABOUT));
         byte[] img=cursor.getBlob(cursor.getColumnIndex(contract_contacts.COLUMN_PIC));
-
+        int is_user=cursor.getInt(cursor.getColumnIndex(contract_contacts.COLUMN_IS_USER));
+        if(is_user==0){
+            holder.mIsUserCardView.setVisibility(View.GONE);
+        }
+        else{
+            holder.mIsUserCardView.setVisibility(View.VISIBLE);
+        }
         holder.mNumber.setText(ph_no);
         holder.mName.setText(name==null?"":name);
         holder.mAbout.setText(about==null?"":about);
@@ -96,6 +102,7 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
     }
     public static class VH extends RecyclerView.ViewHolder{
 
+        CardView mIsUserCardView;
         CardView mImageContainerCardView;
         ImageView mImage;
         TextView mName;
@@ -105,11 +112,11 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
         public VH(View itemView) {
             super(itemView);
             mImageContainerCardView = ((CardView) itemView.findViewById(R.id.contact_item_image_container));
-            mImage = ((ImageView) itemView.findViewById(R.id.contact_item_image));
-            mName = ((TextView) itemView.findViewById(R.id.contact_item_name));
-            mAbout = ((TextView) itemView.findViewById(R.id.contact_item_about));
-            mNumber = ((TextView) itemView.findViewById(R.id.contact_item_number));
-
+            mImage = (ImageView) itemView.findViewById(R.id.contact_item_image);
+            mName = (TextView) itemView.findViewById(R.id.contact_item_name);
+            mAbout = (TextView) itemView.findViewById(R.id.contact_item_about);
+            mNumber = (TextView) itemView.findViewById(R.id.contact_item_number);
+            mIsUserCardView = (CardView) itemView.findViewById(R.id.contact_is_user_cardview);
         }
     }
 

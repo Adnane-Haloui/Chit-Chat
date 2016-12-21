@@ -2,12 +2,8 @@ package com.rajora.arun.chat.chit.chitchat.fragments;
 
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,29 +16,19 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.bot_VH;
 import com.rajora.arun.chat.chit.chitchat.activities.ChatActivity;
 import com.rajora.arun.chat.chit.chitchat.activities.ProfileDetailsActivity;
 import com.rajora.arun.chat.chit.chitchat.R;
-import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.adapter_bot_item;
-import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
-import com.rajora.arun.chat.chit.chitchat.contentProviders.ProviderHelper;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_bots;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
 import com.rajora.arun.chat.chit.chitchat.dataModels.BotsDataModel;
 
 public class fragment_bot_list extends Fragment{
     private RecyclerView mRecyclerView;
     private FirebaseRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private int position;
     private static final int CURSOR_LOADER_ID=1;
     private DatabaseReference databaseReference;
     private FirebaseStorage firebaseStorage;
@@ -50,25 +36,8 @@ public class fragment_bot_list extends Fragment{
     public fragment_bot_list() {
     }
 
-    public static fragment_bot_list newInstance(int position) {
-        fragment_bot_list fragment = new fragment_bot_list();
-        Bundle bundle=new Bundle();
-        bundle.putInt("position",position);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            position = getArguments().getInt("position");
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
+    public static fragment_bot_list newInstance() {
+        return new fragment_bot_list();
     }
 
     @Override
