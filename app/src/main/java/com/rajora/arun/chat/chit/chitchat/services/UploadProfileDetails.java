@@ -27,16 +27,12 @@ import com.rajora.arun.chat.chit.chitchat.utils.utils;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
-public class UploadProfileDetails extends SimpleJobService {
+public class UploadProfileDetails extends JobService {
 
     public static final String PARAM_PIC = "PROFILE";
     public static final String PARAM_NAME = "NAME";
     public static final String PARAM_ABOUT = "ABOUT";
 
-    @Override
-    public int onRunJob(JobParameters job) {
-        return UploadProfileDetails(job)?RESULT_SUCCESS:RESULT_FAIL_NORETRY;
-    }
 
     private boolean UploadProfileDetails(JobParameters job){
         Bundle extras = job.getExtras();
@@ -106,4 +102,13 @@ public class UploadProfileDetails extends SimpleJobService {
         return true;
     }
 
+    @Override
+    public boolean onStartJob(JobParameters job) {
+        return false;
+    }
+
+    @Override
+    public boolean onStopJob(JobParameters job) {
+        return false;
+    }
 }

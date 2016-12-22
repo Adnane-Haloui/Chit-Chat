@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.JsonObject;
+import com.rajora.arun.chat.chit.authenticator.BuildConfig;
 import com.rajora.arun.chat.chit.authenticator.R;
 import com.rajora.arun.chat.chit.authenticator.login.Login;
 import com.rajora.arun.chat.chit.authenticator.login.User_Metadata;
@@ -58,9 +59,9 @@ public class LoginSplashFragment extends Fragment {
 
     private enum Auth_Status{AUTHENTICATE_ON_DIGIT,FETCH_TOKEN_FROM_AZURE,AUTHENTICATE_ON_FIREBASE};
 
-    private static final String TOKEN_URL="https://chit-chat-token-generator.azurewebsites.net/token";
-    private static final String TWITTER_KEY = "TWITTER_KEY";
-    private static final String TWITTER_SECRET = "TWITTER_SECRET";
+    private static final String TOKEN_URL= BuildConfig.TOKEN_URL;
+    private static final String TWITTER_KEY = BuildConfig.TWITTER_KEY;
+    private static final String TWITTER_SECRET = BuildConfig.TWITTER_SECRET;
 
     private final View.OnClickListener verifyOnDigitsClickListener=new View.OnClickListener() {
         @Override
@@ -275,13 +276,13 @@ public class LoginSplashFragment extends Fragment {
                                 SharedPreferences.Editor editor=getContext().getSharedPreferences("user-details",MODE_PRIVATE).edit();
                                 editor.putString("firebase_auth_token",response.getString("token"));
                                 if(response.has("name")){
-                                    editor.putString("name",response.getString("token"));
+                                    editor.putString("name",response.getString("name"));
                                 }
                                 if(response.has("about")){
-                                    editor.putString("about",response.getString("token"));
+                                    editor.putString("about",response.getString("about"));
                                 }
                                 if(response.has("profile_pic_timestamp")){
-                                    editor.putString("profile_pic_timestamp",response.getString("token"));
+                                    editor.putString("profile_pic_timestamp",response.getString("profile_pic_timestamp"));
                                 }
                                 editor.commit();
                             }

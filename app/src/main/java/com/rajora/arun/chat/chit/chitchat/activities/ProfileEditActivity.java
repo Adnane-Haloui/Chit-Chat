@@ -197,6 +197,9 @@ public class ProfileEditActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        SharedPreferences.Editor editor=getSharedPreferences("user-details",MODE_PRIVATE).edit();
+        editor.putBoolean("first_profile_edit",true);
+        editor.commit();
         Intent intent = new Intent(this, FetchNewChatData.class);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }

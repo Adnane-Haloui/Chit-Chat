@@ -44,7 +44,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
         if(sharedPreferences.contains("login_status") && sharedPreferences.getString("login_status","").equals("complete")) {
-            showChatFragment(false);
+            if(sharedPreferences.contains("first_profile_edit") && sharedPreferences.getBoolean("first_profile_edit",false)){
+                showChatFragment(false);
+            }
+            else{
+                    showProfileEdit();
+            }
         }
         else{
             startFirebaseForAuthentication();
@@ -79,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         sharedPreferences.getBoolean("updateFirebaseInstanceIdOnAuth",false)){
                     MyFirebaseInstanceIDService.updateTokens(sharedPreferences);
                 }
-                Intent intent=new Intent(MainActivity.this,ProfileEditActivity.class);
-                startActivityForResult(intent,REQUEST_CODE_PROFILE);
+                showProfileEdit();
             }
             else{
                 finish();
@@ -91,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 showChatFragment(true);
             }
         }
+    }
+
+    private void showProfileEdit(){
+        Intent intent=new Intent(MainActivity.this,ProfileEditActivity.class);
+        startActivityForResult(intent,REQUEST_CODE_PROFILE);
     }
 
     private void showChatFragment(boolean commitAllowingStateLoss){
