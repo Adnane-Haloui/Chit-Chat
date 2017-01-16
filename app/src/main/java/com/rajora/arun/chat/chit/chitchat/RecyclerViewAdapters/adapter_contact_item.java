@@ -2,11 +2,7 @@ package com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,20 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.bumptech.glide.Glide;
 import com.rajora.arun.chat.chit.chitchat.R;
-import com.rajora.arun.chat.chit.chitchat.contentProviders.ProviderHelper;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
-
-/**
- * Created by arc on 15/10/16.
- */
+import com.rajora.arun.chat.chit.chitchat.dataModels.ContactDetailDataModel;
+import com.rajora.arun.chat.chit.chitchat.utils.ImageUtils;
 
 public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_contact_item.VH>{
 
@@ -42,6 +28,7 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
         mItemClickListener=listener;
     }
 
+
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View v=LayoutInflater.from(parent.getContext()).inflate(R.layout.view_contact_item,parent,false);
@@ -50,59 +37,48 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
 
     @Override
     public void onBindViewHolder(final VH holder, Cursor cursor) {
-        String name=cursor.getString(cursor.getColumnIndex(contract_contacts.COLUMN_NAME));
-        String ph_no=cursor.getString(cursor.getColumnIndex(contract_contacts.COLUMN_PH_NUMBER));
-        String about=cursor.getString(cursor.getColumnIndex(contract_contacts.COLUMN_ABOUT));
-        byte[] img=cursor.getBlob(cursor.getColumnIndex(contract_contacts.COLUMN_PIC));
-        int is_user=cursor.getInt(cursor.getColumnIndex(contract_contacts.COLUMN_IS_USER));
-        if(is_user==0){
-            holder.mIsUserCardView.setVisibility(View.GONE);
+        ContactDetailDataModel item=new ContactDetailDataModel(cursor);
+        if(item.is_user){
+            holder.mIsUserTextView.setText("User");
         }
         else{
-            holder.mIsUserCardView.setVisibility(View.VISIBLE);
+            holder.mIsUserTextView.setText("Invite");
         }
-        holder.mNumber.setText(ph_no);
-        holder.mName.setText(name==null?"":name);
-        holder.mAbout.setText(about==null?"":about);
-        if(img!=null && img.length>20)
-            holder.mImage.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
-        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            holder.mImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.empty_profile_pic,null));
-        }
-        else{
-            holder.mImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.empty_profile_pic));
-        }
+        holder.mNumber.setText(item.contact_id);
+        holder.mName.setText(item.name==null || item.name.isEmpty()?item.contact_id:item.name);
+        holder.mAbout.setText(item.about==null?"":item.about);
+        ImageUtils.loadImageIntoView(mContext,item,holder.mImage);
 
-        holder.itemView.setContentDescription("Contact item with name "+(name==null?"Unknown":name)+" and number "+(ph_no));
-        holder.mNumber.setContentDescription("Contact phone number "+ph_no);
-        holder.mName.setContentDescription("Contact name "+(name==null?"Unknown":name));
-        holder.mAbout.setContentDescription("About "+name+" : "+(about==null?"":about));
-        holder.mImage.setContentDescription("Profile picture of "+name);
+        holder.itemView.setContentDescription("Contact item with name "+
+                (item.name==null || item.name.isEmpty()?"Unknown":item.name)+" and number "+item.contact_id);
+        holder.mNumber.setContentDescription("Contact phone number "+item.contact_id);
+        holder.mName.setContentDescription("Contact name "+(item.name==null || item.name.isEmpty()?item.contact_id:item.name));
+        holder.mAbout.setContentDescription("About "+
+                (item.name==null || item.name.isEmpty()?item.contact_id:item.name)+" : "+(item.about==null?"":item.about));
+        holder.mImage.setContentDescription("Profile picture of "+item.name);
 
-        bind(holder,mItemClickListener);
+        bind(holder,mItemClickListener,item);
     }
 
-    public void bind(final VH holder,final onItemClickListener mItemClickListener) {
+    public void bind(final VH holder,final onItemClickListener mItemClickListener,final ContactDetailDataModel item) {
         holder.itemView.setOnClickListener(
                 new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
-                        mCursor.moveToPosition(holder.getAdapterPosition());
-                        mItemClickListener.onItemClick(holder.getAdapterPosition(),mCursor);
+                        mItemClickListener.onItemClick(holder.getAdapterPosition(),item);
                     }
                 }
         );
         holder.itemView.findViewById(R.id.contact_item_image_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCursor.moveToPosition(holder.getAdapterPosition());
-                mItemClickListener.onImageClick(holder.getAdapterPosition(),mCursor);
+                mItemClickListener.onImageClick(holder.getAdapterPosition(),item);
             }
         });
     }
     public static class VH extends RecyclerView.ViewHolder{
 
-        CardView mIsUserCardView;
+        TextView mIsUserTextView;
         CardView mImageContainerCardView;
         ImageView mImage;
         TextView mName;
@@ -116,12 +92,12 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
             mName = (TextView) itemView.findViewById(R.id.contact_item_name);
             mAbout = (TextView) itemView.findViewById(R.id.contact_item_about);
             mNumber = (TextView) itemView.findViewById(R.id.contact_item_number);
-            mIsUserCardView = (CardView) itemView.findViewById(R.id.contact_is_user_cardview);
+            mIsUserTextView = (TextView) itemView.findViewById(R.id.contact_is_user_textview);
         }
     }
 
     public interface onItemClickListener{
-        void onItemClick(int position,Cursor cursor);
-        void onImageClick(int position,Cursor cursor);
+        void onItemClick(int position,ContactDetailDataModel item);
+        void onImageClick(int position,ContactDetailDataModel item);
     }
 }

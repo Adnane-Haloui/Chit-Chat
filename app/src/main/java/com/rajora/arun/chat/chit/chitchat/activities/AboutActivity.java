@@ -12,27 +12,7 @@ import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.services.FetchNewChatData;
 
 
-public class AboutActivity extends AppCompatActivity {
-
-
-    FetchNewChatData mBoundService;
-    boolean service_connected=false;
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            service_connected=false;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            service_connected=true;
-            FetchNewChatData.customBinder myBinder = (FetchNewChatData.customBinder) service;
-            mBoundService = myBinder.getService();
-            mBoundService.setCurrentItemId(null);
-        }
-
-    };
+public class AboutActivity extends AppCompatChatListenerActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +20,4 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Intent intent = new Intent(this, FetchNewChatData.class);
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    protected void onPause() {
-        if(service_connected )
-            unbindService(mServiceConnection);
-        super.onPause();
-    }
 }

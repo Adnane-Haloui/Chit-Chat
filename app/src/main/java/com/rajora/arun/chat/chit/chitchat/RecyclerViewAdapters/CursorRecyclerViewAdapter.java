@@ -4,11 +4,9 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 
-/**
- * Created by arc on 19/10/16.
- */
 
-public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>{
+public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder>
+		extends RecyclerView.Adapter<VH>{
 
     public Cursor mCursor;
     private CursorDataSetObserver mCursorDataObserver;
@@ -27,17 +25,18 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
 
     @Override
     public void setHasStableIds(boolean hasStableIds) {
-        super.setHasStableIds(false);
+        super.setHasStableIds(true);
     }
 
     @Override
     public long getItemId(int position) {
-        return (isDataValid && mCursor!=null && mCursor.moveToPosition(position))?mCursor.getLong(mCursor.getColumnIndex(columnId)):0;
+        return isDataValid && mCursor!=null && mCursor.moveToPosition(position)
+                ?mCursor.getLong(mCursor.getColumnIndex(columnId)):0;
     }
 
     @Override
     public int getItemCount() {
-        return (isDataValid && mCursor!=null)?mCursor.getCount():0;
+        return isDataValid && mCursor!=null ?mCursor.getCount():0;
     }
 
     public abstract void onBindViewHolder(VH holder,Cursor cursor);
@@ -47,11 +46,6 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         if(isDataValid && mCursor!=null &&  mCursor.moveToPosition(position)){
             onBindViewHolder(holder,mCursor);
         }
-    }
-
-    public void swapCursor(Cursor cursor,String colId){
-        columnId=colId;
-        swapCursor(cursor);
     }
 
     public void swapCursor(Cursor cursor){

@@ -4,4 +4,8 @@
         <item>Camera</item>
         <item>Gallery</item>
     </array>
+    <array name="pick_video_option_list_array">
+        <item>Camera</item>
+        <item>Gallery</item>
+    </array>
 </resources>

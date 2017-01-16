@@ -1,18 +1,28 @@
 package com.rajora.arun.chat.chit.chitchat.fragments;
 
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,24 +30,74 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.rajora.arun.chat.chit.chitchat.activities.AboutActivity;
 import com.rajora.arun.chat.chit.chitchat.activities.ProfileEditActivity;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.services.FetchNewChatData;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
-public class fragment_chat_lists extends Fragment {
+public class fragment_chat_lists extends ChatListenerFragment{
 
-    private final int TAG_ADD_CONTACT=100;
+    private static final int TAG_ADD_CONTACT=100;
 
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     private ViewPagerAdapter mViewPagerAdapter;
+	private View mRootLayout;
+    DatabaseReference connectedRef;
+	private Snackbar mSnackbar;
+	ConnectivityManager connectivityManager;
+
+	private View.OnClickListener mSnackbarClickListener=new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if(mSnackbar!=null && mSnackbar.isShownOrQueued()){
+				mSnackbar.dismiss();
+			}
+		}
+	};
+	ValueEventListener mValueEventListener=new ValueEventListener() {
+		@Override
+		public void onDataChange(DataSnapshot dataSnapshot) {
+			if(!dataSnapshot.getValue(Boolean.class)){
+				if(mRootLayout!=null){
+					if(mSnackbar!=null && mSnackbar.isShownOrQueued()){
+						mSnackbar.dismiss();
+					}
+					NetworkInfo activeNetwork=connectivityManager.getActiveNetworkInfo();
+					if(activeNetwork!=null && !activeNetwork.isConnected()){
+						mSnackbar=Snackbar.make(mRootLayout,"You are Offline!",Snackbar.LENGTH_INDEFINITE);
+						mSnackbar.setAction("OK",mSnackbarClickListener);
+						mSnackbar.show();
+					}
+				}
+			}
+			else{
+				if(mSnackbar!=null && mSnackbar.isShownOrQueued()){
+					mSnackbar.dismiss();
+					mSnackbar=Snackbar.make(mRootLayout,"You are back Online!",Snackbar.LENGTH_SHORT);
+					mSnackbar.show();
+				}
+			}
+
+		}
+
+		@Override
+		public void onCancelled(DatabaseError databaseError) {
+
+		}
+	};
 
     public fragment_chat_lists() {
     }
@@ -46,33 +106,30 @@ public class fragment_chat_lists extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        connectedRef=FirebaseDatabase.getInstance().getReference(".info/connected");
+	    connectivityManager =((ConnectivityManager) getContext().getSystemService(CONNECTIVITY_SERVICE));
     }
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		connectedRef.addValueEventListener(mValueEventListener);
+	}
 
-    FetchNewChatData mBoundService;
-    boolean service_connected=false;
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
+	@Override
+	public void onPause() {
+		if(mSnackbar!=null && mSnackbar.isShownOrQueued()){
+			mSnackbar.dismiss();
+		}
+		connectedRef.removeEventListener(mValueEventListener);
+		super.onPause();
+	}
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            service_connected=false;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            service_connected=true;
-            FetchNewChatData.customBinder myBinder = (FetchNewChatData.customBinder) service;
-            mBoundService = myBinder.getService();
-            mBoundService.setCurrentItemId(null);
-        }
-
-    };
-
-    @Override
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_chat_lists, container, false);
-        mViewPager= ((ViewPager) view.findViewById(R.id.view_pager_chat_list));
+		mViewPager= ((ViewPager) view.findViewById(R.id.view_pager_chat_list));
         mViewPagerAdapter=new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         mTabLayout= ((TabLayout) view.findViewById(R.id.tabs_chat_list));
 
@@ -81,7 +138,28 @@ public class fragment_chat_lists extends Fragment {
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPagerAdapter.notifyDataSetChanged();
         mViewPager.setCurrentItem(1);
+        ((NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE))
+                .cancelAll();
+	    mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
+		    @Override
+		    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+		    }
+
+		    @Override
+		    public void onPageSelected(int position) {
+				if(position==1){
+					((NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE))
+							.cancelAll();
+				}
+		    }
+
+		    @Override
+		    public void onPageScrollStateChanged(int state) {
+
+		    }
+	    });
+		mRootLayout=view;
         return view;
     }
 
@@ -120,7 +198,6 @@ public class fragment_chat_lists extends Fragment {
         @Override
         public Fragment getItem(int position)
         {
-            Log.d("findme","got position "+position);
            switch (position){
                case 0:return fragment_bot_list.newInstance();
                case 1:return fragment_chat_list.newInstance();
@@ -146,17 +223,4 @@ public class fragment_chat_lists extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Intent intent = new Intent(getContext(), FetchNewChatData.class);
-        getContext().bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onPause() {
-        if(service_connected )
-            getContext().unbindService(mServiceConnection);
-        super.onPause();
-    }
 }

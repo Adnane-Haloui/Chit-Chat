@@ -34,8 +34,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.gson.JsonObject;
 import com.rajora.arun.chat.chit.authenticator.BuildConfig;
 import com.rajora.arun.chat.chit.authenticator.R;
@@ -263,6 +265,7 @@ public class LoginSplashFragment extends Fragment {
                         boolean errorOccurred=false;
                         try {
                             if(response.getString("token").equals("auth_failed")){
+                                FirebaseCrash.log("AUTH_FAILED TOKEN RECEIVED");
                                 errorOccurred=true;
                                 showErrorMessage("Our servers are under maintenance. Please try again later!");
                                 mLoginButton.setText("TRY AGAIN");
@@ -289,6 +292,7 @@ public class LoginSplashFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                             errorOccurred=true;
+	                        FirebaseCrash.log("JSON PARSING ERROR "+e.getStackTrace().toString());
                             showErrorMessage("Please check network Connectivity!");
                             mLoginButton.setText("TRY AGAIN");
                             mProgressBar.setVisibility(View.GONE);
@@ -320,9 +324,9 @@ public class LoginSplashFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()){
-
+	                        if(task.getException()!=null)
+	                        FirebaseCrash.log(task.getException().getMessage());
                             Log.d("findme",task.getException().getMessage().toString());
-                            Toast.makeText(getContext(),"Auth failed on firebase",Toast.LENGTH_SHORT).show();
                             showErrorMessage("Please check network Connectivity!");
                             mLoginButton.setText("TRY AGAIN");
                             mProgressBar.setVisibility(View.GONE);
@@ -334,7 +338,6 @@ public class LoginSplashFragment extends Fragment {
                             SharedPreferences.Editor editor=getContext().getSharedPreferences("user-details",MODE_PRIVATE).edit();
                             editor.putString("login_status","complete");
                             editor.commit();
-
                             mListener.onLoginFinish();
                         }
                     }

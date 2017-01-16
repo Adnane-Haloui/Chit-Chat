@@ -2,7 +2,12 @@ package com.rajora.arun.chat.chit.chitchat.fragments;
 
 
 import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.database.Cursor;
+import android.graphics.drawable.Icon;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -20,13 +25,16 @@ import com.rajora.arun.chat.chit.chitchat.activities.ProfileDetailsActivity;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.adapter_chat_item;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chats;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
+import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChatList;
+import com.rajora.arun.chat.chit.chitchat.dataModels.ChatListDataModel;
 
-public class fragment_chat_list extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,adapter_chat_item.onItemClickListener{
-    private RecyclerView mRecyclerView;
+import java.util.ArrayList;
+import java.util.List;
+
+public class fragment_chat_list extends Fragment
+		implements LoaderManager.LoaderCallbacks<Cursor>,adapter_chat_item.onItemClickListener{
+
     private adapter_chat_item mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private static final int CURSOR_LOADER_ID=2;
 
     public fragment_chat_list() {
@@ -41,70 +49,76 @@ public class fragment_chat_list extends Fragment implements LoaderManager.Loader
                              Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.fragment_chat_list, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.chat_recycler_view);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.chat_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null,this);
-        mAdapter = new adapter_chat_item(getContext(), FirebaseStorage.getInstance(),this,null,contract_chats.COLUMN_ID);
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new adapter_chat_item(getContext(), FirebaseStorage.getInstance(),this,null,
+		        ContractChatList._ID);
+        recyclerView.setAdapter(mAdapter);
         return view;
     }
 
     @Override
-    public void onItemClick(int position,Cursor cursor) {
+    public void onItemClick(int position,ChatListDataModel item) {
         Intent intent=new Intent(getContext(), ChatActivity.class);
-        if(cursor.getInt(cursor.getColumnIndex(contract_chats.COLUMN_IS_BOT))>0){
-            intent.putExtra("type","bot");
-            intent.putExtra("imageurl",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_BOT_PIC_URL)));
-            intent.putExtra("name",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_NAME)));
-            intent.putExtra("dev_name",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_BOT_DEV_NAME)));
-            intent.putExtra("about",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_ABOUT)));
-            intent.putExtra("Gid",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_BOT_ID)));
-
-        }
-        else{
-            intent.putExtra("type","contact");
-            intent.putExtra("profilePic",cursor.getBlob(cursor.getColumnIndex(contract_chats.COLUMN_PIC)));
-            intent.putExtra("name",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_NAME)));
-            intent.putExtra("number",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_PH_NUMBER)));
-            intent.putExtra("about",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_ABOUT)));
-        }
-
+        intent.putExtra("type","contact_data_model");
+        intent.putExtra("data",item.getContactItemDataModel());
         startActivity(intent);
     }
 
     @Override
-    public void onImageClick(int position,Cursor cursor) {
+    public void onImageClick(int position, ChatListDataModel item) {
         Intent intent=new Intent(getContext(), ProfileDetailsActivity.class);
-        intent.putExtra("type","chats");
-        intent.putExtra("image",cursor.getBlob(cursor.getColumnIndex(contract_chats.COLUMN_PIC)));
-        intent.putExtra("text1",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_NAME)));
-        intent.putExtra("text2",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_PH_NUMBER)));
-        intent.putExtra("text3",cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_ABOUT)));
-
+        intent.putExtra("type","contact_data_model");
+        intent.putExtra("data",item.getContactItemDataModel());
         startActivity(intent);
 
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getContext(), ChatContentProvider.CHATS_URI,
-                new String[]{contract_chats.COLUMN_LAST_MESSAGE_TIME,
-                        contract_chats.COLUMN_LAST_MESSAGE,
-                        contract_chats.COLUMN_BOT_ID,
-                        contract_chats.COLUMN_PH_NUMBER,
-                        contract_chats.COLUMN_NAME,
-                        contract_chats.COLUMN_IS_BOT,
-                        contract_chats.COLUMN_PIC,
-                        contract_chats.COLUMN_ID,
-                        contract_chats.COLUMN_ABOUT,
-                        contract_chats.COLUMN_BOT_PIC_URL,
-                        contract_chats.COLUMN_BOT_DEV_NAME},null,null,null);
+        return new CursorLoader(getContext(), ChatContentProvider.CHATS_LIST_URI,
+                new String[]{ContractChatList._ID,
+		                ContractChatList.COLUMN_CONTACT_ID,
+		                ContractChatList.COLUMN_IS_BOT,
+		                ContractChatList.COLUMN_NAME,
+		                ContractChatList.COLUMN_LAST_MESSAGE,
+		                ContractChatList.COLUMN_LAST_MESSAGE_TIMESTAMP,
+		                ContractChatList.COLUMN_LAST_MESSAGE_TYPE,
+		                ContractChatList.COLUMN_PIC_URI,
+		                ContractChatList.COLUMN_PIC_URL,
+		                ContractChatList.COLUMN_UNREAD_COUNT},null,null,
+                ContractChatList.COLUMN_LAST_MESSAGE_TIMESTAMP+" DESC");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
+	    if (VERSION.SDK_INT >= VERSION_CODES.N_MR1 && data!=null) {
+		    data.moveToFirst();
+		    List<ShortcutInfo> shortcuts=new ArrayList<>();
+		    for(int i=1;i<5 && !data.isAfterLast();){
+			    ChatListDataModel item=new ChatListDataModel(data);
+			    if(item.name!=null && !item.name.isEmpty()){
+				    Intent intent=new Intent(getContext(), ChatActivity.class);
+				    intent.putExtra("type","contact_data_model");
+				    intent.putExtra("data",item.getContactItemDataModel());
+				    ShortcutInfo shortcutInfo=
+						    new ShortcutInfo.Builder(getContext(),"id"+ i)
+								    .setShortLabel(item.name)
+								    .setLongLabel((item.is_bot?"Bot: ":"Contact: ")+item.name)
+								    .setIntent(intent)
+								    .setIcon(Icon.createWithResource(getContext(),R.drawable.empty_profile_pic))
+								    .build();
+				    shortcuts.add(shortcutInfo);
+				    i++;
+			    }
+			    data.moveToNext();
+		    }
+		    ShortcutManager shortcutManager=getContext().getSystemService(ShortcutManager.class);
+		    shortcutManager.setDynamicShortcuts(shortcuts);
+
+	    }
     }
 
     @Override

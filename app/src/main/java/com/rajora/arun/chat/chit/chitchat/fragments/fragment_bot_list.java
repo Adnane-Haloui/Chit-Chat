@@ -23,7 +23,8 @@ import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.bot_VH;
 import com.rajora.arun.chat.chit.chitchat.activities.ChatActivity;
 import com.rajora.arun.chat.chit.chitchat.activities.ProfileDetailsActivity;
 import com.rajora.arun.chat.chit.chitchat.R;
-import com.rajora.arun.chat.chit.chitchat.dataModels.BotsDataModel;
+import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseBotsDataModel;
+import com.rajora.arun.chat.chit.chitchat.utils.ImageUtils;
 
 public class fragment_bot_list extends Fragment{
     private RecyclerView mRecyclerView;
@@ -50,10 +51,10 @@ public class fragment_bot_list extends Fragment{
         mRecyclerView.setLayoutManager(mLayoutManager);
         firebaseStorage=FirebaseStorage.getInstance();
         databaseReference= FirebaseDatabase.getInstance().getReference("botList");
-        mAdapter = new FirebaseRecyclerAdapter<BotsDataModel,bot_VH>(
-            BotsDataModel.class,R.layout.view_bot_item,bot_VH.class,databaseReference) {
+        mAdapter = new FirebaseRecyclerAdapter<FirebaseBotsDataModel,bot_VH>(
+                FirebaseBotsDataModel.class,R.layout.view_bot_item,bot_VH.class,databaseReference) {
             @Override
-            protected void populateViewHolder(bot_VH viewHolder, final BotsDataModel model, int position) {
+            protected void populateViewHolder(bot_VH viewHolder, final FirebaseBotsDataModel model, int position) {
                 CardView mImageContainerCardView = ((CardView) viewHolder.itemView.findViewById(R.id.bot_item_image_container));
                 ImageView mImage = ((ImageView) viewHolder.itemView.findViewById(R.id.bot_item_image));
                 TextView mName = ((TextView) viewHolder.itemView.findViewById(R.id.bot_item_name));
@@ -72,34 +73,23 @@ public class fragment_bot_list extends Fragment{
                 mDeveloperName.setText(model.getDev_name());
                 mAbout.setText(model.getDesc());
                 if(model.getImage_url()!=null){
-                    Glide.with(fragment_bot_list.this.getContext())
-                            .using(new FirebaseImageLoader())
-                            .load(firebaseStorage.getReference(model.getImage_url()))
-                            .into(mImage);
+                    ImageUtils.loadBitmapFromFirebase(getContext(),model.getImage_url(),R.drawable.empty_profile_pic,mImage);
                 }
                 mImageContainerCardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(getContext(), ProfileDetailsActivity.class);
-                        intent.putExtra("type","bot");
-                        intent.putExtra("imageurl",model.getImage_url());
-                        intent.putExtra("text1",model.getName());
-                        intent.putExtra("text2",model.getDev_name());
-                        intent.putExtra("text3",model.getDesc());
+                        intent.putExtra("type","bot_data_model");
+                        intent.putExtra("data",model);
                         startActivity(intent);
-
                     }
                 });
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent=new Intent(getContext(), ChatActivity.class);
-                        intent.putExtra("type","bot");
-                        intent.putExtra("imageurl",model.getImage_url());
-                        intent.putExtra("name",model.getName());
-                        intent.putExtra("dev_name",model.getDev_name());
-                        intent.putExtra("about",model.getDesc());
-                        intent.putExtra("Gid",model.getGid());
+                        intent.putExtra("type","bot_data_model");
+                        intent.putExtra("data",model);
                         startActivity(intent);
 
                     }

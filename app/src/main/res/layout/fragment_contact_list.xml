@@ -1,10 +1,37 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.rajora.arun.chat.chit.chitchat.fragments.fragment_contact_list">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/contact_recycler_view"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                tools:context="com.rajora.arun.chat.chit.chitchat.fragments.fragment_contact_list">
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-</FrameLayout>
+            android:layout_height="match_parent">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/contact_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/add_contact_fab"
+		android:src="@drawable/ic_add_black_24dp"
+		android:layout_margin="12dp"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:fabSize="normal"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/refresh_fab"
+            android:src="@drawable/refresh_icon"
+            app:fabSize="mini"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/add_contact_fab"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"/>
+</RelativeLayout>

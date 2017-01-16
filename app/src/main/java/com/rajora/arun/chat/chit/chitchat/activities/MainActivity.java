@@ -1,38 +1,28 @@
 package com.rajora.arun.chat.chit.chitchat.activities;
 
 import android.app.Activity;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import com.rajora.arun.chat.chit.authenticator.login.Login;
-import com.rajora.arun.chat.chit.authenticator.login.User_Metadata;
 import com.rajora.arun.chat.chit.chitchat.R;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Helper.chat_database;
 import com.rajora.arun.chat.chit.chitchat.fcm.MyFirebaseInstanceIDService;
 import com.rajora.arun.chat.chit.chitchat.fragments.fragment_chat_lists;
 
-import java.util.Locale;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.ConnectionResult;
 
 public class MainActivity extends AppCompatActivity {
 
-    final static int REQUEST_CODE_LOGIN=100;
-    final static int REQUEST_CODE_PROFILE=200;
+    private static final int REQUEST_CODE_LOGIN=100;
+    private static final int REQUEST_CODE_PROFILE=200;
+	private static final int REQUEST_PLAY_SERVICES_RESOLUTION = 9000;
 
     final static String FRAGMENT_TAG_CHAT_LIST="chat_list_fragment_tag";
 
@@ -42,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+		checkPlayServices();
+        Stetho.initializeWithDefaults(this);
+
+	    sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
         if(sharedPreferences.contains("login_status") && sharedPreferences.getString("login_status","").equals("complete")) {
             if(sharedPreferences.contains("first_profile_edit") && sharedPreferences.getBoolean("first_profile_edit",false)){
                 showChatFragment(false);
@@ -63,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+	    checkPlayServices();
         if(canShowChatFragment()) {
             showChatFragment(false);
         }
@@ -115,4 +109,29 @@ public class MainActivity extends AppCompatActivity {
         return sharedPreferences.contains("login_status") && sharedPreferences.getString("login_status","").equals("complete")
                 && getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_CHAT_LIST)==null;
     }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, REQUEST_PLAY_SERVICES_RESOLUTION)
+                        .show();
+            } else {
+	            new AlertDialog.Builder(this).setMessage("Google Play Services Error")
+			            .setTitle("This device is not supported for required Goole Play Services")
+			            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				            @Override
+				            public void onClick(DialogInterface dialogInterface, int i) {
+					            finish();
+				            }
+			            })
+			            .create()
+			            .show();
+            }
+            return false;
+        }
+        return true;
+    }
+
 }

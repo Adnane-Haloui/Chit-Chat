@@ -1,34 +1,28 @@
 package com.rajora.arun.chat.chit.chitchat.services;
 
 import android.app.IntentService;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Context;
-import android.database.Cursor;
-import android.os.Bundle;
 
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
-import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chat;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chats;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
-
-import java.util.HashMap;
+import com.rajora.arun.chat.chit.chitchat.contentProviders.ProviderHelper;
+import com.rajora.arun.chat.chit.chitchat.dataModels.ChatItemDataModel;
+import com.rajora.arun.chat.chit.chitchat.utils.FirebaseUtils;
 
 public class SendMessageService extends IntentService {
-    private static final String ACTION_SEND_MESSAGE_TEXT_TO_USER = "com.rajora.arun.chat.chit.chitchat.services.action.SEND_MESSAGE_TEXT_TO_USER";
-    private static final String ACTION_SEND_MESSAGE_TEXT_TO_BOT = "com.rajora.arun.chat.chit.chitchat.services.action.SEND_MESSAGE_TEXT_TO_BOT";
 
     private static final String EXTRA_FROM_ID = "com.rajora.arun.chat.chit.chitchat.services.extra.FROM_ID";
     private static final String EXTRA_TO_ID = "com.rajora.arun.chat.chit.chitchat.services.extra.TO_ID";
-    private static final String EXTRA_CONTENT_TYPE = "com.rajora.arun.chat.chit.chitchat.services.extra.CONTENT_TYPE";
     private static final String EXTRA_CONTENT = "com.rajora.arun.chat.chit.chitchat.services.extra.CONTENT";
+    private static final String EXTRA_CONTENT_TYPE = "com.rajora.arun.chat.chit.chitchat.services.extra.CONTENT_TYPE";
     private static final String EXTRA_TIMESTAMP = "com.rajora.arun.chat.chit.chitchat.services.extra.TIMESTAMP";
-    private static final String EXTRA_BOT_DETAILS = "com.rajora.arun.chat.chit.chitchat.services.extra.BOT_DETAILS";
-    FirebaseDatabase mFirebaseDatabase;
+    private static final String EXTRA_IS_BOT = "com.rajora.arun.chat.chit.chitchat.services.extra.IS_BOT";
+	private static final String EXTRA_FILE_URI="com.rajora.arun.chat.chit.chitchat.services.extra.FILE_URI";
+
+	private static final String ACTION_UPLOAD_FILE="FILE_UPLOAD_ACTION";
+	private static final String ACTION_UPLOAD_TEXT="TEXT_UPLOAD_ACTION";
+
+	FirebaseDatabase mFirebaseDatabase;
 
 
     public SendMessageService() {
@@ -36,210 +30,57 @@ public class SendMessageService extends IntentService {
         mFirebaseDatabase=FirebaseDatabase.getInstance();
     }
 
-    public static void startSendTextMessageToUser(Context context,String from, String to,String content_type,String content,long timestamp) {
+    public static void startSendTextMessage(Context context, String from, String to, String content,String content_type,boolean is_bot,long timestamp) {
         Intent intent = new Intent(context, SendMessageService.class);
-        intent.setAction(ACTION_SEND_MESSAGE_TEXT_TO_USER);
+	    intent.setAction(ACTION_UPLOAD_TEXT);
         intent.putExtra(EXTRA_FROM_ID,from);
         intent.putExtra(EXTRA_TO_ID, to);
-        intent.putExtra(EXTRA_CONTENT_TYPE, content_type);
         intent.putExtra(EXTRA_CONTENT, content);
-        intent.putExtra(EXTRA_TIMESTAMP,timestamp);
-        context.startService(intent);
-    }
-    public static void startSendTextMessageToBot(Context context, String from, String to, String content_type, String content, long timestamp, Bundle bundle) {
-        Intent intent = new Intent(context, SendMessageService.class);
-        intent.setAction(ACTION_SEND_MESSAGE_TEXT_TO_BOT);
-        intent.putExtra(EXTRA_FROM_ID,from);
-        intent.putExtra(EXTRA_TO_ID, to);
         intent.putExtra(EXTRA_CONTENT_TYPE, content_type);
-        intent.putExtra(EXTRA_CONTENT, content);
+        intent.putExtra(EXTRA_IS_BOT,is_bot);
         intent.putExtra(EXTRA_TIMESTAMP,timestamp);
-        intent.putExtra(EXTRA_BOT_DETAILS,bundle);
         context.startService(intent);
     }
 
-    @Override
+	public static void startSendFileMessage(Context context, String from, String to,String file_uri, String content,String content_type,boolean is_bot,long timestamp) {
+		Intent intent = new Intent(context, SendMessageService.class);
+		intent.setAction(ACTION_UPLOAD_FILE);
+		intent.putExtra(EXTRA_FROM_ID,from);
+		intent.putExtra(EXTRA_TO_ID, to);
+		intent.putExtra(EXTRA_FILE_URI,file_uri);
+		intent.putExtra(EXTRA_CONTENT, content);
+		intent.putExtra(EXTRA_CONTENT_TYPE, content_type);
+		intent.putExtra(EXTRA_IS_BOT,is_bot);
+		intent.putExtra(EXTRA_TIMESTAMP,timestamp);
+		context.startService(intent);
+	}
+
+
+	@Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_SEND_MESSAGE_TEXT_TO_USER.equals(action)) {
-                final String to = intent.getStringExtra(EXTRA_TO_ID);
-                final String from = intent.getStringExtra(EXTRA_FROM_ID);
-                final String content_type = intent.getStringExtra(EXTRA_CONTENT_TYPE);
-                final String content = intent.getStringExtra(EXTRA_CONTENT);
-                final long timestamp = intent.getLongExtra(EXTRA_TIMESTAMP,-1);
-                sendTextMessageToUser(from,to,content_type,content,timestamp);
-            }
-            else if(ACTION_SEND_MESSAGE_TEXT_TO_BOT.equals(action)){
-                final String to = intent.getStringExtra(EXTRA_TO_ID);
-                final String from = intent.getStringExtra(EXTRA_FROM_ID);
-                final String content_type = intent.getStringExtra(EXTRA_CONTENT_TYPE);
-                final String content = intent.getStringExtra(EXTRA_CONTENT);
-                final long timestamp = intent.getLongExtra(EXTRA_TIMESTAMP,-1);
-                final Bundle bot_details=intent.getBundleExtra(EXTRA_BOT_DETAILS);
-                sendTextMessageToBot(from,to,content_type,content,timestamp,bot_details);
-            }
+            String from = intent.getStringExtra(EXTRA_FROM_ID);
+            String to = intent.getStringExtra(EXTRA_TO_ID);
+            String content = intent.getStringExtra(EXTRA_CONTENT);
+            String content_type = intent.getStringExtra(EXTRA_CONTENT_TYPE);
+            boolean is_bot = intent.getBooleanExtra(EXTRA_IS_BOT,false);
+            long timestamp = intent.getLongExtra(EXTRA_TIMESTAMP,-1);
+	        if(intent.getAction().equals(ACTION_UPLOAD_TEXT)){
+		        sendTextMessage(from,to,content,content_type,is_bot,timestamp);
+	        }
+	        else{
+		        sendFileMessage(from,to,content,intent.getStringExtra(EXTRA_FILE_URI),content_type,is_bot,timestamp);
+	        }
         }
     }
-    private void sendTextMessageToBot(String from_number,String to_id,String content_type,String content,long timestamp,Bundle bot_details){
-        bot_details.keySet();
-        String bot_name=bot_details.getString("botName","");
-        //String bot_number=bot_details.getString("botNumber","");
-        String bot_about=bot_details.getString("botAbout","");
-        //String bot_gid=bot_details.getString("botGid","");
-        String bot_image_url=bot_details.getString("botImageUrl","");
-        String bot_dev_name=bot_details.getString("botDevName","");
-
-        Cursor historyStatusCursor=getContentResolver().query(ChatContentProvider.CHATS_URI,new String[]{
-                contract_chats.COLUMN_ABOUT,
-                contract_chats.COLUMN_ID,
-                contract_chats.COLUMN_PIC,
-                contract_chats.COLUMN_IS_BOT,
-                contract_chats.COLUMN_BOT_ID,
-                contract_chats.COLUMN_LAST_MESSAGE,
-                contract_chats.COLUMN_LAST_MESSAGE_TIME,
-                contract_chats.COLUMN_NAME,
-                contract_chats.COLUMN_PH_NUMBER
-        }, contract_chats.COLUMN_ID+" = ? ",new String[]{to_id},null);
-        ContentValues values=new ContentValues();
-        values.put(contract_chats.COLUMN_ID,to_id);
-        values.put(contract_chats.COLUMN_BOT_ID,to_id);
-        values.put(contract_chats.COLUMN_IS_BOT,true);
-        values.put(contract_chats.COLUMN_LAST_MESSAGE,content);
-        values.put(contract_chats.COLUMN_ABOUT,bot_about);
-        values.put(contract_chats.COLUMN_BOT_PIC_URL,bot_image_url);
-        values.put(contract_chats.COLUMN_BOT_DEV_NAME,bot_dev_name);
-        values.put(contract_chats.COLUMN_NAME,bot_name);
-        values.put(contract_chats.COLUMN_LAST_MESSAGE_TIME,timestamp);
-        if(historyStatusCursor!=null && historyStatusCursor.getCount()>0 && historyStatusCursor.moveToFirst()
-                && historyStatusCursor.getLong(historyStatusCursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE_TIME))<=timestamp){
-            getContentResolver().update(ChatContentProvider.CHATS_URI,values,contract_chats.COLUMN_ID+" = ? ",new String[]{to_id});
-            historyStatusCursor.close();
-        }
-        else{
-            getContentResolver().insert(ChatContentProvider.CHATS_URI,values);
-        }
-
-        DatabaseReference itemDatabaseReference=mFirebaseDatabase.getReference("botChatItems/"+to_id+"/");
-        DatabaseReference revItemReference=mFirebaseDatabase.getReference("chatItems/"+from_number.substring(1)+"/");
-        final String id_on_server=itemDatabaseReference.push().getKey().substring(1);
-        itemDatabaseReference=itemDatabaseReference.child(id_on_server);
-
-        ContentValues chatValues=new ContentValues();
-        chatValues.put(contract_chat.COLUMN_IS_BOT,true);
-        chatValues.put(contract_chat.COLUMN_MESSAGE,content);
-        chatValues.put(contract_chat.COLUMN_MESSAGE_ID_ON_SERVER,id_on_server);
-        chatValues.put(contract_chat.COLUMN_MESSAGE_SENDER_ID,to_id);
-        chatValues.put(contract_chat.COLUMN_MESSAGE_SENDER_NUMBER,from_number);
-        chatValues.put(contract_chat.COLUMN_MESSAGE_STATUS,"sending");
-        chatValues.put(contract_chat.COLUMN_MESSAGE_TYPE,content_type);
-        chatValues.put(contract_chat.COLUMN_MESSAGE_RECEIVER_ID,to_id);
-        chatValues.put(contract_chat.COLUMN_TIMESTAMP,timestamp);
-        getContentResolver().insert(ChatContentProvider.CHAT_URI,chatValues);
-
-        HashMap<String,Object> fbvalues=new HashMap<>();
-        fbvalues.put("sender",from_number);
-        fbvalues.put("receiver",to_id);
-        fbvalues.put("is_bot",true);
-        fbvalues.put("type",content_type);
-        fbvalues.put("content",content);
-        fbvalues.put("id",id_on_server);
-        fbvalues.put("timestamp",timestamp);
-        fbvalues.put("g_timestamp", ServerValue.TIMESTAMP);
-        revItemReference.push().updateChildren(fbvalues);
-        itemDatabaseReference.updateChildren(fbvalues, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                ContentValues UpdateStatusvalues=new ContentValues();
-                UpdateStatusvalues.put(contract_chat.COLUMN_MESSAGE_STATUS,"sent");
-                getContentResolver().update(ChatContentProvider.CHAT_URI,
-                        UpdateStatusvalues,contract_chat.COLUMN_MESSAGE_ID_ON_SERVER+" = ?",
-                        new String[]{id_on_server});
-            }
-        });
-
+    private void sendTextMessage(String from_id,String to_id,String message,String content_type,boolean is_bot,long timestamp){
+	    ChatItemDataModel item=new ChatItemDataModel(to_id,is_bot,message,"sent","read",content_type,timestamp);
+	    item.chat_id= FirebaseUtils.sendChatMessageToFirebase(mFirebaseDatabase,item,from_id);
+	    ProviderHelper.handleMessageInDatabase(this,item);
     }
 
-    private void sendTextMessageToUser(String from_number,String to_id,String content_type,String content,long timestamp) {
+    private void sendFileMessage(String from_id,String to_id,String uri,String file_details,String content_type,boolean is_bot,long timestamp){
 
-        Cursor historyStatusCursor=getContentResolver().query(ChatContentProvider.CHATS_URI,new String[]{
-                contract_chats.COLUMN_ABOUT,
-                contract_chats.COLUMN_ID,
-                contract_chats.COLUMN_PIC,
-                contract_chats.COLUMN_IS_BOT,
-                contract_chats.COLUMN_BOT_ID,
-                contract_chats.COLUMN_LAST_MESSAGE,
-                contract_chats.COLUMN_LAST_MESSAGE_TIME,
-                contract_chats.COLUMN_NAME,
-                contract_chats.COLUMN_PH_NUMBER
-            }, contract_chats.COLUMN_ID+" = ? ",new String[]{to_id},null);
-
-            if(historyStatusCursor!=null && historyStatusCursor.getCount()>0 ){
-                if(historyStatusCursor.moveToFirst() && historyStatusCursor.getLong(historyStatusCursor
-                        .getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE_TIME))<=timestamp){
-                    ContentValues values=new ContentValues();
-                    values.put(contract_chats.COLUMN_ID,to_id);
-                    values.put(contract_chats.COLUMN_IS_BOT,false);
-                    values.put(contract_chats.COLUMN_LAST_MESSAGE,content);
-                    values.put(contract_chats.COLUMN_LAST_MESSAGE_TIME,timestamp);
-                    getContentResolver().update(ChatContentProvider.CHATS_URI,values,contract_chats.COLUMN_ID+" = ? ",new String[]{to_id});
-                }
-                historyStatusCursor.close();
-
-            }
-            else{
-                Cursor valueCursor=getContentResolver().query(ChatContentProvider.CONTACTS_URI,new String[]{
-                    }, contract_contacts.COLUMN_PH_NUMBER+" = ? ",new String[]{to_id},null);
-                if(valueCursor!=null && valueCursor.moveToFirst()){
-                    ContentValues values=new ContentValues();
-                    values.put(contract_chats.COLUMN_ID,valueCursor.getString(valueCursor.getColumnIndex(contract_contacts.COLUMN_PH_NUMBER)));
-                    values.put(contract_chats.COLUMN_IS_BOT,false);
-                    values.put(contract_chats.COLUMN_LAST_MESSAGE,content);
-                    values.put(contract_chats.COLUMN_LAST_MESSAGE_TIME,timestamp);
-                    values.put(contract_chats.COLUMN_NAME,valueCursor.getString(valueCursor.getColumnIndex(contract_contacts.COLUMN_NAME)));
-                    values.put(contract_chats.COLUMN_PIC,valueCursor.getBlob(valueCursor.getColumnIndex(contract_contacts.COLUMN_PIC)));
-                    values.put(contract_chats.COLUMN_PH_NUMBER,valueCursor.getString(valueCursor.getColumnIndex(contract_contacts.COLUMN_PH_NUMBER)));
-                    getContentResolver().insert(ChatContentProvider.CHATS_URI,values);
-                    valueCursor.close();
-                }
-            }
-            DatabaseReference itemDatabaseReference=mFirebaseDatabase.getReference("chatItems/"+to_id.substring(1)+"/");
-            DatabaseReference revItemReference=mFirebaseDatabase.getReference("chatItems/"+from_number.substring(1)+"/");
-            final String id_on_server=itemDatabaseReference.push().getKey().substring(1);
-            itemDatabaseReference=itemDatabaseReference.child(id_on_server);
-
-            ContentValues chatValues=new ContentValues();
-            chatValues.put(contract_chat.COLUMN_IS_BOT,false);
-            chatValues.put(contract_chat.COLUMN_MESSAGE,content);
-            chatValues.put(contract_chat.COLUMN_MESSAGE_ID_ON_SERVER,id_on_server);
-            chatValues.put(contract_chat.COLUMN_MESSAGE_SENDER_ID,to_id);
-            chatValues.put(contract_chat.COLUMN_MESSAGE_SENDER_NUMBER,from_number);
-            chatValues.put(contract_chat.COLUMN_MESSAGE_STATUS,"sending");
-            chatValues.put(contract_chat.COLUMN_MESSAGE_TYPE,content_type);
-            chatValues.put(contract_chat.COLUMN_MESSAGE_RECEIVER_ID,to_id);
-            chatValues.put(contract_chat.COLUMN_TIMESTAMP,timestamp);
-            getContentResolver().insert(ChatContentProvider.CHAT_URI,chatValues);
-
-            HashMap<String,Object> values=new HashMap<>();
-            values.put("sender",from_number);
-            values.put("receiver",to_id);
-            values.put("is_bot",false);
-            values.put("type",content_type);
-            values.put("content",content);
-            values.put("id",id_on_server);
-            values.put("timestamp",timestamp);
-            values.put("g_timestamp", ServerValue.TIMESTAMP);
-            revItemReference.push().updateChildren(values);
-            itemDatabaseReference.updateChildren(values, new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    ContentValues UpdateStatusvalues=new ContentValues();
-                    UpdateStatusvalues.put(contract_chat.COLUMN_MESSAGE_STATUS,"sent");
-                    getContentResolver().update(ChatContentProvider.CHAT_URI,
-                            UpdateStatusvalues,contract_chat.COLUMN_MESSAGE_ID_ON_SERVER+" = ?",
-                            new String[]{id_on_server});
-                }
-            });
     }
 
 }

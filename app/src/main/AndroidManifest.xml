@@ -1,85 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rajora.arun.chat.chit.chitchat">
+          package="com.rajora.arun.chat.chit.chitchat">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<uses-permission android:name="android.permission.RECEIVE_SMS"/>
+	<uses-permission android:name="android.permission.READ_CONTACTS"/>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+	<uses-feature
+		android:name="android.hardware.camera"
+		android:required="false"/>
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
+	<application
+		android:allowBackup="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme">
+		<meta-data
+			android:name="com.google.android.geo.API_KEY"
+			android:value="@string/GEO_API_KEY"/>
+		<activity android:name=".activities.MainActivity">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+		<activity
+			android:name=".activities.ProfileEditActivity"
+			android:theme="@style/ChangeProfileTheme"
+			android:windowSoftInputMode="stateHidden"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.ProfileEditActivity"
-            android:theme="@style/ChangeProfileTheme"
-            android:windowSoftInputMode="stateHidden" />
+		<service
+			android:name=".services.UploadProfileDetails"
+			android:exported="false">
+			<intent-filter>
+				<action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+			</intent-filter>
+		</service>
 
-        <service
-            android:name=".services.UploadProfileDetails"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
-            </intent-filter>
-        </service>
+		<activity
+			android:name=".activities.ChatActivity"
+			android:label="@string/title_activity_chat"
+			android:parentActivityName=".activities.MainActivity"
+			android:theme="@style/AppTheme.NoActionBar">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value=".activities.MainActivity"/>
+		</activity>
+		<activity
+			android:name=".activities.ProfileDetailsActivity"
+			android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+		<activity android:name=".activities.AboutActivity"/>
 
-        <activity
-            android:name=".activities.ChatActivity"
-            android:label="@string/title_activity_chat"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.ProfileDetailsActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".activities.AboutActivity" />
+		<provider
+			android:name=".contentProviders.ChatContentProvider"
+			android:authorities="com.rajora.arun.chit.chat.provider"
+			android:enabled="true"
+			android:exported="true"/>
 
-        <provider
-            android:name=".contentProviders.ChatContentProvider"
-            android:authorities="com.rajora.arun.chit.chat.provider"
-            android:enabled="true"
-            android:exported="false" />
+		<service
+			android:name=".services.updateContactsDbFromPhoneDb"
+			android:exported="false"/>
+		<service
+			android:name=".services.SendMessageService"
+			android:exported="false"/>
+		<service android:name=".fcm.MyFirebaseMessagingService">
+			<intent-filter>
+				<action android:name="com.google.firebase.MESSAGING_EVENT"/>
+			</intent-filter>
+		</service>
+		<service android:name=".fcm.MyFirebaseInstanceIDService">
+			<intent-filter>
+				<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+			</intent-filter>
+		</service>
+		<service
+			android:name=".services.FetchNewChatData"
+			android:enabled="true"
+			android:exported="false"/>
+		<service
+			android:name=".services.UpdateBotDetailsIntentService"
+			android:exported="false">
+		</service>
+		<service
+			android:name=".services.SetReadMessageIntentService"
+			android:exported="false">
+		</service>
 
-        <service
-            android:name=".services.updateContactsDbFromPhoneDb"
-            android:exported="false" />
-        <service
-            android:name=".services.SendMessageService"
-            android:exported="false" />
-        <service android:name=".fcm.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service android:name=".fcm.MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".services.FetchNewChatData"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".services.FetchNewDataOnce"
-            android:exported="false"></service>
-    </application>
+		<receiver android:name=".widget.ChatAppWidget">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+				<action android:name=".app.ACTION_DATA_UPDATED"/>
+			</intent-filter>
+
+			<meta-data
+				android:name="android.appwidget.provider"
+				android:resource="@xml/chat_app_widget_info"/>
+		</receiver>
+
+		<service
+			android:name=".widget.ChatListRemoteViewService"
+			android:permission="android.permission.BIND_REMOTEVIEWS">
+		</service>
+
+		<provider
+			android:name="android.support.v4.content.FileProvider"
+			android:authorities="com.rajora.arun.chat.chit.chitchat.fileprovider"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/file_paths"></meta-data>
+		</provider>
+
+	</application>
 
 </manifest>

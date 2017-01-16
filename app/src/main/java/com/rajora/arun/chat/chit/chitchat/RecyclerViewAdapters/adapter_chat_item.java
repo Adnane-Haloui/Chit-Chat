@@ -2,28 +2,29 @@ package com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.rajora.arun.chat.chit.chitchat.R;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_bots;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chats;
+import com.rajora.arun.chat.chit.chitchat.R.id;
+import com.rajora.arun.chat.chit.chitchat.R.layout;
+import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.adapter_chat_item.VH;
+import com.rajora.arun.chat.chit.chitchat.dataModels.ChatListDataModel;
+import com.rajora.arun.chat.chit.chitchat.utils.ImageUtils;
 import com.rajora.arun.chat.chit.chitchat.utils.utils;
 
-/**
- * Created by arc on 17/10/16.
- */
 
-public class adapter_chat_item extends CursorRecyclerViewAdapter<adapter_chat_item.VH>{
+public class adapter_chat_item extends CursorRecyclerViewAdapter<VH>{
 
     public onItemClickListener mItemClickListener;
     public Context mContext;
@@ -37,82 +38,84 @@ public class adapter_chat_item extends CursorRecyclerViewAdapter<adapter_chat_it
     }
 
     @Override
-    public adapter_chat_item.VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.view_chat_item,parent,false);
-        return new adapter_chat_item.VH(v);
+    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v= LayoutInflater.from(parent.getContext()).inflate(layout.view_chat_item,parent,false);
+        return new VH(v);
     }
 
 
     @Override
-    public void onBindViewHolder(adapter_chat_item.VH holder, Cursor cursor) {
-        byte[] img=cursor.getBlob(cursor.getColumnIndex(contract_chats.COLUMN_PIC));
-        String imgUrl=cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_BOT_PIC_URL));
-        if(img!=null && img.length>20)
-            holder.mImage.setImageBitmap(BitmapFactory.decodeByteArray(img, 0, img.length));
-        else if(imgUrl!=null){
-            Glide.with(mContext)
-                    .using(new FirebaseImageLoader())
-                    .load(firebaseStorage.getReference(imgUrl))
-                    .into(holder.mImage);
+    public void onBindViewHolder(VH holder, Cursor cursor) {
+        ChatListDataModel item=new ChatListDataModel(cursor);
+
+	    ImageUtils.loadImageIntoView(mContext,item,holder.mImage);
+        if(item.unread_count==0){
+            holder.mUnreadCount.setVisibility(View.GONE);
         }
         else{
-            holder.mImage.setImageResource(R.drawable.empty_profile_pic);
+            holder.mUnreadCount.setText(String.valueOf(item.unread_count));
+            holder.mUnreadCount.setVisibility(View.VISIBLE);
+            holder.mUnreadCount.setContentDescription(item.unread_count +" unread messages.");
         }
-        String name=cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_NAME));
-        String about=cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE));
-        String time=utils.getTimeFromTimestamp(
-                cursor.getString(cursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE_TIME)),true);
-        holder.mName.setText(name);
-        holder.mAbout.setText(about);
-        holder.mTime.setText(time);
-
-        holder.itemView.setContentDescription("Contact "+ name);
-        holder.mImage.setContentDescription("Profile picture of "+name);
-        holder.mTime.setContentDescription("Last message at "+time);
-        holder.mAbout.setContentDescription("Last message is "+about);
-        holder.mName.setContentDescription("Contact "+name);
-
-        bind(holder,mItemClickListener);
+        holder.mName.setText(item.name==null || item.name.isEmpty() ?item.contact_id:item.name);
+        holder.mTime.setText(utils.getTimeFromTimestamp(item.last_message_time,true));
+	    holder.itemView.setContentDescription("Contact "+
+			    (item.name==null || item.name.isEmpty() ?item.contact_id:item.name));
+	    holder.mImage.setContentDescription("Profile picture of "+
+			    (item.name==null || item.name.isEmpty() ?item.contact_id:item.name));
+	    holder.mTime.setContentDescription("Last message at "+utils.getTimeFromTimestamp(item.last_message_time,true));
+	    if(item.last_message_type!=null){
+            if(item.last_message_type.equals("text")){
+                holder.mLastMessage.setText(item.last_message);
+                holder.mLastMessage.setContentDescription("Last message is "+item.last_message);
+            }
+            else{
+                holder.mLastMessage.setText("["+item.last_message_type+"]");
+                holder.mLastMessage.setContentDescription("Received "+item.last_message_type+" last.");
+            }
+        }
+        holder.mName.setContentDescription("Contact "+
+		        (item.name==null || item.name.isEmpty() ?item.contact_id:item.name));
+        bind(holder,mItemClickListener,item);
     }
 
-    public void bind(final VH holder,final onItemClickListener mItemClickListener) {
+    public void bind(final VH holder,final onItemClickListener mItemClickListener,final ChatListDataModel item) {
         holder.itemView.setOnClickListener(
-                new View.OnClickListener(){
+                new OnClickListener(){
                     @Override
                     public void onClick(View v) {
-                        mCursor.moveToPosition(holder.getAdapterPosition());
-                        mItemClickListener.onItemClick(holder.getAdapterPosition(),mCursor);
+                        mItemClickListener.onItemClick(holder.getAdapterPosition(), item);
                     }
                 }
         );
-        holder.itemView.findViewById(R.id.chat_item_image_container).setOnClickListener(new View.OnClickListener() {
+        holder.itemView.findViewById(id.chat_item_image_container).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCursor.moveToPosition(holder.getAdapterPosition());
-                mItemClickListener.onImageClick(holder.getAdapterPosition(),mCursor);
+                mItemClickListener.onImageClick(holder.getAdapterPosition(), item);
             }
         });
     }
-    public static class VH extends RecyclerView.ViewHolder{
+    public static class VH extends ViewHolder{
 
-        CardView mImageContainerCardView;
         ImageView mImage;
         TextView mName;
-        TextView mAbout;
+        TextView mLastMessage;
         TextView mTime;
+        TextView mUnreadCount;
+        CardView mImageContainerCardView;
 
         public VH(View itemView) {
             super(itemView);
-            mImageContainerCardView = ((CardView) itemView.findViewById(R.id.chat_item_image_container));
-            mImage = ((ImageView) itemView.findViewById(R.id.chat_item_image));
-            mName = ((TextView) itemView.findViewById(R.id.chat_item_name));
-            mAbout = ((TextView) itemView.findViewById(R.id.chat_item_about));
-            mTime = ((TextView) itemView.findViewById(R.id.chat_item_time));
-
+            mImageContainerCardView = (CardView) itemView.findViewById(id.chat_item_image_container);
+            mImage = (ImageView) itemView.findViewById(id.chat_item_image);
+            mName = (TextView) itemView.findViewById(id.chat_item_name);
+            mLastMessage = (TextView) itemView.findViewById(id.chat_item_last_message);
+            mTime = (TextView) itemView.findViewById(id.chat_item_time);
+            mUnreadCount=(TextView) itemView.findViewById(id.chat_unread_count);
         }
     }
     public interface onItemClickListener{
-         void onItemClick(int position,Cursor cursor);
-         void onImageClick(int position,Cursor cursor);
+         void onItemClick(int position,ChatListDataModel item);
+         void onImageClick(int position,ChatListDataModel item);
     }
 }

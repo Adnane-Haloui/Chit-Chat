@@ -9,12 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Binder;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Process;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.app.NotificationCompat;
 
@@ -23,34 +18,62 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.activities.MainActivity;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chat;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_chats;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.contract_contacts;
-import com.rajora.arun.chat.chit.chitchat.dataModels.ChatItemDataModel;
+import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChat;
+import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseChatItemDataModel;
 
+import java.util.HashMap;
+
+import io.fabric.sdk.android.services.concurrency.AsyncTask;
+
+import static android.support.v4.app.NotificationCompat.CATEGORY_MESSAGE;
+import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
 
 public class FetchNewChatData extends Service {
 
-    private customBinder mBinder= new customBinder();
+    private final customBinder mBinder= new customBinder();
+
     private FirebaseDatabase firebaseDatabase;
+
+	private DatabaseReference onlineReference;
+	private DatabaseReference connectedRef;
     private DatabaseReference mRef;
+
     private String currentItemId;
-    private boolean is_bound=false;
+    private boolean is_currentItemId_bot;
     private String ph_no;
     private long last_time_stamp;
+
+	ValueEventListener singleEventListener=new ValueEventListener() {
+		@Override
+		public void onDataChange(DataSnapshot dataSnapshot) {
+			mRef.removeEventListener(singleEventListener);
+			if(dataSnapshot!=null){
+					new UpdateNewChatAsyncTask(true,true,FetchNewChatData.this).execute(dataSnapshot);
+			}
+			stopSelf();
+		}
+
+		@Override
+		public void onCancelled(DatabaseError databaseError) {
+			mRef.removeEventListener(singleEventListener);
+			stopSelf();
+		}
+	};
 
     ChildEventListener childEventListener=new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            receiveMessage(( dataSnapshot.getValue(ChatItemDataModel.class)),dataSnapshot.getKey().substring(1));
+	        new UpdateNewChatAsyncTask(false,false,FetchNewChatData.this).execute(dataSnapshot);
         }
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
         }
 
         @Override
@@ -69,161 +92,106 @@ public class FetchNewChatData extends Service {
         }
     };
 
-    private void receiveMessage(ChatItemDataModel data,String key){
-        if(!isChatItemReceived(data,key)){
-            updateDatabase(data,key);
-            sendNotification(data,key);
-        }
-        if(data.getG_timestamp()>=last_time_stamp)
-            last_time_stamp=data.getG_timestamp();
-    }
-    private boolean isChatItemReceived(ChatItemDataModel data,String key){
-        Cursor mcursor=getContentResolver().query(ChatContentProvider.CHAT_URI,
-                new String[]{contract_chat.COLUMN_MESSAGE_ID_ON_SERVER},contract_chat.COLUMN_MESSAGE_ID_ON_SERVER+" = ? ",
-                new String[]{key},null);
-        if(mcursor!=null && mcursor.getCount()>0){
-            if(!mcursor.isClosed())
-                mcursor.close();
-            return true;
-        }
-        if(mcursor!=null && !mcursor.isClosed())
-            mcursor.close();
-        return false;
-    }
-    private void updateDatabase(ChatItemDataModel data,String key){
-        updateLastMessage(data,key);
-        updateChat(data,key);
-    }
+	ValueEventListener connectedEventListener=new ValueEventListener() {
+		@Override
+		public void onDataChange(DataSnapshot dataSnapshot) {
+			if(dataSnapshot.getValue(Boolean.class)){
+				DatabaseReference con=onlineReference.push();
+				HashMap<String, Object> value = new HashMap<>();
+				value.put("online",Boolean.TRUE);
+				value.put("connect", ServerValue.TIMESTAMP);
+				con.setValue(value);
+				value.put("online",Boolean.FALSE);
+				value.put("disconnect",ServerValue.TIMESTAMP);
+				con.onDisconnect().updateChildren(value);
+			}
+		}
 
-    private void updateLastMessage(ChatItemDataModel data, String key) {
-        Cursor mcursor=getContentResolver().query(ChatContentProvider.CHATS_URI,
-                new String[]{contract_chats.COLUMN_LAST_MESSAGE_TIME,contract_chats.COLUMN_ID},
-                contract_chats.COLUMN_ID+" = ? OR "+contract_chats.COLUMN_ID+" = ? ",
-                new String[]{data.getReceiver(),data.getSender()},null);
-        if(mcursor!=null && mcursor.getCount()>0){
-            mcursor.moveToFirst();
-            if(mcursor.getLong(mcursor.getColumnIndex(contract_chats.COLUMN_LAST_MESSAGE_TIME))<=data.getG_timestamp()){
-                ContentValues values=new ContentValues();
-                values.put(contract_chats.COLUMN_LAST_MESSAGE_TIME,data.getG_timestamp());
-                values.put(contract_chats.COLUMN_LAST_MESSAGE,data.getContent());
-                getContentResolver().update(ChatContentProvider.CHATS_URI,values,
-                        contract_chats.COLUMN_ID+" = ? OR "+contract_chats.COLUMN_ID+" = ? ",
-                        new String[]{data.getReceiver(),data.getSender()});
-            }
-        }
-        else{
-            ContentValues values=new ContentValues();
-            if(data.is_bot()){
-                values.put(contract_chats.COLUMN_BOT_ID,data.getReceiver()==ph_no?data.getSender():data.getReceiver());
-            }
-            else{
-                values.put(contract_chats.COLUMN_PH_NUMBER,data.getReceiver()==ph_no?data.getSender():data.getReceiver());
-            }
-            values.put(contract_chats.COLUMN_ID,data.getReceiver()==ph_no?data.getSender():data.getReceiver());
-            values.put(contract_chats.COLUMN_IS_BOT,data.is_bot());
-            values.put(contract_chats.COLUMN_LAST_MESSAGE,data.getContent());
-            values.put(contract_chats.COLUMN_LAST_MESSAGE_TIME,data.getG_timestamp());
-            values.put(contract_chats.COLUMN_NAME,data.getReceiver()==ph_no?data.getSender():data.getReceiver());
+		@Override
+		public void onCancelled(DatabaseError databaseError) {
 
-            getContentResolver().insert(ChatContentProvider.CHATS_URI,values);
-        }
-        if(mcursor!=null && !mcursor.isClosed())
-            mcursor.close();
-    }
-
-    private void updateChat(ChatItemDataModel data, String key) {
-        ContentValues values=new ContentValues();
-
-        values.put(contract_chat.COLUMN_IS_BOT,data.is_bot());
-        values.put(contract_chat.COLUMN_MESSAGE,data.getContent());
-        values.put(contract_chat.COLUMN_MESSAGE_ID_ON_SERVER,key);
-        values.put(contract_chat.COLUMN_MESSAGE_SENDER_ID,data.getSender());
-        values.put(contract_chat.COLUMN_MESSAGE_SENDER_NUMBER,data.getSender());
-        values.put(contract_chat.COLUMN_MESSAGE_STATUS,"received");
-        values.put(contract_chat.COLUMN_MESSAGE_TYPE,data.getType());
-        values.put(contract_chat.COLUMN_MESSAGE_RECEIVER_ID,data.getReceiver());
-        values.put(contract_chat.COLUMN_TIMESTAMP,data.getG_timestamp());
-
-        getContentResolver().insert(ChatContentProvider.CHAT_URI,values);
-    }
-
-
-    private void sendNotification(ChatItemDataModel data,String key){
-        if(!data.getSender().equals(ph_no) && (currentItemId==null || data.getReceiver().equals(currentItemId))){
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle("New Message Received")
-                            .setContentText("Someone just sent you a message.");
-            Intent resultIntent = new Intent(this, MainActivity.class);
-
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(MainActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentIntent(resultPendingIntent);
-            NotificationManager mNotificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(100, mBuilder.build());
-        }
-    }
+		}
+	};
 
     public FetchNewChatData() {
     }
 
     @Override
     public void onCreate() {
-        firebaseDatabase=FirebaseDatabase.getInstance();
-        SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
-        ph_no=sharedPreferences.getString("phone","");
-        mRef=firebaseDatabase.getReference("chatItems/"+ph_no+"/");
-        last_time_stamp=sharedPreferences.getLong("lastSyncTimestamp",-1);
-        if(last_time_stamp==-1){
-            mRef.orderByChild("g_timestamp").addChildEventListener(childEventListener);
-        }
-        else{
-            mRef.orderByChild("g_timestamp").startAt(last_time_stamp+1).addChildEventListener(childEventListener);
-        }
+	    firebaseDatabase=FirebaseDatabase.getInstance();
+	    SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+	    ph_no=sharedPreferences.getString("phone","1").substring(1);
+	    last_time_stamp=sharedPreferences.getLong("lastSyncTimestamp",-1);
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+	    mRef=firebaseDatabase.getReference("chatItems/"+ph_no+"/");
+	    if(mRef!=null){
+		    if(last_time_stamp==-1){
+			    mRef.orderByChild("g_timestamp").addChildEventListener(childEventListener);
+		    }
+		    else{
+			    mRef.orderByChild("g_timestamp").startAt(last_time_stamp).
+					    addChildEventListener(childEventListener);
+		    }
+	    }
         return START_STICKY;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        is_bound=true;
+	    mRef=firebaseDatabase.getReference("chatItems/"+ph_no+"/");
+	    if(last_time_stamp==-1){
+		    mRef.orderByChild("g_timestamp").addListenerForSingleValueEvent(singleEventListener);
+	    }
+	    else{
+		    mRef.orderByChild("g_timestamp").startAt(last_time_stamp).
+				    addListenerForSingleValueEvent(singleEventListener);
+	    }
+	    onlineReference=firebaseDatabase.getReference("online/users/"+ph_no);
+	    connectedRef=firebaseDatabase.getReference(".info/connected");
+	    connectedRef.addValueEventListener(connectedEventListener);
         return mBinder;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        is_bound=false;
         currentItemId=null;
+	    is_currentItemId_bot=false;
+	    if(connectedRef!=null){
+		    connectedRef.removeEventListener(connectedEventListener);
+	    }
         return false;
     }
 
     @Override
     public void onRebind(Intent intent) {
-        is_bound=true;
-        super.onRebind(intent);
+	    mRef=firebaseDatabase.getReference("chatItems/"+ph_no+"/");
+	    if(last_time_stamp==-1){
+		    mRef.orderByChild("g_timestamp").addListenerForSingleValueEvent(singleEventListener);
+	    }
+	    else{
+		    mRef.orderByChild("g_timestamp").startAt(last_time_stamp).
+				    addListenerForSingleValueEvent(singleEventListener);
+	    }
+	    onlineReference=firebaseDatabase.getReference("online/users/"+ph_no);
+	    connectedRef=firebaseDatabase.getReference(".info/connected");
+	    connectedRef.addValueEventListener(connectedEventListener);
+	    super.onRebind(intent);
     }
 
     @Override
     public void onDestroy() {
-        if(mRef!=null){
+	    if(mRef!=null){
             mRef.removeEventListener(childEventListener);
         }
-        SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
-        SharedPreferences.Editor editor=sharedPreferences.edit();
-        editor.putLong("lastSyncTimestamp",last_time_stamp);
-        editor.commit();
     }
 
-    public void setCurrentItemId(String id){
+    public void setCurrentItem(String id,boolean is_bot){
         currentItemId=id;
+        is_currentItemId_bot=is_bot;
     }
 
     public class customBinder extends Binder{
@@ -231,5 +199,125 @@ public class FetchNewChatData extends Service {
             return FetchNewChatData.this;
         }
     }
+
+	public class UpdateNewChatAsyncTask extends AsyncTask<DataSnapshot, Void, Void> {
+
+		boolean mIsList;
+		boolean mStopService;
+		FetchNewChatData mContext;
+
+		public UpdateNewChatAsyncTask(boolean is_list,boolean stopService,FetchNewChatData context) {
+			mIsList=is_list;
+			mStopService=stopService;
+			mContext=context;
+		}
+
+		@Override
+		protected Void doInBackground(DataSnapshot... dataSnapshots) {
+			if(dataSnapshots.length>0 && dataSnapshots[0]!=null){
+				DataSnapshot dataSnapshot=dataSnapshots[0];
+				if(mIsList){
+					for (DataSnapshot chatItem : dataSnapshot.getChildren()) {
+						receiveMessage(chatItem.getValue(FirebaseChatItemDataModel.class),
+								chatItem.getKey().substring(1));
+					}
+				}
+				else{
+					receiveMessage( dataSnapshot.getValue(FirebaseChatItemDataModel.class),
+							dataSnapshot.getKey().substring(1));
+				}
+			}
+			return null;
+		}
+
+		private void receiveMessage(FirebaseChatItemDataModel data,String key){
+			if(!isChatItemReceived(data,key)){
+				updateDatabase(data,key);
+				sendNotification(data);
+			}
+		}
+		private boolean isChatItemReceived(FirebaseChatItemDataModel data,String key){
+			Cursor mcursor=getContentResolver().query(ChatContentProvider.CHAT_URI,
+					new String[]{ContractChat.COLUMN_CHAT_ID},
+					ContractChat.COLUMN_CHAT_ID+" = ? AND "+ContractChat.COLUMN_CONTACT_ID+
+							" = ? AND "+ContractChat.COLUMN_IS_BOT+" = ? ",
+					new String[]{key,data.getSender().substring(1).equals(ph_no)?
+							data.getReceiver():data.getSender(),data.is_bot()?"1":"0"},null);
+			if(mcursor!=null && mcursor.getCount()>0){
+				if(!mcursor.isClosed())
+					mcursor.close();
+				return true;
+			}
+			if(mcursor!=null && !mcursor.isClosed())
+				mcursor.close();
+			return false;
+		}
+		private void updateDatabase(FirebaseChatItemDataModel data,String key){
+			updateChat(data,key);
+		}
+
+		private void updateChat(FirebaseChatItemDataModel data, String key) {
+			ContentValues values=new ContentValues();
+
+			values.put(ContractChat.COLUMN_CHAT_ID,key);
+			values.put(ContractChat.COLUMN_IS_BOT,data.is_bot());
+			values.put(ContractChat.COLUMN_MESSAGE,data.getContent());
+			values.put(ContractChat.COLUMN_MESSAGE_TYPE,data.getType());
+			values.put(ContractChat.COLUMN_TIMESTAMP,data.getG_timestamp());
+			if(data.getSender().substring(1).equals(ph_no)){
+				values.put(ContractChat.COLUMN_CONTACT_ID,data.getReceiver());
+				values.put(ContractChat.COLUMN_MESSAGE_DIRECTION,"sent");
+				values.put(ContractChat.COLUMN_MESSAGE_STATUS,"read");
+			}
+			else{
+				values.put(ContractChat.COLUMN_CONTACT_ID,data.getSender());
+				values.put(ContractChat.COLUMN_MESSAGE_DIRECTION,"received");
+				values.put(ContractChat.COLUMN_MESSAGE_STATUS, currentItemId!=null && data.getSender().equals(currentItemId)
+						&& is_currentItemId_bot==data.is_bot() ?"read":"unread");
+			}
+			getContentResolver().insert(ChatContentProvider.CHAT_URI,values);
+			SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+			long time_stamp=sharedPreferences.getLong("lastSyncTimestamp",-1);
+			if(time_stamp==-1 || time_stamp<data.getG_timestamp()){
+				sharedPreferences.edit().putLong("lastSyncTimestamp",data.getG_timestamp()).commit();
+			}
+
+		}
+
+
+		private void sendNotification(FirebaseChatItemDataModel data){
+			if(!data.getSender().equals(ph_no) && (currentItemId==null ||
+					!(data.getReceiver().equals(currentItemId)
+							&& data.is_bot()==is_currentItemId_bot))){
+				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
+						.setSmallIcon(R.mipmap.ic_launcher)
+						.setContentTitle("New Message")
+						.setPriority(PRIORITY_HIGH)
+						.setCategory(CATEGORY_MESSAGE)
+						.setContentText("New message received.");
+
+				Intent resultIntent = new Intent(mContext, MainActivity.class);
+				TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
+				stackBuilder.addParentStack(MainActivity.class);
+				stackBuilder.addNextIntent(resultIntent);
+
+				PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+						PendingIntent.FLAG_UPDATE_CURRENT);
+				mBuilder.setContentIntent(resultPendingIntent);
+				NotificationManager mNotificationManager =
+						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				mNotificationManager.notify(100, mBuilder.build());
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			super.onPostExecute(aVoid);
+			if(mStopService){
+				mContext.stopSelf();
+			}
+		}
+	}
+
 
 }
