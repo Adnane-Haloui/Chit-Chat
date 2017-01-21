@@ -61,10 +61,10 @@ public class ChatListDataModel implements Parcelable {
 			}
 			if(cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT)>=0){
 				if(cursor.isNull(cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT))){
-					unread_count=cursor.getInt(cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT));
+					unread_count=0;
 				}
 				else{
-					unread_count=0;
+					unread_count=cursor.getInt(cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT));
 				}
 			}
 			if(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE)>=0){

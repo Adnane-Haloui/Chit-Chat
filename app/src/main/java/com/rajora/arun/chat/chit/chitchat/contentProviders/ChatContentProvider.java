@@ -16,6 +16,7 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChat;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChatList;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractContacts;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractNotificationList;
+import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractUnreadCount;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Helper.chat_database;
 
 public class ChatContentProvider extends ContentProvider {
@@ -28,9 +29,11 @@ public class ChatContentProvider extends ContentProvider {
     public static final String CHAT_LIST_URL = "content://" + PROVIDER_NAME + "/chat_list";
     public static final String CHAT_URL = "content://" + PROVIDER_NAME + "/chat";
     public static final String NOTIFICATION_LIST_URL = "content://" + PROVIDER_NAME + "/notification_list";
+    public static final String UNREAD_COUNT_URL = "content://" + PROVIDER_NAME + "/unread_count";
 
     public static final Uri CONTACT_LIST_URI = Uri.parse(CONTACT_LIST_URL);
     public static final Uri NOTIFICATION_LIST_URI = Uri.parse(NOTIFICATION_LIST_URL);
+	public static final Uri UNREAD_COUNT_URI = Uri.parse(UNREAD_COUNT_URL);
     public static final Uri CHATS_LIST_URI = Uri.parse(CHAT_LIST_URL);
     public static final Uri CHAT_URI = Uri.parse(CHAT_URL);
 
@@ -49,6 +52,8 @@ public class ChatContentProvider extends ContentProvider {
 
         sUriMatcher.addURI(PROVIDER_NAME,"chat",6);
         sUriMatcher.addURI(PROVIDER_NAME,"chat/*",7);
+
+	    sUriMatcher.addURI(PROVIDER_NAME,"unread_count",8);
     }
 
     public ChatContentProvider() {
@@ -84,7 +89,8 @@ public class ChatContentProvider extends ContentProvider {
             case 7:
                 count = deleteItems(uri, ContractChat.TABLE_NAME, ContractChat._ID, selection , selectionArgs);
                 break;
-
+	        case 8:
+		        throw new UnsupportedOperationException("Cannot delete values from unread_message_count table");
             default:
                 throw new UnsupportedOperationException("Unknown URI " + uri);
         }
@@ -112,6 +118,8 @@ public class ChatContentProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/vnd.com.rajora.arun.chit.chat.provider.chat";
             case 7:
                 return "vnd.android.cursor.item/vnd.com.rajora.arun.chit.chat.provider.chat";
+	        case 8:
+		        return "vnd.android.cursor.dir/vnd.com.rajora.arun.chit.chat.provider.unread_count";
         }
        return null;
     }
@@ -126,7 +134,7 @@ public class ChatContentProvider extends ContentProvider {
             case 1:
             case 2:
                 baseUri=CONTACT_LIST_URI;
-                rowId=db.insert(ContractContacts.TABLE_NAME,"",values);
+	            rowId=db.insertWithOnConflict(ContractContacts.TABLE_NAME,"",values,SQLiteDatabase.CONFLICT_REPLACE);
                 break;
             case 3:
             case 4:
@@ -136,8 +144,10 @@ public class ChatContentProvider extends ContentProvider {
             case 6:
             case 7:
                 baseUri=CHAT_URI;
-                rowId=db.insert(ContractChat.TABLE_NAME,"",values);
-                break;
+	            rowId=db.insertWithOnConflict(ContractChat.TABLE_NAME,"",values,SQLiteDatabase.CONFLICT_IGNORE);
+	            break;
+	        case 8:
+		        throw new UnsupportedOperationException("Cannot insert values into unread_message_count table");
         }
         if (rowId > 0)
         {
@@ -153,7 +163,7 @@ public class ChatContentProvider extends ContentProvider {
 
             return _uri;
         }
-        throw new SQLException("Failed to add item(s) into " + uri);
+        return null;
     }
 
     @Override
@@ -182,7 +192,7 @@ public class ChatContentProvider extends ContentProvider {
                 queryBuilder.setTables(ContractChatList.TABLE_NAME);
                 break;
             case 5:
-                primary_column= ContractNotificationList.TN_COLUMN_CONTACT_ID;
+                primary_column= ContractNotificationList.COLUMN_CONTACT_ID;
                 sortColumn=ContractNotificationList.COLUMN_MESSAGE_TIMESTAMP;
                 queryBuilder.setTables(ContractNotificationList.TABLE_NAME);
                 break;
@@ -192,20 +202,25 @@ public class ChatContentProvider extends ContentProvider {
                 sortColumn=ContractChat.COLUMN_TIMESTAMP+" DESC ";
                 queryBuilder.setTables(ContractChat.TABLE_NAME);
                 break;
-
+	        case 8:
+		        primary_column= ContractUnreadCount._ID;
+		        sortColumn=ContractUnreadCount.COLUMN_UNREAD_COUNT;
+		        queryBuilder.setTables(ContractUnreadCount.TABLE_NAME);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
         switch (sUriMatcher.match(uri)){
             case 1:
             case 3:
+	        case 5:
             case 6:
+	        case 8:
                 break;
             case 2:
             case 4:
-            case 5:
             case 7:
-                    queryBuilder.appendWhere( primary_column+ "=" + uri.getPathSegments().get(1));
+	            queryBuilder.appendWhere( primary_column+ "=" + uri.getPathSegments().get(1));
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -249,7 +264,8 @@ public class ChatContentProvider extends ContentProvider {
             case 7:
                 count = updateItems(uri, ContractChat.TABLE_NAME, values,ContractChat._ID,selection , selectionArgs);
                 break;
-
+	        case 8:
+		        throw new UnsupportedOperationException("Cannot update values of unread_message_count table");
             default:
                 throw new UnsupportedOperationException("Unknown URI " + uri);
         }

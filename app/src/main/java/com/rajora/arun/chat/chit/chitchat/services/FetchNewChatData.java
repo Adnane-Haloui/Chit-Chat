@@ -1,6 +1,5 @@
 package com.rajora.arun.chat.chit.chitchat.services;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
@@ -8,11 +7,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.NotificationCompat;
+
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -22,9 +26,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.rajora.arun.chat.chit.chitchat.R;
+import com.rajora.arun.chat.chit.chitchat.R.mipmap;
 import com.rajora.arun.chat.chit.chitchat.activities.MainActivity;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChat;
+import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractNotificationList;
+import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractUnreadCount;
 import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseChatItemDataModel;
 
 import java.util.HashMap;
@@ -232,10 +239,13 @@ public class FetchNewChatData extends Service {
 
 		private void receiveMessage(FirebaseChatItemDataModel data,String key){
 			if(!isChatItemReceived(data,key)){
-				updateDatabase(data,key);
-				sendNotification(data);
+				updateChat(data,key);
+				if(!data.sender.equals(ph_no) && (currentItemId==null || !(data.sender.equals(currentItemId) && data.is_bot==is_currentItemId_bot))){
+					sendNotification();
+				}
 			}
 		}
+
 		private boolean isChatItemReceived(FirebaseChatItemDataModel data,String key){
 			Cursor mcursor=getContentResolver().query(ChatContentProvider.CHAT_URI,
 					new String[]{ContractChat.COLUMN_CHAT_ID},
@@ -251,9 +261,6 @@ public class FetchNewChatData extends Service {
 			if(mcursor!=null && !mcursor.isClosed())
 				mcursor.close();
 			return false;
-		}
-		private void updateDatabase(FirebaseChatItemDataModel data,String key){
-			updateChat(data,key);
 		}
 
 		private void updateChat(FirebaseChatItemDataModel data, String key) {
@@ -285,29 +292,68 @@ public class FetchNewChatData extends Service {
 		}
 
 
-		private void sendNotification(FirebaseChatItemDataModel data){
-			if(!data.sender.equals(ph_no) && (currentItemId==null ||
-					!(data.receiver.equals(currentItemId)
-							&& data.is_bot==is_currentItemId_bot))){
-				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
-						.setSmallIcon(R.mipmap.ic_launcher)
-						.setContentTitle("New Message")
-						.setPriority(PRIORITY_HIGH)
-						.setCategory(CATEGORY_MESSAGE)
-						.setContentText("New message received.");
+		private void sendNotification(){
+			Cursor countCursor=mContext.getContentResolver().query(ChatContentProvider.UNREAD_COUNT_URI,
+					new String[]{ContractUnreadCount.COLUMN_UNREAD_COUNT},null,null,null);
+			if(countCursor!=null && countCursor.getCount()>0 && countCursor.moveToFirst()){
+				long unreadCount=countCursor.getLong(countCursor.getColumnIndex(ContractUnreadCount.COLUMN_UNREAD_COUNT));
+				if(unreadCount>0){
+					Cursor contentCursor=mContext.getContentResolver().query(ChatContentProvider.NOTIFICATION_LIST_URI,
+							new String[]{ContractNotificationList.COLUMN_CONTACT_ID,
+									ContractNotificationList.COLUMN_IS_BOT,
+									ContractNotificationList.COLUMN_MESSAGE,
+									ContractNotificationList.COLUMN_MESSAGE_TIMESTAMP,
+									ContractNotificationList.COLUMN_MESSAGE_TYPE,
+									ContractNotificationList.COLUMN_NAME,},null,null,ContractNotificationList.COLUMN_MESSAGE_TIMESTAMP);
+					if(contentCursor!=null && contentCursor.moveToFirst()){
+						NotificationCompat.MessagingStyle messagingStyle=new NotificationCompat.MessagingStyle("You");
 
-				Intent resultIntent = new Intent(mContext, MainActivity.class);
-				TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
-				stackBuilder.addParentStack(MainActivity.class);
-				stackBuilder.addNextIntent(resultIntent);
+						messagingStyle.setConversationTitle(unreadCount+" new messages.");
+						do{
+							String name=contentCursor.getString(contentCursor.getColumnIndex(ContractNotificationList.COLUMN_NAME));
+							String contact_id=contentCursor.getString(contentCursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
+							Boolean is_bot=contentCursor.getInt(contentCursor.getColumnIndex(ContractNotificationList.COLUMN_IS_BOT))!=0;
+							String message=contentCursor.getString(contentCursor.getColumnIndex(ContractNotificationList.COLUMN_MESSAGE));
+							String message_type=contentCursor.getString(contentCursor.getColumnIndex(ContractNotificationList.COLUMN_MESSAGE_TYPE));
+							long timestamp=contentCursor.getLong(contentCursor.getColumnIndex(ContractNotificationList.COLUMN_MESSAGE_TIMESTAMP));
+							String sender=name==null || name.isEmpty()? is_bot?"Unknown bot":contact_id :name;
+							String notificaion_message=message_type.equals("text")?message:"["+message_type+"]";
+							messagingStyle.addMessage(notificaion_message,timestamp,sender);
+						}while (contentCursor.moveToNext());
+						android.support.v4.app.NotificationCompat.Builder notiBuilder=new NotificationCompat.Builder(mContext)
+								.setSmallIcon(mipmap.ic_launcher)
+								.setContentTitle(unreadCount+" new messages.")
+								.setStyle(messagingStyle)
+								.setAutoCancel(true)
+								.setNumber((int) unreadCount)
+								.setTicker(unreadCount+" new messages.")
+								.setPriority(PRIORITY_HIGH)
+								.setCategory(CATEGORY_MESSAGE)
+								.setShowWhen(true)
+								.setLights(Color.GREEN, 100, 200)
+								.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+						Intent resultIntent = new Intent(mContext, MainActivity.class);
+						TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
+						stackBuilder.addParentStack(MainActivity.class);
+						stackBuilder.addNextIntent(resultIntent);
 
-				PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
-						PendingIntent.FLAG_UPDATE_CURRENT);
-				mBuilder.setContentIntent(resultPendingIntent);
-				NotificationManager mNotificationManager =
-						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				mNotificationManager.notify(100, mBuilder.build());
+						PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+								PendingIntent.FLAG_UPDATE_CURRENT);
+						notiBuilder.setContentIntent(resultPendingIntent);
+						NotificationManager mNotificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
+						mNotificationManager.notify(100, notiBuilder.build());
+
+					}
+					if(contentCursor!=null && !contentCursor.isClosed()){
+						contentCursor.close();
+					}
+				}
 			}
+			if(countCursor!=null && !countCursor.isClosed()){
+				countCursor.close();
+			}
+
+
 		}
 
 		@Override

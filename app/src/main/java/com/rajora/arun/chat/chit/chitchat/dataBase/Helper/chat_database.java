@@ -19,8 +19,8 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractUnreadCount
 
 public class chat_database extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION=40;
-    private static final String DATABASE_NAME="chat.db";
+    private static final int DATABASE_VERSION=56;
+    private static final String DATABASE_NAME="chRECEIVEDat.db";
 
     public chat_database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -100,8 +100,8 @@ public class chat_database extends SQLiteOpenHelper {
 			    ContractChat.TN_COLUMN_MESSAGE_TYPE+QSPACE+
 			    ContractNotificationTempList.COLUMN_MESSAGE_TYPE+
 			    QFROM+ContractChat.TABLE_NAME+QWHERE+ContractChat.TN_COLUMN_MESSAGE_STATUS+
-			    " = \"UNREAD\" AND "+ContractChat.TN_COLUMN_MESSAGE_DIRECTION+
-			    "= \"RECEIVED\" "+QORDER_BY+ContractChat.TN_COLUMN_TIMESTAMP+
+			    " = \"unread\" AND "+ContractChat.TN_COLUMN_MESSAGE_DIRECTION+
+			    "= \"received\" "+QORDER_BY+ContractChat.TN_COLUMN_TIMESTAMP+
 			    QDESC+QLIMIT+" 10 "+QSEMICOLON;
 
 	    final String SQL_CREATE_NOTIFICATION_LIST_TABLE=QCREATEVIEW+
@@ -130,7 +130,7 @@ public class chat_database extends SQLiteOpenHelper {
 	    final String SQL_CREATE_UNREAD_COUNT_TABLE=QCREATEVIEW+ ContractUnreadCount.TABLE_NAME+QAS+
 			    QSELECT+ContractChat.TN_COLUMN_ID+QSPACE+ContractUnreadCount._ID+QCOMMA+
 			    QCOUNTALL+QSPACE+ContractUnreadCount.COLUMN_UNREAD_COUNT+
-				QFROM+ContractChat.TABLE_NAME+QWHERE+ContractChat.TN_COLUMN_MESSAGE_STATUS+" = \"UNREAD\" "+
+				QFROM+ContractChat.TABLE_NAME+QWHERE+ContractChat.TN_COLUMN_MESSAGE_STATUS+" = \"unread\" "+
 			    QGROUPBY+ContractChat.TN_COLUMN_CONTACT_ID+QCOMMA+ContractChat.TN_COLUMN_IS_BOT+QSEMICOLON;
 
 
