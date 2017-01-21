@@ -19,7 +19,7 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractUnreadCount
 
 public class chat_database extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION=33;
+    private static final int DATABASE_VERSION=40;
     private static final String DATABASE_NAME="chat.db";
 
     public chat_database(Context context) {

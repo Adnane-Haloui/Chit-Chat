@@ -12,6 +12,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -88,7 +89,6 @@ public class FetchNewChatData extends Service {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
         }
     };
 
@@ -130,11 +130,11 @@ public class FetchNewChatData extends Service {
 	    mRef=firebaseDatabase.getReference("chatItems/"+ph_no+"/");
 	    if(mRef!=null){
 		    if(last_time_stamp==-1){
-			    mRef.orderByChild("g_timestamp").addChildEventListener(childEventListener);
+			    mRef.orderByChild("g_timestamp").addListenerForSingleValueEvent(singleEventListener);
 		    }
 		    else{
 			    mRef.orderByChild("g_timestamp").startAt(last_time_stamp).
-					    addChildEventListener(childEventListener);
+					    addListenerForSingleValueEvent(singleEventListener);
 		    }
 	    }
         return START_STICKY;
@@ -144,11 +144,11 @@ public class FetchNewChatData extends Service {
     public IBinder onBind(Intent intent) {
 	    mRef=firebaseDatabase.getReference("chatItems/"+ph_no+"/");
 	    if(last_time_stamp==-1){
-		    mRef.orderByChild("g_timestamp").addListenerForSingleValueEvent(singleEventListener);
+		    mRef.orderByChild("g_timestamp").addChildEventListener(childEventListener);
 	    }
 	    else{
 		    mRef.orderByChild("g_timestamp").startAt(last_time_stamp).
-				    addListenerForSingleValueEvent(singleEventListener);
+				    addChildEventListener(childEventListener);
 	    }
 	    onlineReference=firebaseDatabase.getReference("online/users/"+ph_no);
 	    connectedRef=firebaseDatabase.getReference(".info/connected");
@@ -170,11 +170,11 @@ public class FetchNewChatData extends Service {
     public void onRebind(Intent intent) {
 	    mRef=firebaseDatabase.getReference("chatItems/"+ph_no+"/");
 	    if(last_time_stamp==-1){
-		    mRef.orderByChild("g_timestamp").addListenerForSingleValueEvent(singleEventListener);
+		    mRef.orderByChild("g_timestamp").addChildEventListener(childEventListener);
 	    }
 	    else{
 		    mRef.orderByChild("g_timestamp").startAt(last_time_stamp).
-				    addListenerForSingleValueEvent(singleEventListener);
+				    addChildEventListener(childEventListener);
 	    }
 	    onlineReference=firebaseDatabase.getReference("online/users/"+ph_no);
 	    connectedRef=firebaseDatabase.getReference(".info/connected");
@@ -241,8 +241,8 @@ public class FetchNewChatData extends Service {
 					new String[]{ContractChat.COLUMN_CHAT_ID},
 					ContractChat.COLUMN_CHAT_ID+" = ? AND "+ContractChat.COLUMN_CONTACT_ID+
 							" = ? AND "+ContractChat.COLUMN_IS_BOT+" = ? ",
-					new String[]{key,data.getSender().substring(1).equals(ph_no)?
-							data.getReceiver():data.getSender(),data.is_bot()?"1":"0"},null);
+					new String[]{key,data.sender.substring(1).equals(ph_no)?
+							data.receiver:data.sender,data.is_bot?"1":"0"},null);
 			if(mcursor!=null && mcursor.getCount()>0){
 				if(!mcursor.isClosed())
 					mcursor.close();
@@ -260,35 +260,35 @@ public class FetchNewChatData extends Service {
 			ContentValues values=new ContentValues();
 
 			values.put(ContractChat.COLUMN_CHAT_ID,key);
-			values.put(ContractChat.COLUMN_IS_BOT,data.is_bot());
-			values.put(ContractChat.COLUMN_MESSAGE,data.getContent());
-			values.put(ContractChat.COLUMN_MESSAGE_TYPE,data.getType());
-			values.put(ContractChat.COLUMN_TIMESTAMP,data.getG_timestamp());
-			if(data.getSender().substring(1).equals(ph_no)){
-				values.put(ContractChat.COLUMN_CONTACT_ID,data.getReceiver());
+			values.put(ContractChat.COLUMN_IS_BOT,data.is_bot);
+			values.put(ContractChat.COLUMN_MESSAGE,data.content);
+			values.put(ContractChat.COLUMN_MESSAGE_TYPE,data.type);
+			values.put(ContractChat.COLUMN_TIMESTAMP,data.g_timestamp);
+			if(data.sender.substring(1).equals(ph_no)){
+				values.put(ContractChat.COLUMN_CONTACT_ID,data.receiver);
 				values.put(ContractChat.COLUMN_MESSAGE_DIRECTION,"sent");
 				values.put(ContractChat.COLUMN_MESSAGE_STATUS,"read");
 			}
 			else{
-				values.put(ContractChat.COLUMN_CONTACT_ID,data.getSender());
+				values.put(ContractChat.COLUMN_CONTACT_ID,data.sender);
 				values.put(ContractChat.COLUMN_MESSAGE_DIRECTION,"received");
-				values.put(ContractChat.COLUMN_MESSAGE_STATUS, currentItemId!=null && data.getSender().equals(currentItemId)
-						&& is_currentItemId_bot==data.is_bot() ?"read":"unread");
+				values.put(ContractChat.COLUMN_MESSAGE_STATUS, currentItemId!=null && data.sender.equals(currentItemId)
+						&& is_currentItemId_bot==data.is_bot ?"read":"unread");
 			}
 			getContentResolver().insert(ChatContentProvider.CHAT_URI,values);
 			SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
 			long time_stamp=sharedPreferences.getLong("lastSyncTimestamp",-1);
-			if(time_stamp==-1 || time_stamp<data.getG_timestamp()){
-				sharedPreferences.edit().putLong("lastSyncTimestamp",data.getG_timestamp()).commit();
+			if(time_stamp==-1 || time_stamp<data.g_timestamp){
+				sharedPreferences.edit().putLong("lastSyncTimestamp",data.g_timestamp).commit();
 			}
 
 		}
 
 
 		private void sendNotification(FirebaseChatItemDataModel data){
-			if(!data.getSender().equals(ph_no) && (currentItemId==null ||
-					!(data.getReceiver().equals(currentItemId)
-							&& data.is_bot()==is_currentItemId_bot))){
+			if(!data.sender.equals(ph_no) && (currentItemId==null ||
+					!(data.receiver.equals(currentItemId)
+							&& data.is_bot==is_currentItemId_bot))){
 				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mContext)
 						.setSmallIcon(R.mipmap.ic_launcher)
 						.setContentTitle("New Message")

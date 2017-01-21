@@ -41,7 +41,7 @@ public class FirebaseUtils {
 		        ph_no.substring(1)+"/");
         final String id_on_server=itemDatabaseReference.push().getKey().substring(1);
         itemDatabaseReference=itemDatabaseReference.child(id_on_server);
-
+		final String cur_id_on_server=revItemReference.push().getKey().substring(1);
         HashMap<String,Object> fbvalues=new HashMap<>();
         fbvalues.put("sender",ph_no);
         fbvalues.put("receiver",item.contact_id);
@@ -52,9 +52,9 @@ public class FirebaseUtils {
         fbvalues.put("timestamp",item.timestamp);
         fbvalues.put("g_timestamp", ServerValue.TIMESTAMP);
 
-        revItemReference.push().updateChildren(fbvalues);
+        revItemReference.child("-"+cur_id_on_server).updateChildren(fbvalues);
         itemDatabaseReference.updateChildren(fbvalues);
-        return id_on_server;
+        return cur_id_on_server;
     }
 
     public static String getUniqueChatIdForFile(FirebaseDatabase firebaseDatabase,ChatItemDataModel item,String from_id){
@@ -73,7 +73,7 @@ public class FirebaseUtils {
 					item.contact_id.substring(1)+"/");
 		}
 		DatabaseReference revItemReference=firebaseDatabase.getReference("chatItems/"+
-				from_id.substring(1)+"/").child(item.chat_id);
+				from_id.substring(1)+"/").child("-"+item.chat_id);
 		final String id_on_server=itemDatabaseReference.push().getKey().substring(1);
 		itemDatabaseReference=itemDatabaseReference.child(id_on_server);
 
@@ -87,7 +87,7 @@ public class FirebaseUtils {
 		fbvalues.put("timestamp",item.timestamp);
 		fbvalues.put("g_timestamp", ServerValue.TIMESTAMP);
 
-		revItemReference.push().updateChildren(fbvalues);
+		revItemReference.updateChildren(fbvalues);
 		itemDatabaseReference.updateChildren(fbvalues);
 	}
 }

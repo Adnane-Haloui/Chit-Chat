@@ -8,6 +8,7 @@ import android.net.Uri;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChat;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractContacts;
 import com.rajora.arun.chat.chit.chitchat.dataModels.ChatItemDataModel;
+import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseChatItemDataModel;
 
 
 public class ProviderHelper {
@@ -46,7 +47,24 @@ public class ProviderHelper {
     }
 
     public static void handleMessageInDatabase(Context context,ChatItemDataModel item){
+	    if(!isChatItemReceived(context,item));
         context.getContentResolver().insert(ChatContentProvider.CHAT_URI,item.getMessageContentValues());
+    }
+
+    private static boolean isChatItemReceived(Context context,ChatItemDataModel data){
+        Cursor mcursor=context.getContentResolver().query(ChatContentProvider.CHAT_URI,
+                new String[]{ContractChat.COLUMN_CHAT_ID},
+                ContractChat.COLUMN_CHAT_ID+" = ? AND "+ContractChat.COLUMN_CONTACT_ID+
+                        " = ? AND "+ContractChat.COLUMN_IS_BOT+" = ? ",
+                new String[]{data.chat_id,data.contact_id,data.is_bot?"1":"0"},null);
+        if(mcursor!=null && mcursor.getCount()>0){
+            if(!mcursor.isClosed())
+                mcursor.close();
+            return true;
+        }
+        if(mcursor!=null && !mcursor.isClosed())
+            mcursor.close();
+        return false;
     }
 
     public static void updateFileMessageInDatabase(Context context,String message_id,String contact_id,boolean is_bot,String status){

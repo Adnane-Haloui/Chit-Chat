@@ -41,7 +41,7 @@ public class UpdateBotDetailsIntentService extends IntentService {
 				contentValues.put(ContractContacts.COLUMN_NAME,botDetails.getName());
 				contentValues.put(ContractContacts.COLUMN_ABOUT,botDetails.getDesc());
 				contentValues.put(ContractContacts.COLUMN_DEV_NAME,botDetails.getDev_name());
-				contentValues.put(ContractContacts.COLUMN_IS_USER, botDetails.is_deleted());
+				contentValues.put(ContractContacts.COLUMN_IS_USER, !botDetails.is_deleted());
 
 				if(currendDetailsCursor!=null && currendDetailsCursor.getCount()>0){
 					getContentResolver().update(ChatContentProvider.CONTACT_LIST_URI,contentValues,

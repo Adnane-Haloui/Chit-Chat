@@ -69,10 +69,13 @@ ref.on("child_added", function(snapshot, prevChildKey) {
   var botRef=db.ref("botChatItems/"+botName);
   botRef.on("child_added",function(snapshot,prevChildKey){
     var data=snapshot.val();
+	console.log("got",snapshot.key);
+	var delRef=db.ref("botChatItems"+"/"+botName+"/"+snapshot.key);
+	if(typeof(data.processed)==="undefined"){
     var bRef=db.ref("botList/"+botName);
-    bRef.once("value",function(snap) {
+	    bRef.once("value",function(snap) {
       var brefObj=snap.val();
-  console.log("got",brefObj);
+//  console.log("got",brefObj);
         var messageData={ "type" : data.type 
             ,"messageText" : data.content
             ,"sender": data.sender
@@ -81,6 +84,9 @@ ref.on("child_added", function(snapshot, prevChildKey) {
           };
           console.log("sending",messageData);
         sendMessageToBot(messageData,brefObj.endpoint,botName,data.sender);
-  });
+	  });
+	    delRef.update({"processed":true});
+	}
+
   });
 });
