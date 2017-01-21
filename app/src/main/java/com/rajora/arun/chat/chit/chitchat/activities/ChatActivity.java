@@ -57,69 +57,13 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 	private ContactItemDataModel contactData;
 
 
-	private TextView last_seen_text_view;
 	private TextView chat_name_textview;
 	private ImageView chat_image_imageview;
 	private AlertDialog.Builder mAlertDialog;
 
-	private DatabaseReference onlineReference;
-	private DatabaseReference connectedRef;
 	private HashSet<Integer> mOpenIndexSet;
 
-	private int mConnectedDevices;
 	private int mNotUserWarningProgress;
-
-	ValueEventListener connectedEventListener=new ValueEventListener() {
-		@Override
-		public void onDataChange(DataSnapshot dataSnapshot) {
-			if(dataSnapshot.getValue(Boolean.class)){
-				last_seen_text_view.setVisibility(View.INVISIBLE);
-			}
-			else{
-				last_seen_text_view.setVisibility(View.VISIBLE);
-			}
-		}
-
-		@Override
-		public void onCancelled(DatabaseError databaseError) {
-
-		}
-	};
-
-	ChildEventListener onlineEventListener=new ChildEventListener() {
-		@Override
-		public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-			mConnectedDevices++;
-			if(mConnectedDevices>0){
-				last_seen_text_view.setText("Online");
-				last_seen_text_view.setVisibility(View.VISIBLE);
-			}
-		}
-
-		@Override
-		public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-			mConnectedDevices--;
-			if(mConnectedDevices<=0){
-				mConnectedDevices=0;
-				last_seen_text_view.setText("Offline");
-				last_seen_text_view.setVisibility(View.VISIBLE);
-			}
-		}
-
-		@Override
-		public void onChildRemoved(DataSnapshot dataSnapshot) {
-		}
-
-		@Override
-		public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-		}
-
-		@Override
-		public void onCancelled(DatabaseError databaseError) {
-
-		}
-	};
 
 	private RecyclerView mRecyclerView;
 	private adapter_sidebar_contact_item mAdapter;
@@ -140,8 +84,6 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		mNotUserWarningProgress=0;
 		chat_name_textview= (TextView) findViewById(R.id.chat_name);
 		chat_image_imageview= (ImageView) findViewById(R.id.chat_image);
-		last_seen_text_view=(TextView) findViewById(R.id.chat_last_seen);
-
 		findViewById(R.id.go_back).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -226,9 +168,6 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 			contactData = bundle.getParcelable("data");
 			getSupportLoaderManager().initLoader(CURSOR_CONTACT_ITEM_LOADER_ID,null,this);
 		}
-		if(bundle.containsKey("last-seen")){
-			last_seen_text_view.setText(bundle.getString("last-seen"));
-		}
 		if(bundle.containsKey("openindex")){
 			mOpenIndexSet= (HashSet<Integer>) bundle.getSerializable("openindex");
 		}
@@ -239,26 +178,6 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 	protected void onResume() {
 		super.onResume();
 		checkPlayServices();
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		if(!contactData.is_bot()){
-			mConnectedDevices=0;
-			onlineReference= FirebaseDatabase.getInstance().getReference("online/users/"+contactData.getContact_id().substring(1));
-			onlineReference.orderByChild("online").equalTo(Boolean.TRUE).addChildEventListener(onlineEventListener);
-			connectedRef=FirebaseDatabase.getInstance().getReference(".info/connected");
-			connectedRef.addValueEventListener(connectedEventListener);
-		}
-	}
-
-	@Override
-	protected void onStop() {
-		if(connectedRef!=null)
-			connectedRef.removeEventListener(connectedEventListener);
-		mConnectedDevices=0;
-		super.onStop();
 	}
 
 	@Override
@@ -275,7 +194,6 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		if(mOpenIndexSet!=null){
 			outState.putSerializable("openindex",mOpenIndexSet);
 		}
-		outState.putString("last-seen",last_seen_text_view.getText().toString());
 		outState.putInt("NotUserWarningProgress",mNotUserWarningProgress);
 
 	}
@@ -472,19 +390,19 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 				dialogInterface.dismiss();
 			}
 		});
-		mAlertDialog.setNeutralButton("Invite", new DialogInterface.OnClickListener() {
+		mAlertDialog.setNegativeButton("Invite", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
 				mNotUserWarningProgress=2;
 				dialogInterface.dismiss();
 				Intent intent = new AppInviteInvitation.IntentBuilder("Chit Chat Invitation")
-						.setMessage("you have been invited to Chit Chat App by "+contactData.getContact_id()+" . https://vc8hx.app.goo.gl/naxz")
+						.setMessage("you have been invited to Chit Chat App by "+my_ph_no+" . https://vc8hx.app.goo.gl/naxz")
 						.setDeepLink(Uri.parse("https://vc8hx.app.goo.gl/naxz"))
 						.build();
-				startActivity(intent);
+				startActivityForResult(intent,1023);
 			}
 		});
-		mAlertDialog.setNegativeButton("GO BACK", new DialogInterface.OnClickListener() {
+		mAlertDialog.setNeutralButton("GO BACK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
 				mNotUserWarningProgress=2;

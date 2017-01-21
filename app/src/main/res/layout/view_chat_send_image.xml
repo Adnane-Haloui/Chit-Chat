@@ -5,6 +5,10 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content">
 	<android.support.v7.widget.CardView
+		android:maxWidth="250dp"
+		android:maxHeight="250dp"
+		android:minWidth="100dp"
+		android:minHeight="100dp"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
 		android:layout_width="wrap_content"
@@ -15,24 +19,31 @@
 		android:layout_marginBottom="@dimen/chat_item_margin"
 		app:cardCornerRadius="@dimen/chat_item_corner_radius"
 		android:elevation="@dimen/chat_item_card_elevation">
-		<LinearLayout
-			android:layout_margin="@dimen/chat_item_linearlayout_margin"
-			android:orientation="vertical"
+		<ImageView
+			android:id="@+id/image_image"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-			<TextView
-				android:id="@+id/text_message"
-				android:layout_gravity="start"
-				android:textSize="@dimen/chat_item_text_size"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
-			<TextView
-				android:id="@+id/text_time"
-				android:textSize="@dimen/chat_message_sub_text_size"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textAlignment="viewEnd"
-				android:layout_gravity="end"/>
-		</LinearLayout>
+			android:layout_height="wrap_content"
+			android:scaleType="fitXY"/>
+
+		<ImageView
+			android:id="@+id/image_button"
+			android:layout_gravity="center"
+			android:textSize="@dimen/chat_item_text_size"
+			android:layout_width="24dp"
+			android:layout_height="24dp" />
+		<ProgressBar
+			android:id="@+id/image_progressbar"
+			android:layout_gravity="center"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="?android:attr/progressBarStyleLarge"
+			android:indeterminate="true"/>
+		<TextView
+			android:id="@+id/image_time"
+			android:textSize="@dimen/chat_message_sub_text_size"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|end"/>
+
 	</android.support.v7.widget.CardView>
 </RelativeLayout>

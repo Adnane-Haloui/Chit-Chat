@@ -56,31 +56,17 @@
                             android:layout_height="44dp"
                             android:src="@drawable/empty_profile_pic"/>
                     </android.support.v7.widget.CardView>
-	                <LinearLayout
+	                <TextView
+		                android:textSize="28sp"
+		                android:id="@+id/chat_name"
 		                android:layout_width="match_parent"
+		                android:maxLines="1"
+		                android:ellipsize="end"
 		                android:layout_height="wrap_content"
-		                android:orientation="vertical">
-		                <TextView
-			                android:textSize="28sp"
-			                android:id="@+id/chat_name"
-			                android:layout_width="match_parent"
-			                android:maxLines="1"
-			                android:ellipsize="end"
-			                android:layout_height="wrap_content"
-			                android:text="Arun Rajora"/>
-		                <TextView
-			                android:id="@+id/chat_last_seen"
-			                android:layout_width="wrap_content"
-			                android:layout_height="wrap_content"
-			                android:maxLines="1"/>
-	                </LinearLayout>
-
+		                android:text="Arun Rajora"/>
                 </LinearLayout>
-
             </android.support.v7.widget.Toolbar>
-
         </android.support.design.widget.AppBarLayout>
-
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
@@ -90,8 +76,6 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:layout="@layout/fragment_chat" />
-
-
     </android.support.design.widget.CoordinatorLayout>
     <android.support.v7.widget.RecyclerView
         android:layout_marginLeft="-64dp"
@@ -99,5 +83,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start" />
-
 </android.support.v4.widget.DrawerLayout>

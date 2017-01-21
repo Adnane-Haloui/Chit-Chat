@@ -16,6 +16,7 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -75,4 +76,25 @@ public class utils {
         return temp_ph_no;
     }
 
+    public static String getReadableFileSize(long size){
+	    double nsize=0;
+	    String suffix="";
+		if(size<1024){
+			nsize=size;
+			suffix="Bytes";
+		}
+	    else if(size<1024*1024){
+			nsize=size/1024.0;
+			suffix="KB";
+		}
+	    else if(size<1024*1024*1024){
+			nsize=size/(1024.0*1024.0);
+			suffix="MB";
+		}
+	    else{
+			nsize=size/(1024.0*1024.0*1024.0);
+			suffix="GB";
+		}
+	    return new DecimalFormat("#.##").format(nsize)+" "+suffix;
+    }
 }

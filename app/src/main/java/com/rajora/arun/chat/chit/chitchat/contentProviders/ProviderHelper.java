@@ -48,4 +48,22 @@ public class ProviderHelper {
     public static void handleMessageInDatabase(Context context,ChatItemDataModel item){
         context.getContentResolver().insert(ChatContentProvider.CHAT_URI,item.getMessageContentValues());
     }
+
+    public static void updateFileMessageInDatabase(Context context,String message_id,String contact_id,boolean is_bot,String status){
+        ContentValues values=new ContentValues();
+        values.put(ContractChat.COLUMN_UPLOAD_STATUS,status);
+        context.getContentResolver().update(ChatContentProvider.CHAT_URI,values,
+                ContractChat.COLUMN_CONTACT_ID+" = ? AND "+ContractChat.COLUMN_IS_BOT+" = ? AND "+ContractChat.COLUMN_CHAT_ID+" = ?",
+                new String[]{contact_id,is_bot?"1":"0",message_id});
+    }
+
+    public static void updateFileMessageInDatabase(Context context,String contact_id,String message_id,String status,String uri){
+        ContentValues values=new ContentValues();
+        values.put(ContractChat.COLUMN_UPLOAD_STATUS,status);
+	    values.put(ContractChat.COLUMN_EXTRA_URI,uri);
+        context.getContentResolver().update(ChatContentProvider.CHAT_URI,values,
+                ContractChat.COLUMN_CONTACT_ID+" = ? AND "+ContractChat.COLUMN_IS_BOT+" = ? AND "+ContractChat.COLUMN_CHAT_ID+" = ?",
+                new String[]{contact_id,"0",message_id});
+    }
+
 }

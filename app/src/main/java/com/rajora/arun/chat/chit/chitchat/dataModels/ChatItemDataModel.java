@@ -96,6 +96,8 @@ public class ChatItemDataModel implements Parcelable {
 		contentValues.put(ContractChat.COLUMN_MESSAGE_STATUS,message_status);
 		contentValues.put(ContractChat.COLUMN_MESSAGE_TYPE,message_type);
 		contentValues.put(ContractChat.COLUMN_TIMESTAMP,timestamp);
+		contentValues.put(ContractChat.COLUMN_EXTRA_URI,extra_uri);
+		contentValues.put(ContractChat.COLUMN_UPLOAD_STATUS,upload_status);
 		return contentValues;
 	}
 

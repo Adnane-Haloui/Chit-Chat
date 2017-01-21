@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.AlarmClock;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
@@ -22,6 +23,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
@@ -54,6 +56,7 @@ import com.rajora.arun.chat.chit.chitchat.R.layout;
 import com.rajora.arun.chat.chit.chitchat.R.menu;
 import com.rajora.arun.chat.chit.chitchat.R.string;
 import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.adapter_chats;
+import com.rajora.arun.chat.chit.chitchat.activities.ProfileEditActivity;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChat;
 import com.rajora.arun.chat.chit.chitchat.dataModels.ContactItemDataModel;
@@ -68,6 +71,9 @@ import com.rajora.arun.chat.chit.chitchat.utils.utils;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Intent.ACTION_PICK;
@@ -75,6 +81,7 @@ import static android.content.Intent.ACTION_PICK;
 
 public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cursor>{
 
+	private static final int CURSOR_LOADER_ID=200;
 
 	final static int REQUEST_CAPTURE_IMAGE=1;
 	final static int REQUEST_PICK_IMAGE=2;
@@ -82,20 +89,26 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 	final static int REQUEST_PICK_VIDEO=4;
 	final static int REQUEST_PICK_FILE=5;
 	final static int REQUEST_PICK_CONTACT=6;
-	final static int REQUEST_PICK_LOCATION=7;
 
+	final static int REQUEST_PICK_LOCATION=7;
 	private boolean mAssistantBotLastCanceled;
+
+	private String mImagePickedUri;
+	private String mCurrentPhotoPath;
+
 	private boolean mAssistantBotVisibility;
 	private String ph_no;
 	private ContactItemDataModel contactData;
-	private FirebaseBotsDataModel mBotData;
-	private int mRecyclerViewPosition;
-	private int mLast_item;
-	private LinearLayoutManager mLayoutManager;
-	private boolean is_first_load;
-	private static final int CURSOR_LOADER_ID=200;
 
+	private FirebaseBotsDataModel mBotData;
+	private int mLast_item;
+	private boolean is_first_load;
+	private int is_first_cursor_load;
 	private adapter_chats mAdapter;
+
+	private int mRecyclerViewPosition;
+
+	private LinearLayoutManager mLayoutManager;
 	private RecyclerView mRecyclerView;
 	private CardView mAssistantBotContainer;
 
@@ -140,6 +153,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 	    setHasOptionsMenu(true);
 	    mLast_item=-1;
 	    is_first_load=true;
+		is_first_cursor_load=0;
         Bundle extras = getActivity().getIntent().getExtras();
 	    mRecyclerViewPosition=-1;
 		if(savedInstanceState!=null){
@@ -150,6 +164,9 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 			mRecyclerViewPosition=savedInstanceState.getInt("recycler_view_position");
 			mAssistantBotLastCanceled=savedInstanceState.getBoolean("assistantBotLastCancelled");
 			mAssistantBotVisibility=savedInstanceState.getBoolean("assistantBotVisibility");
+			if(savedInstanceState.containsKey("profile_pic_current_path")){
+				mCurrentPhotoPath=savedInstanceState.getString("profile_pic_current_path");
+			}
 		}
 	    else if(extras!=null){
 			if ("bot_data_model".equals(extras.getString("type"))) {
@@ -173,8 +190,23 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 	    mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new adapter_chats(getContext(),ph_no,null, ContractChat._ID);
         mRecyclerView.setAdapter(mAdapter);
-		mAssistantBotContainer.setVisibility(mAssistantBotVisibility?View.GONE:View.VISIBLE);
-	    mAssistantBotContainer.setOnClickListener(new View.OnClickListener() {
+		mAssistantBotContainer.setVisibility(mAssistantBotVisibility?View.VISIBLE:View.GONE);
+	    view.findViewById(id.assistant_bot_icon).setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View view) {
+			    mAssistantBotLastCanceled=true;
+			    mAssistantBotVisibility=false;
+			    Intent alarmIntent=new Intent(AlarmClock.ACTION_SET_ALARM).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			    if (alarmIntent.resolveActivity(getContext().getPackageManager()) != null) {
+				    startActivity(alarmIntent);
+			    }
+			    else{
+				    Toast.makeText(getContext(),"No Alarm app found!",Toast.LENGTH_SHORT).show();
+			    }
+			    mAssistantBotContainer.setVisibility(View.GONE);
+		    }
+	    });
+	    view.findViewById(id.assistant_bot_text).setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View view) {
 			    mAssistantBotLastCanceled=true;
@@ -235,28 +267,28 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		if(requestCode==500 && grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-			IntentUtils.fireLocationPickerIntent(getContext(),getActivity(),REQUEST_PICK_LOCATION);
+			IntentUtils.fireLocationPickerIntent(this,REQUEST_PICK_LOCATION);
 		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
-			case id.action_upload_image:IntentUtils.showImageSelectionPopup(getContext(),REQUEST_CAPTURE_IMAGE,REQUEST_PICK_VIDEO);
+			case id.action_upload_image:showImageSelectionPopup(this,REQUEST_CAPTURE_IMAGE,REQUEST_PICK_IMAGE);
 				break;
-			case id.action_upload_video:IntentUtils.showVideoSelectionPopup(getContext(),REQUEST_CAPTURE_VIDEO,REQUEST_PICK_VIDEO);
+			case id.action_upload_video:IntentUtils.showVideoSelectionPopup(this,REQUEST_CAPTURE_VIDEO,REQUEST_PICK_VIDEO);
 				break;
-			case id.action_upload_file:IntentUtils.fireFilePickerIntent(getContext(),REQUEST_PICK_FILE);
+			case id.action_upload_file:IntentUtils.fireFilePickerIntent(this,REQUEST_PICK_FILE);
 				break;
 			case id.action_Update_location:
 				if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
 					requestPermissions(new String[]{permission.ACCESS_FINE_LOCATION},500);
 				}
 				else{
-					IntentUtils.fireLocationPickerIntent(getContext(),getActivity(),REQUEST_PICK_LOCATION);
+					IntentUtils.fireLocationPickerIntent(this,REQUEST_PICK_LOCATION);
 				}
 				break;
-			case id.action_upload_contact:IntentUtils.fireContactPickerIntent(getContext(),REQUEST_PICK_CONTACT);
+			case id.action_upload_contact:IntentUtils.fireContactPickerIntent(this,REQUEST_PICK_CONTACT);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -269,15 +301,43 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 		Uri uri=null;
 		String type=null;
 		if(resultCode== Activity.RESULT_OK){
-
 			switch (requestCode){
 				case REQUEST_CAPTURE_IMAGE:
-				case REQUEST_PICK_IMAGE:MessageUtils.sendFileDetails(getContext(),ph_no,contactData,data.getData(),"image");
+					mImagePickedUri = Uri.fromFile(new File(mCurrentPhotoPath)).toString();
+					Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+					mediaScanIntent.setData(Uri.parse(mImagePickedUri));
+					getContext().sendBroadcast(mediaScanIntent);
+					if(contactData.is_bot()){
+						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+					}
+					else{
+						MessageUtils.sendFileDetails(getContext(),ph_no,contactData,Uri.parse(mImagePickedUri),"image");
+					}
+					break;
+				case REQUEST_PICK_IMAGE:
+					if(contactData.is_bot()){
+						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+					}
+					else{
+						MessageUtils.sendFileDetails(getContext(),ph_no,contactData,data.getData(),"image");
+					}
 					break;
 				case REQUEST_CAPTURE_VIDEO:
-				case REQUEST_PICK_VIDEO:MessageUtils.sendFileDetails(getContext(),ph_no,contactData,data.getData(),"video");
+				case REQUEST_PICK_VIDEO:
+					if(contactData.is_bot()){
+						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+					}
+					else{
+						MessageUtils.sendFileDetails(getContext(),ph_no,contactData,data.getData(),"video");
+					}
 					break;
-				case REQUEST_PICK_FILE:MessageUtils.sendFileDetails(getContext(),ph_no,contactData,data.getData(),"file");
+				case REQUEST_PICK_FILE:
+					if(contactData.is_bot()){
+						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+					}
+					else{
+						MessageUtils.sendFileDetails(getContext(),ph_no,contactData,data.getData(),"file");
+					}
 					break;
 				case REQUEST_PICK_CONTACT:MessageUtils.sendContactDetails(getContext(),ph_no,contactData,data.getData());
 					break;
@@ -296,6 +356,10 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 		outState.putBoolean("assistantBotVisibility",mAssistantBotVisibility);
 		outState.putParcelable("contact_data",contactData);
 		outState.putInt("recycler_view_position", mLayoutManager.findFirstVisibleItemPosition());
+		if(mImagePickedUri!=null)
+			outState.putString("profile_pic",mImagePickedUri);
+		if(mCurrentPhotoPath!=null)
+			outState.putString("profile_pic_current_path",mCurrentPhotoPath);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -342,16 +406,73 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 	    if(data!=null &&  data.getCount()>0 && data.moveToLast()){
 			String msg=data.getString(data.getColumnIndex(ContractChat.COLUMN_MESSAGE));
 		    String msgType=data.getString(data.getColumnIndex(ContractChat.COLUMN_MESSAGE_TYPE));
-		    if(!mAssistantBotLastCanceled && setAlarmIntentDetector.shouldShowAlarmIntent(msg,msgType)){
+		    if(is_first_cursor_load<2 && !mAssistantBotLastCanceled && setAlarmIntentDetector.shouldShowAlarmIntent(msg,msgType)){
+			    mAssistantBotContainer.setVisibility(View.VISIBLE);
+			    mAssistantBotLastCanceled=false;
+			    mAssistantBotVisibility=true;
+		    }
+		    else if(is_first_cursor_load>=2 && setAlarmIntentDetector.shouldShowAlarmIntent(msg,msgType)){
 			    mAssistantBotContainer.setVisibility(View.VISIBLE);
 			    mAssistantBotLastCanceled=false;
 			    mAssistantBotVisibility=true;
 		    }
 	    }
+	    is_first_cursor_load++;
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
+
+	public void showImageSelectionPopup(final Fragment fragment, final int requestCodeCapture, final int requestCodePick){
+		new Builder(fragment.getContext()).setTitle(string.pick_image_from)
+				.setItems(array.pick_image_option_list_array, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if(which==0){
+							Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+							File photoFile = createImageFile();
+							if (photoFile == null) {
+								Toast.makeText(getContext(),"Error creating file for image!",Toast.LENGTH_SHORT).show();
+							}
+							else{
+								Uri photoURI = FileProvider.getUriForFile(getContext(),
+										"com.rajora.arun.chat.chit.chitchat.fileprovider",
+										photoFile);
+								takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+								if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+									startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
+								}
+								else{
+									Toast.makeText(getContext(),"No camera app found!",Toast.LENGTH_SHORT).show();
+								}
+							}						}
+						else if(which==1){
+							Intent PickImageintent = new Intent().setType("image/*").setAction(Intent.ACTION_GET_CONTENT);
+							if (PickImageintent.resolveActivity(fragment.getContext().getPackageManager()) != null) {
+								fragment.startActivityForResult(PickImageintent,requestCodePick);
+							}
+							else{
+								Toast.makeText(fragment.getContext(),"No app found to pick image!",Toast.LENGTH_SHORT).show();
+							}
+						}
+					}
+				}).create().show();
+	}
+
+	private File createImageFile(){
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+Math.floor(Math.random()*1000);
+		String imageFileName = "JPEG_" + timeStamp + "_";
+		File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+		File image = null;
+		try {
+			image = File.createTempFile(imageFileName, ".jpg", storageDir);
+			mCurrentPhotoPath = image.getAbsolutePath();
+			return image;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

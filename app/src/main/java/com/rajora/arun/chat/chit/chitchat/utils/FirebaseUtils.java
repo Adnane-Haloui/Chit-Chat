@@ -57,4 +57,37 @@ public class FirebaseUtils {
         return id_on_server;
     }
 
+    public static String getUniqueChatIdForFile(FirebaseDatabase firebaseDatabase,ChatItemDataModel item,String from_id){
+	    DatabaseReference itemDatabaseReference=firebaseDatabase.getReference("chatItems/"+
+			    from_id.substring(1)+"/");
+	    return itemDatabaseReference.push().getKey().substring(1);
+    }
+
+	public static void sendFileTextMessageToFirebase(FirebaseDatabase firebaseDatabase,ChatItemDataModel item,String from_id){
+		DatabaseReference itemDatabaseReference;
+		if(item.is_bot){
+			itemDatabaseReference=firebaseDatabase.getReference("botChatItems/"+item.contact_id+"/");
+		}
+		else{
+			itemDatabaseReference=firebaseDatabase.getReference("chatItems/"+
+					item.contact_id.substring(1)+"/");
+		}
+		DatabaseReference revItemReference=firebaseDatabase.getReference("chatItems/"+
+				from_id.substring(1)+"/").child(item.chat_id);
+		final String id_on_server=itemDatabaseReference.push().getKey().substring(1);
+		itemDatabaseReference=itemDatabaseReference.child(id_on_server);
+
+		HashMap<String,Object> fbvalues=new HashMap<>();
+		fbvalues.put("sender",from_id);
+		fbvalues.put("receiver",item.contact_id);
+		fbvalues.put("is_bot",item.is_bot);
+		fbvalues.put("type",item.message_type);
+		fbvalues.put("content",item.message);
+		fbvalues.put("id",id_on_server);
+		fbvalues.put("timestamp",item.timestamp);
+		fbvalues.put("g_timestamp", ServerValue.TIMESTAMP);
+
+		revItemReference.push().updateChildren(fbvalues);
+		itemDatabaseReference.updateChildren(fbvalues);
+	}
 }

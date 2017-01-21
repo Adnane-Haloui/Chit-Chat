@@ -35,14 +35,20 @@
 				android:textSize="@dimen/chat_item_text_size"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" />
-			<Button
-				android:id="@+id/action_file"
+			<ImageView
+				android:id="@+id/file_button"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="Download file"/>
+				android:layout_height="wrap_content"/>
+			<ProgressBar
+				android:id="@+id/file_progressbar"
+				android:layout_gravity="center"
+				android:layout_width="48dp"
+				android:layout_height="48dp"
+				style="?android:attr/progressBarStyleLarge"
+				android:indeterminate="true"/>
 			<TextView
 				android:text="2:3 pm"
-				android:id="@+id/text_time"
+				android:id="@+id/file_time"
 				android:textSize="@dimen/chat_message_sub_text_size"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

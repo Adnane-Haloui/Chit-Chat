@@ -194,19 +194,14 @@ public class ProfileEditActivity extends AppCompatChatListenerActivity{
 		    outState.putString("profile_pic_current_path",mCurrentPhotoPath);
     }
 
-
 	private File createImageFile(){
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+Math.floor(Math.random()*1000);
-		String imageFileName = "JPEG_" + timeStamp + "_";
+		String imageFileName = "JPEG_" + timeStamp + "_.jpg";
 		File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 		File image = null;
-		try {
-			image = File.createTempFile(imageFileName, ".jpg", storageDir);
-			mCurrentPhotoPath = image.getAbsolutePath();
-			return image;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		image =new  File(storageDir,imageFileName);
+		mCurrentPhotoPath = image.getAbsolutePath();
+		return image;
 	}
+
 }

@@ -35,12 +35,14 @@
 			    android:orientation="horizontal"
 			    android:padding="4dp">
 			    <ImageView
+				    android:id="@+id/assistant_bot_icon"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:layout_marginEnd="4dp"
 				    android:src="@drawable/ic_alarm_add_black_24dp"
 				    android:layout_marginRight="4dp"/>
 			    <TextView
+				    android:id="@+id/assistant_bot_text"
 				    android:text="Set an alarm"
 				    android:textSize="16sp"
 				    android:layout_width="wrap_content"
