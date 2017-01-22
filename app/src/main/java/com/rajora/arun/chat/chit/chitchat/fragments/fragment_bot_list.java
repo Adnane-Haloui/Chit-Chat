@@ -1,38 +1,31 @@
 package com.rajora.arun.chat.chit.chitchat.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
+import com.rajora.arun.chat.chit.chitchat.R.id;
+import com.rajora.arun.chat.chit.chitchat.R.layout;
 import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.bot_VH;
-import com.rajora.arun.chat.chit.chitchat.activities.ChatActivity;
-import com.rajora.arun.chat.chit.chitchat.activities.ProfileDetailsActivity;
-import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseBotsDataModel;
-import com.rajora.arun.chat.chit.chitchat.utils.ImageUtils;
 
 public class fragment_bot_list extends Fragment{
+
     private RecyclerView mRecyclerView;
     private FirebaseRecyclerAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private static final int CURSOR_LOADER_ID=1;
     private DatabaseReference databaseReference;
-    private FirebaseStorage firebaseStorage;
+
+    private TextView mEmptyView;
 
     public fragment_bot_list() {
     }
@@ -45,59 +38,42 @@ public class fragment_bot_list extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View view=inflater.inflate(R.layout.fragment_bot_list, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.bot_recycler_view);
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        View view=inflater.inflate(layout.fragment_bot_list, container, false);
+	    mEmptyView= (TextView) view.findViewById(id.bot_list_empty);
+        mRecyclerView = (RecyclerView) view.findViewById(id.bot_recycler_view);
+	    LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        firebaseStorage=FirebaseStorage.getInstance();
         databaseReference= FirebaseDatabase.getInstance().getReference("botList");
-        mAdapter = new FirebaseRecyclerAdapter<FirebaseBotsDataModel,bot_VH>(
-                FirebaseBotsDataModel.class,R.layout.view_bot_item,bot_VH.class,databaseReference) {
-            @Override
-            protected void populateViewHolder(bot_VH viewHolder, final FirebaseBotsDataModel model, int position) {
-                CardView mImageContainerCardView = ((CardView) viewHolder.itemView.findViewById(R.id.bot_item_image_container));
-                ImageView mImage = ((ImageView) viewHolder.itemView.findViewById(R.id.bot_item_image));
-                TextView mName = ((TextView) viewHolder.itemView.findViewById(R.id.bot_item_name));
-                TextView mDeveloperName = ((TextView) viewHolder.itemView.findViewById(R.id.bot_item_developer_name));
-                TextView mAbout = ((TextView) viewHolder.itemView.findViewById(R.id.bot_item_about));
-
-                viewHolder.itemView.setContentDescription("Bot item "+model.getName()+" by "+
-                        ((model.getDev_name()==null || model.getDev_name().isEmpty())?"Unknown":model.getDev_name()));
-                mImageContainerCardView.setContentDescription("Image of "+model.getName()+" bot");
-                mName.setContentDescription("Bot item "+model.getName());
-                mDeveloperName.setContentDescription("Bot developed by "+model.getDev_name());
-                mAbout.setContentDescription("About "+model.getName()+" is "+
-                        ((model.getDesc()==null || model.getDesc().isEmpty())?"Unknown":model.getDesc()));
-
-                mName.setText(model.getName());
-                mDeveloperName.setText(model.getDev_name());
-                mAbout.setText(model.getDesc());
-                if(model.getImage_url()!=null){
-                    ImageUtils.loadBitmapFromFirebase(getContext(),model.getImage_url(),R.drawable.empty_profile_pic,mImage);
-                }
-                mImageContainerCardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent(getContext(), ProfileDetailsActivity.class);
-                        intent.putExtra("type","bot_data_model");
-                        intent.putExtra("data",model);
-                        startActivity(intent);
-                    }
-                });
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent(getContext(), ChatActivity.class);
-                        intent.putExtra("type","bot_data_model");
-                        intent.putExtra("data",model);
-                        startActivity(intent);
-
-                    }
-                });
-
-            }
-        };
-        mRecyclerView.setAdapter(mAdapter);
         return view;
     }
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		mAdapter = new FirebaseRecyclerAdapter<FirebaseBotsDataModel,bot_VH>(
+				FirebaseBotsDataModel.class, layout.view_bot_item,bot_VH.class,databaseReference) {
+			@Override
+			protected void populateViewHolder(bot_VH viewHolder, final FirebaseBotsDataModel model, int position) {
+				viewHolder.setValues(model,getContext());
+				viewHolder.setContentDescription(model);
+				viewHolder.setClickListeners(model,getContext());
+			}
+
+			@Override
+			protected void onDataChanged() {
+				mEmptyView.setVisibility(mAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+			}
+
+		};
+		mRecyclerView.setAdapter(mAdapter);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (mAdapter != null) {
+			mAdapter.cleanup();
+		}
+	}
+
 }

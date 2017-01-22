@@ -1,13 +1,18 @@
 package com.rajora.arun.chat.chit.chitchat.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -30,13 +35,15 @@ public class ProfileEditActivity extends AppCompatChatListenerActivity{
     private ImageView mProfilePicHolder;
     private EditText mProfileName;
     private EditText mProfileAbout;
-    private Button mChangeProfilePicButton;
 
-    private String mProfilePicUri;
+	private String mProfilePicUri;
 	private String mCurrentPhotoPath;
 
 	final static int REQUEST_CAPTURE_IMAGE=1;
     final static int REQUEST_PICK_IMAGE=2;
+
+	int mRequestCode;
+	String dataUri;
 
 
     @Override
@@ -47,8 +54,13 @@ public class ProfileEditActivity extends AppCompatChatListenerActivity{
         mProfilePicHolder=(ImageView)findViewById(R.id.profile_pic_holder);
         mProfileName=(EditText) findViewById(R.id.profile_name);
         mProfileAbout=(EditText) findViewById(R.id.profile_about);
-	    mChangeProfilePicButton=(Button)findViewById(R.id.upload_profile_pic_button);
-	    restoreLayoutValues(savedInstanceState);
+	    if(savedInstanceState!=null)
+	    {
+		    restoreLayoutValues(savedInstanceState);
+		    mRequestCode=savedInstanceState.getInt("requestCode");
+		    if(savedInstanceState.containsKey("datauri"))
+			    dataUri=savedInstanceState.getString("datauri");
+	    }
 	    mProfilePicHolder.setOnClickListener(new View.OnClickListener() {
 
 		    @Override
@@ -56,10 +68,19 @@ public class ProfileEditActivity extends AppCompatChatListenerActivity{
 			    changeProfilePic();
 		    }
 	    });
-	    mChangeProfilePicButton.setOnClickListener(new View.OnClickListener() {
+
+	    findViewById(R.id.upload_profile_pic_button).setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
-			    changeProfilePic();
+			    mRequestCode=-100;
+			    dataUri=null;
+			    if (ContextCompat.checkSelfPermission(ProfileEditActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED
+					    || ContextCompat.checkSelfPermission(ProfileEditActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+				    ActivityCompat.requestPermissions(ProfileEditActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE} ,550);
+			    }
+			    else{
+				    changeProfilePic();
+			    }
 		    }
 	    });
 
@@ -157,28 +178,51 @@ public class ProfileEditActivity extends AppCompatChatListenerActivity{
     }
 
 	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(resultCode==RESULT_OK){
-			if(requestCode==REQUEST_CAPTURE_IMAGE){
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+				&& ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+			if(mRequestCode==REQUEST_CAPTURE_IMAGE){
 				mProfilePicUri = Uri.fromFile(new File(mCurrentPhotoPath)).toString();
 				mProfilePicHolder.setImageURI(Uri.parse(mProfilePicUri));
-				Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-				mediaScanIntent.setData(Uri.parse(mProfilePicUri));
-				sendBroadcast(mediaScanIntent);
+				sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.parse(mProfilePicUri)));
 			}
-			else if(requestCode==REQUEST_PICK_IMAGE){
-				mProfilePicUri = data.getData().toString();
-				mProfilePicHolder.setImageURI(data.getData());
+			else if(mRequestCode==REQUEST_PICK_IMAGE){
+				mProfilePicUri = dataUri;
+				mProfilePicHolder.setImageURI(Uri.parse(dataUri));
 			}
+			else{
+				changeProfilePic();
+			}
+		}
+	}
 
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(resultCode==RESULT_OK){
+			mRequestCode=requestCode;
+			dataUri=mRequestCode==REQUEST_PICK_IMAGE?data.getData().toString():null;
+			if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED
+					|| ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+				ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE} ,550);
+			}
+			else{
+				if(requestCode==REQUEST_CAPTURE_IMAGE){
+					mProfilePicUri = Uri.fromFile(new File(mCurrentPhotoPath)).toString();
+					mProfilePicHolder.setImageURI(Uri.parse(mProfilePicUri));
+					sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.parse(mProfilePicUri)));
+				}
+				else if(requestCode==REQUEST_PICK_IMAGE){
+					mProfilePicUri = data.getData().toString();
+					mProfilePicHolder.setImageURI(data.getData());
+				}
+			}
 		}
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getSharedPreferences("user-details",MODE_PRIVATE).edit()
-		        .putBoolean("first_profile_edit",true).commit();
+        getSharedPreferences("user-details",MODE_PRIVATE).edit().putBoolean("first_profile_edit",true).apply();
     }
 
     @Override
@@ -192,14 +236,15 @@ public class ProfileEditActivity extends AppCompatChatListenerActivity{
             outState.putString("profile_pic",mProfilePicUri);
 	    if(mCurrentPhotoPath!=null)
 		    outState.putString("profile_pic_current_path",mCurrentPhotoPath);
+	    outState.putInt("requestCode",mRequestCode);
+	    if(dataUri!=null)
+		    outState.putString("datauri",dataUri);
     }
 
 	private File createImageFile(){
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+Math.floor(Math.random()*1000);
 		String imageFileName = "JPEG_" + timeStamp + "_.jpg";
-		File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-		File image = null;
-		image =new  File(storageDir,imageFileName);
+		File image =new  File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),imageFileName);
 		mCurrentPhotoPath = image.getAbsolutePath();
 		return image;
 	}

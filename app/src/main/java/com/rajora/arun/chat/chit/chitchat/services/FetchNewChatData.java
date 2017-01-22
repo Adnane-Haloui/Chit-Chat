@@ -30,8 +30,10 @@ import com.rajora.arun.chat.chit.chitchat.R.mipmap;
 import com.rajora.arun.chat.chit.chitchat.activities.MainActivity;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChat;
+import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractContacts;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractNotificationList;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractUnreadCount;
+import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseBotsDataModel;
 import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseChatItemDataModel;
 
 import java.util.HashMap;
@@ -244,6 +246,44 @@ public class FetchNewChatData extends Service {
 					sendNotification();
 				}
 			}
+			if(data.is_bot && !isBotDetailsPresent(data)){
+				updateBotDetails(data);
+			}
+		}
+
+		private boolean isBotDetailsPresent(FirebaseChatItemDataModel data){
+			Cursor mcursor=getContentResolver().query(ChatContentProvider.CONTACT_LIST_URI,
+					new String[]{ContractContacts._ID},
+					ContractChat.COLUMN_CONTACT_ID+ " = ? AND "+ContractChat.COLUMN_IS_BOT+" = ? ",
+					new String[]{data.sender.substring(1).equals(ph_no)?
+							data.receiver:data.sender,"1"},null);
+			if(mcursor!=null && mcursor.getCount()>0){
+				if(!mcursor.isClosed())
+					mcursor.close();
+				return true;
+			}
+			if(mcursor!=null && !mcursor.isClosed())
+				mcursor.close();
+			return false;
+		}
+
+		private void updateBotDetails(FirebaseChatItemDataModel data){
+			String bot_id=data.sender.substring(1).equals(ph_no)?data.receiver:data.sender;
+			DatabaseReference botRef=firebaseDatabase.getInstance().getReference("botList/"+bot_id);
+			botRef.addListenerForSingleValueEvent(new ValueEventListener() {
+				@Override
+				public void onDataChange(DataSnapshot dataSnapshot) {
+					if(dataSnapshot!=null && dataSnapshot.exists()){
+						FirebaseBotsDataModel botDetails=dataSnapshot.getValue(FirebaseBotsDataModel.class);
+						UpdateBotDetailsIntentService.startBotDetailsUpdate(mContext,botDetails);
+					}
+				}
+
+				@Override
+				public void onCancelled(DatabaseError databaseError) {
+
+				}
+			});
 		}
 
 		private boolean isChatItemReceived(FirebaseChatItemDataModel data,String key){

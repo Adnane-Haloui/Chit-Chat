@@ -18,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.rajora.arun.chat.chit.chitchat.activities.ChatActivity;
@@ -37,7 +38,9 @@ public class fragment_chat_list extends Fragment
     private adapter_chat_item mAdapter;
     private static final int CURSOR_LOADER_ID=2;
 
-    public fragment_chat_list() {
+	private TextView mEmptyView;
+
+	public fragment_chat_list() {
     }
 
     public static fragment_chat_list newInstance() {
@@ -49,6 +52,7 @@ public class fragment_chat_list extends Fragment
                              Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.fragment_chat_list, container, false);
+	    mEmptyView= (TextView) view.findViewById(R.id.chat_list_empty);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.chat_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null,this);
@@ -94,6 +98,12 @@ public class fragment_chat_list extends Fragment
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
+	    if(data!=null && data.getCount()>0){
+		    mEmptyView.setVisibility(View.GONE);
+	    }
+	    else{
+		    mEmptyView.setVisibility(View.VISIBLE);
+	    }
 	    if (VERSION.SDK_INT >= VERSION_CODES.N_MR1 && data!=null) {
 		    data.moveToFirst();
 		    List<ShortcutInfo> shortcuts=new ArrayList<>();

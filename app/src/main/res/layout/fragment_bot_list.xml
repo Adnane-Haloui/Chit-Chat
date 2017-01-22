@@ -1,12 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.rajora.arun.chat.chit.chitchat.fragments.fragment_bot_list">
-
-    <android.support.v7.widget.RecyclerView
+	<TextView
+		android:id="@+id/bot_list_empty"
+		android:text="No bot service available!"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textAlignment="center"/>
+	<android.support.v7.widget.RecyclerView
         android:id="@+id/bot_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-</FrameLayout>
+</LinearLayout>

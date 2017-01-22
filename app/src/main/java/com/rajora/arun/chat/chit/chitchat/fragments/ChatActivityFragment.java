@@ -9,17 +9,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.AlarmClock;
-import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -39,28 +36,21 @@ import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker.IntentBuilder;
-import com.google.gson.JsonObject;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.rajora.arun.chat.chit.chitchat.AssistantBot.setAlarmIntentDetector;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.R.array;
 import com.rajora.arun.chat.chit.chitchat.R.id;
 import com.rajora.arun.chat.chit.chitchat.R.layout;
-import com.rajora.arun.chat.chit.chitchat.R.menu;
 import com.rajora.arun.chat.chit.chitchat.R.string;
 import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.adapter_chats;
-import com.rajora.arun.chat.chit.chitchat.activities.ProfileEditActivity;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChat;
 import com.rajora.arun.chat.chit.chitchat.dataModels.ContactItemDataModel;
 import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseBotsDataModel;
+import com.rajora.arun.chat.chit.chitchat.services.FirebaseFileUploadService;
 import com.rajora.arun.chat.chit.chitchat.services.SendMessageService;
 import com.rajora.arun.chat.chit.chitchat.services.SetReadMessageIntentService;
 import com.rajora.arun.chat.chit.chitchat.services.UpdateBotDetailsIntentService;
@@ -68,15 +58,12 @@ import com.rajora.arun.chat.chit.chitchat.utils.IntentUtils;
 import com.rajora.arun.chat.chit.chitchat.utils.MessageUtils;
 import com.rajora.arun.chat.chit.chitchat.utils.utils;
 
-import com.google.android.gms.location.places.ui.PlacePicker;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static android.content.Context.MODE_PRIVATE;
-import static android.content.Intent.ACTION_PICK;
 
 
 public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cursor>{
@@ -111,6 +98,9 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 	private LinearLayoutManager mLayoutManager;
 	private RecyclerView mRecyclerView;
 	private CardView mAssistantBotContainer;
+
+	private int mPickRequestCode;
+	private String mDataUri;
 
 	private OnLayoutChangeListener mLayoutChangeListener=new OnLayoutChangeListener() {
 		@Override
@@ -157,6 +147,9 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
         Bundle extras = getActivity().getIntent().getExtras();
 	    mRecyclerViewPosition=-1;
 		if(savedInstanceState!=null){
+			mPickRequestCode=savedInstanceState.getInt("requestCode");
+			if(savedInstanceState.containsKey("datauri"))
+				mDataUri=savedInstanceState.getString("datauri");
 			if(savedInstanceState.containsKey("bot_data_model")){
 				mBotData=savedInstanceState.getParcelable("bot_data_model");
 			}
@@ -188,7 +181,15 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 	    mRecyclerView = (RecyclerView) view.findViewById(id.chat_list_recycler_view);
 	    mLayoutManager=new LinearLayoutManager(getActivity());
 	    mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new adapter_chats(getContext(),ph_no,null, ContractChat._ID);
+        mAdapter = new adapter_chats(getContext(),this,ph_no,null, ContractChat._ID);
+	    if(savedInstanceState!=null){
+		    if(savedInstanceState.containsKey("downloadItem"))
+			    mAdapter.mDownloadItem=savedInstanceState.getParcelable("downloadItem");
+		    if(savedInstanceState.containsKey("downloadLocation"))
+			    mAdapter.mDownloadLocation=savedInstanceState.getString("downloadLocation");
+		    if(savedInstanceState.containsKey("downloadFileName"))
+			    mAdapter.mDownloadFileName=savedInstanceState.getString("downloadFileName");
+	    }
         mRecyclerView.setAdapter(mAdapter);
 		mAssistantBotContainer.setVisibility(mAssistantBotVisibility?View.VISIBLE:View.GONE);
 	    view.findViewById(id.assistant_bot_icon).setOnClickListener(new View.OnClickListener() {
@@ -269,6 +270,52 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 		if(requestCode==500 && grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
 			IntentUtils.fireLocationPickerIntent(this,REQUEST_PICK_LOCATION);
 		}
+		else if(requestCode==600 && grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+			MessageUtils.sendFileDetails(getContext(),ph_no,contactData,Uri.parse(mImagePickedUri),"image");
+		}
+		else if(requestCode==610 && grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+			MessageUtils.sendFileDetails(getContext(),ph_no,contactData,Uri.parse(mDataUri),"image");
+		}
+		else if(requestCode==620 && grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+			MessageUtils.sendFileDetails(getContext(),ph_no,contactData,Uri.parse(mDataUri),"video");
+		}
+		else if(requestCode==630 && grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+			MessageUtils.sendFileDetails(getContext(),ph_no,contactData,Uri.parse(mDataUri),"file");
+		}
+		else if(requestCode==640 && grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+			MessageUtils.sendContactDetails(getContext(),ph_no,contactData,Uri.parse(mDataUri));
+		}
+		else if(requestCode==650 && grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+			Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			File photoFile = createImageFile();
+			if (photoFile == null) {
+				Toast.makeText(getContext(),"Error creating file for image!",Toast.LENGTH_SHORT).show();
+			}
+			else{
+				Uri photoURI = FileProvider.getUriForFile(getContext(),
+						"com.rajora.arun.chat.chit.chitchat.fileprovider",
+						photoFile);
+				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+				if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+					startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
+				}
+				else{
+					Toast.makeText(getContext(),"No camera app found!",Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+		else if(requestCode==660 && grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+			if(mAdapter.mDownloadItem.message_direction.equals("send")){
+				FirebaseFileUploadService.startReceiveFileMessage(getContext(),
+						ph_no,mAdapter.mDownloadItem.contact_id,mAdapter.mDownloadItem.chat_id,
+						mAdapter.mDownloadFileName,mAdapter.mDownloadLocation,mAdapter.mDownloadItem.message_type,ph_no);
+			}
+			else{
+				FirebaseFileUploadService.startReceiveFileMessage(getContext(),
+						mAdapter.mDownloadItem.contact_id,ph_no,mAdapter.mDownloadItem.chat_id,
+						mAdapter.mDownloadFileName,mAdapter.mDownloadLocation,mAdapter.mDownloadItem.message_type,ph_no);
+			}
+		}
 	}
 
 	@Override
@@ -282,7 +329,25 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 				break;
 			case id.action_Update_location:
 				if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
-					requestPermissions(new String[]{permission.ACCESS_FINE_LOCATION},500);
+					if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),permission.ACCESS_FINE_LOCATION)) {
+						new AlertDialog.Builder(getContext())
+								.setMessage("Permissions needed to access your location to enable you to pick it.")
+								.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										requestPermissions(new String[]{permission.ACCESS_FINE_LOCATION} ,500);
+									}
+								})
+								.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialogInterface, int i) {
+										dialogInterface.dismiss();
+									}
+								}).show();
+
+					}else {
+						requestPermissions(new String[]{permission.ACCESS_FINE_LOCATION} ,500);
+					}
 				}
 				else{
 					IntentUtils.fireLocationPickerIntent(this,REQUEST_PICK_LOCATION);
@@ -298,17 +363,18 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Uri uri=null;
-		String type=null;
 		if(resultCode== Activity.RESULT_OK){
+			mPickRequestCode=requestCode;
+			mDataUri=data.getData().toString();
 			switch (requestCode){
 				case REQUEST_CAPTURE_IMAGE:
 					mImagePickedUri = Uri.fromFile(new File(mCurrentPhotoPath)).toString();
-					Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-					mediaScanIntent.setData(Uri.parse(mImagePickedUri));
-					getContext().sendBroadcast(mediaScanIntent);
+					getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.parse(mImagePickedUri)));
 					if(contactData.is_bot()){
 						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+					}
+					else if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+						requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE} ,600);
 					}
 					else{
 						MessageUtils.sendFileDetails(getContext(),ph_no,contactData,Uri.parse(mImagePickedUri),"image");
@@ -317,6 +383,9 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 				case REQUEST_PICK_IMAGE:
 					if(contactData.is_bot()){
 						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+					}
+					else if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+						requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE} ,610);
 					}
 					else{
 						MessageUtils.sendFileDetails(getContext(),ph_no,contactData,data.getData(),"image");
@@ -327,6 +396,9 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 					if(contactData.is_bot()){
 						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
 					}
+					else if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+						requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE} ,620);
+					}
 					else{
 						MessageUtils.sendFileDetails(getContext(),ph_no,contactData,data.getData(),"video");
 					}
@@ -335,11 +407,20 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 					if(contactData.is_bot()){
 						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
 					}
+					else if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+						requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE} ,630);
+					}
 					else{
 						MessageUtils.sendFileDetails(getContext(),ph_no,contactData,data.getData(),"file");
 					}
 					break;
-				case REQUEST_PICK_CONTACT:MessageUtils.sendContactDetails(getContext(),ph_no,contactData,data.getData());
+				case REQUEST_PICK_CONTACT:
+					if(ContextCompat.checkSelfPermission(getContext(), permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
+						requestPermissions(new String[]{permission.READ_CONTACTS} ,640);
+					}
+					else{
+						MessageUtils.sendContactDetails(getContext(),ph_no,contactData,data.getData());
+					}
 					break;
 				case REQUEST_PICK_LOCATION:MessageUtils.sendLocationDetails(getContext(),ph_no,contactData,PlacePicker.getPlace(getContext(),data));
 					break;
@@ -349,6 +430,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 
 	@Override
     public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
         if(mBotData!=null){
 		    outState.putParcelable("bot_data_model",mBotData);
 	    }
@@ -360,7 +442,15 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 			outState.putString("profile_pic",mImagePickedUri);
 		if(mCurrentPhotoPath!=null)
 			outState.putString("profile_pic_current_path",mCurrentPhotoPath);
-		super.onSaveInstanceState(outState);
+		outState.putInt("requestCode",mPickRequestCode);
+		if(mDataUri!=null)
+			outState.putString("datauri",mDataUri);
+		if(mAdapter!=null && mAdapter.mDownloadItem!=null)
+			outState.putParcelable("downloadItem",mAdapter.mDownloadItem);
+		if(mAdapter!=null && mAdapter.mDownloadLocation!=null)
+			outState.putString("downloadLocation",mAdapter.mDownloadLocation);
+		if(mAdapter!=null && mAdapter.mDownloadFileName!=null)
+			outState.putString("downloadFileName",mAdapter.mDownloadFileName);
 	}
 
 	@Override
@@ -431,23 +521,8 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if(which==0){
-							Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-							File photoFile = createImageFile();
-							if (photoFile == null) {
-								Toast.makeText(getContext(),"Error creating file for image!",Toast.LENGTH_SHORT).show();
-							}
-							else{
-								Uri photoURI = FileProvider.getUriForFile(getContext(),
-										"com.rajora.arun.chat.chit.chitchat.fileprovider",
-										photoFile);
-								takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-								if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
-									startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
-								}
-								else{
-									Toast.makeText(getContext(),"No camera app found!",Toast.LENGTH_SHORT).show();
-								}
-							}						}
+							startPickImage();
+						}
 						else if(which==1){
 							Intent PickImageintent = new Intent().setType("image/*").setAction(Intent.ACTION_GET_CONTENT);
 							if (PickImageintent.resolveActivity(fragment.getContext().getPackageManager()) != null) {
@@ -461,6 +536,30 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 				}).create().show();
 	}
 
+	private void startPickImage(){
+		if(ContextCompat.checkSelfPermission(getContext(), permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+			requestPermissions(new String[]{permission.WRITE_EXTERNAL_STORAGE} ,650);
+		}
+		else{
+			Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			File photoFile = createImageFile();
+			if (photoFile == null) {
+				Toast.makeText(getContext(),"Error creating file for image!",Toast.LENGTH_SHORT).show();
+			}
+			else{
+				Uri photoURI = FileProvider.getUriForFile(getContext(),
+						"com.rajora.arun.chat.chit.chitchat.fileprovider",
+						photoFile);
+				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+				if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+					startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
+				}
+				else{
+					Toast.makeText(getContext(),"No camera app found!",Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+	}
 	private File createImageFile(){
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+Math.floor(Math.random()*1000);
 		String imageFileName = "JPEG_" + timeStamp + "_";

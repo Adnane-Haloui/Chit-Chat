@@ -8,11 +8,11 @@
 	<uses-permission android:name="android.permission.READ_CONTACTS"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-	<uses-feature
-		android:name="android.hardware.camera"
-		android:required="false"/>
+	<uses-feature android:name="android.hardware.camera" android:required="false"/>
 
 	<application
 		android:allowBackup="true"
@@ -31,6 +31,7 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+
 		<activity
 			android:name=".activities.ProfileEditActivity"
 			android:theme="@style/ChangeProfileTheme"
@@ -54,6 +55,7 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value=".activities.MainActivity"/>
 		</activity>
+
 		<activity
 			android:name=".activities.ProfileDetailsActivity"
 			android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
@@ -68,27 +70,33 @@
 		<service
 			android:name=".services.updateContactsDbFromPhoneDb"
 			android:exported="false"/>
+
 		<service
 			android:name=".services.SendMessageService"
 			android:exported="false"/>
+
 		<service android:name=".fcm.MyFirebaseMessagingService">
 			<intent-filter>
 				<action android:name="com.google.firebase.MESSAGING_EVENT"/>
 			</intent-filter>
 		</service>
+
 		<service android:name=".fcm.MyFirebaseInstanceIDService">
 			<intent-filter>
 				<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
 			</intent-filter>
 		</service>
+
 		<service
 			android:name=".services.FetchNewChatData"
 			android:enabled="true"
 			android:exported="false"/>
+
 		<service
 			android:name=".services.UpdateBotDetailsIntentService"
 			android:exported="false">
 		</service>
+
 		<service
 			android:name=".services.SetReadMessageIntentService"
 			android:exported="false">
@@ -99,7 +107,6 @@
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
 				<action android:name=".app.ACTION_DATA_UPDATED"/>
 			</intent-filter>
-
 			<meta-data
 				android:name="android.appwidget.provider"
 				android:resource="@xml/chat_app_widget_info"/>
@@ -125,6 +132,7 @@
 			android:enabled="true"
 			android:exported="false">
 		</service>
+
 	</application>
 
 </manifest>

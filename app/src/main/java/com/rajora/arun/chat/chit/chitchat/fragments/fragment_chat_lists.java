@@ -13,6 +13,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.Intents;
+import android.provider.ContactsContract.Intents.Insert;
+import android.provider.ContactsContract.RawContacts;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -29,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +43,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.rajora.arun.chat.chit.chitchat.R.id;
+import com.rajora.arun.chat.chit.chitchat.R.layout;
+import com.rajora.arun.chat.chit.chitchat.R.menu;
 import com.rajora.arun.chat.chit.chitchat.activities.AboutActivity;
 import com.rajora.arun.chat.chit.chitchat.activities.ProfileEditActivity;
 import com.rajora.arun.chat.chit.chitchat.R;
@@ -59,7 +66,7 @@ public class fragment_chat_lists extends ChatListenerFragment{
 	private Snackbar mSnackbar;
 	ConnectivityManager connectivityManager;
 
-	private View.OnClickListener mSnackbarClickListener=new View.OnClickListener() {
+	private OnClickListener mSnackbarClickListener=new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			if(mSnackbar!=null && mSnackbar.isShownOrQueued()){
@@ -107,7 +114,7 @@ public class fragment_chat_lists extends ChatListenerFragment{
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         connectedRef=FirebaseDatabase.getInstance().getReference(".info/connected");
-	    connectivityManager =((ConnectivityManager) getContext().getSystemService(CONNECTIVITY_SERVICE));
+	    connectivityManager = (ConnectivityManager) getContext().getSystemService(CONNECTIVITY_SERVICE);
     }
 
 	@Override
@@ -126,12 +133,11 @@ public class fragment_chat_lists extends ChatListenerFragment{
 	}
 
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_chat_lists, container, false);
-		mViewPager= ((ViewPager) view.findViewById(R.id.view_pager_chat_list));
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view=inflater.inflate(layout.fragment_chat_lists, container, false);
+		mViewPager= (ViewPager) view.findViewById(id.view_pager_chat_list);
         mViewPagerAdapter=new ViewPagerAdapter(getActivity().getSupportFragmentManager());
-        mTabLayout= ((TabLayout) view.findViewById(R.id.tabs_chat_list));
+        mTabLayout= (TabLayout) view.findViewById(id.tabs_chat_list);
 
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mViewPagerAdapter);
@@ -171,16 +177,16 @@ public class fragment_chat_lists extends ChatListenerFragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menu_edit_profile:
+            case id.menu_edit_profile:
                 Intent intent=new Intent(getActivity(),ProfileEditActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.menu_add_contact:
-                Intent add_contact_intent = new Intent(ContactsContract.Intents.Insert.ACTION);
-                add_contact_intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+            case id.menu_add_contact:
+                Intent add_contact_intent = new Intent(Insert.ACTION);
+                add_contact_intent.setType(RawContacts.CONTENT_TYPE);
                 startActivityForResult(add_contact_intent,TAG_ADD_CONTACT);
                 break;
-            case R.id.menu_about:
+            case id.menu_about:
                 Intent about_intent=new Intent(getActivity(),AboutActivity.class);
                 startActivity(about_intent);
                 break;

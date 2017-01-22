@@ -13,8 +13,8 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
@@ -24,13 +24,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.rajora.arun.chat.chit.chitchat.activities.ChatActivity;
-import com.rajora.arun.chat.chit.chitchat.activities.ProfileDetailsActivity;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.adapter_contact_item;
+import com.rajora.arun.chat.chit.chitchat.activities.ChatActivity;
+import com.rajora.arun.chat.chit.chitchat.activities.ProfileDetailsActivity;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChat;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractContacts;
 import com.rajora.arun.chat.chit.chitchat.dataModels.ContactDetailDataModel;
 import com.rajora.arun.chat.chit.chitchat.services.updateContactsDbFromPhoneDb;
@@ -41,13 +41,10 @@ public class fragment_contact_list extends Fragment implements LoaderManager.Loa
 
 	private static final int TAG_ADD_CONTACT=105;
 
-	private RecyclerView mRecyclerView;
-    private adapter_contact_item mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+	private adapter_contact_item mAdapter;
 
-    private FloatingActionButton refreshFab;
-	private FloatingActionButton addContactFab;
 	private SwipeRefreshLayout refreshLayout;
+	private TextView mEmptyView;
 
 	private BroadcastReceiver broadcastReceiver=new BroadcastReceiver() {
 		@Override
@@ -82,8 +79,9 @@ public class fragment_contact_list extends Fragment implements LoaderManager.Loa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_contact_list, container, false);
-	    refreshFab= (FloatingActionButton) view.findViewById(R.id.refresh_fab);
-	    addContactFab= (FloatingActionButton) view.findViewById(R.id.add_contact_fab);
+		mEmptyView= (TextView) view.findViewById(R.id.contact_list_empty);
+		FloatingActionButton refreshFab = (FloatingActionButton) view.findViewById(R.id.refresh_fab);
+		FloatingActionButton addContactFab = (FloatingActionButton) view.findViewById(R.id.add_contact_fab);
 	    refreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 		refreshLayout.setRefreshing(updateContactsDbFromPhoneDb.isProcessing);
 		addContactFab.setOnClickListener(new View.OnClickListener() {
@@ -107,8 +105,8 @@ public class fragment_contact_list extends Fragment implements LoaderManager.Loa
 				startContactRefresh();
 			}
 		});
-	    mRecyclerView = (RecyclerView) view.findViewById(R.id.contact_recycler_view);
-        mLayoutManager = new LinearLayoutManager(getActivity());
+		RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.contact_recycler_view);
+		RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         getLoaderManager().initLoader(CURSOR_LOADER_ID, null,this);
         mAdapter=new adapter_contact_item(getContext(),this,null, ContractContacts._ID);
@@ -181,6 +179,12 @@ public class fragment_contact_list extends Fragment implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
+	    if(data!=null && data.getCount()>0){
+			mEmptyView.setVisibility(View.GONE);
+	    }
+	    else{
+		    mEmptyView.setVisibility(View.VISIBLE);
+	    }
     }
 
     @Override

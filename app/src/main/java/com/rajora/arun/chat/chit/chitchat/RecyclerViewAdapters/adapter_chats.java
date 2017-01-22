@@ -1,12 +1,16 @@
 package com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Intents.Insert;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,11 +50,16 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 
     public String mSender_No;
 	private Context mContext;
+	private Fragment mFragment;
+	public ChatItemDataModel mDownloadItem;
+	public String mDownloadFileName;
+	public String mDownloadLocation;
 
-    public adapter_chats(Context context,String sender_no,Cursor cursor, String idColumn) {
+    public adapter_chats(Context context,Fragment fragment,String sender_no,Cursor cursor, String idColumn) {
         super(cursor, idColumn);
         mSender_No=sender_no;
 	    mContext=context;
+	    mFragment=fragment;
     }
 
     @Override
@@ -83,7 +92,6 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 		try {
 			JSONObject data=new JSONObject(item.message);
 			final String fileName=data.getString("name");
-			long filesize=data.getLong("size");
 			final String location=data.getString("location");
 			if(item.extra_uri!=null && !item.extra_uri.isEmpty()){
 				Glide.with(mContext)
@@ -115,12 +123,21 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 				holder.itemView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						if(item.message_direction.equals("send")){
-							FirebaseFileUploadService.startReceiveFileMessage(mContext,mSender_No,item.contact_id,item.chat_id,fileName,location,item.message_type,mSender_No);
+						if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+							mDownloadItem=item;
+							mDownloadFileName=fileName;
+							mDownloadLocation=location;
+							mFragment.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE} ,660);
 						}
 						else{
-							FirebaseFileUploadService.startReceiveFileMessage(mContext,item.contact_id,mSender_No,item.chat_id,fileName,location,item.message_type,mSender_No);
+							if(item.message_direction.equals("send")){
+								FirebaseFileUploadService.startReceiveFileMessage(mContext,mSender_No,item.contact_id,item.chat_id,fileName,location,item.message_type,mSender_No);
+							}
+							else{
+								FirebaseFileUploadService.startReceiveFileMessage(mContext,item.contact_id,mSender_No,item.chat_id,fileName,location,item.message_type,mSender_No);
+							}
 						}
+
 					}
 				});
 			}
@@ -215,11 +232,19 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 				holder.itemView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						if(item.message_direction.equals("send")){
-							FirebaseFileUploadService.startReceiveFileMessage(mContext,mSender_No,item.contact_id,item.chat_id,fileName,location,item.message_type,mSender_No);
+						if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+							mDownloadItem=item;
+							mDownloadFileName=fileName;
+							mDownloadLocation=location;
+							mFragment.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE} ,660);
 						}
 						else{
-							FirebaseFileUploadService.startReceiveFileMessage(mContext,item.contact_id,mSender_No,item.chat_id,fileName,location,item.message_type,mSender_No);
+							if(item.message_direction.equals("send")){
+								FirebaseFileUploadService.startReceiveFileMessage(mContext,mSender_No,item.contact_id,item.chat_id,fileName,location,item.message_type,mSender_No);
+							}
+							else{
+								FirebaseFileUploadService.startReceiveFileMessage(mContext,item.contact_id,mSender_No,item.chat_id,fileName,location,item.message_type,mSender_No);
+							}
 						}
 					}
 				});
@@ -305,11 +330,19 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 				holder.itemView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						if(item.message_direction.equals("send")){
-							FirebaseFileUploadService.startReceiveFileMessage(mContext,mSender_No,item.contact_id,item.chat_id,fileName,location,item.message_type,mSender_No);
+						if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+							mDownloadItem=item;
+							mDownloadFileName=fileName;
+							mDownloadLocation=location;
+							mFragment.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE} ,660);
 						}
 						else{
-							FirebaseFileUploadService.startReceiveFileMessage(mContext,item.contact_id,mSender_No,item.chat_id,fileName,location,item.message_type,mSender_No);
+							if(item.message_direction.equals("send")){
+								FirebaseFileUploadService.startReceiveFileMessage(mContext,mSender_No,item.contact_id,item.chat_id,fileName,location,item.message_type,mSender_No);
+							}
+							else{
+								FirebaseFileUploadService.startReceiveFileMessage(mContext,item.contact_id,mSender_No,item.chat_id,fileName,location,item.message_type,mSender_No);
+							}
 						}
 					}
 				});
