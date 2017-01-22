@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -125,7 +126,7 @@ public class FirebaseFileUploadService extends Service {
 			msg.put("location",firebase_push_id);
 			item.message=msg.toString();
 		} catch (JSONException e) {
-			//cannot happen guaranteed json is correct.
+			FirebaseCrash.log(e.getStackTrace().toString());
 		}
 		ProviderHelper.handleMessageInDatabase(this,item);
 		StorageReference mStorageReference= FirebaseStorage.getInstance().getReference().child(from_id.substring(1)+"/"+to_id.substring(1)+"/"+item.chat_id+fileName);

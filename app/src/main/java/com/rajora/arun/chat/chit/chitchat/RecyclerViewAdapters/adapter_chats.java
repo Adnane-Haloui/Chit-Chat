@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rajora.arun.chat.chit.chitchat.BuildConfig;
@@ -436,7 +437,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 				}
 			});
 		} catch (JSONException e) {
-			Log.d("findme", "handleLocation: parsing error");
+			FirebaseCrash.log(e.getStackTrace().toString());
 		}
 		holder.itemView.setContentDescription("location");
 	}
@@ -467,7 +468,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 				}
 			});
 		} catch (JSONException e) {
-			Log.d("findme", "handleLocation: parsing error");
+			FirebaseCrash.log(e.getStackTrace().toString());
 		}
 		holder.itemView.setContentDescription("contact");
 	}

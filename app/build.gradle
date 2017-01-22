@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'ArunRajora'
+            keyPassword 'newpassword'
+            storeFile file('$rootdir/keystore.jks')
+            storePassword 'newpassword'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-
     defaultConfig {
         applicationId "com.rajora.arun.chat.chit.chitchat"
         minSdkVersion 16
@@ -15,17 +22,17 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
-        buildTypes.each{
-            it.buildConfigField 'String' , "MAPS_API_SECRET", MapsApiKey
-            it.resValue 'string' , "GEO_API_KEY", GeoApiKey
+        buildTypes.each {
+            it.buildConfigField 'String', "MAPS_API_SECRET", MapsApiKey
+            it.resValue 'string', "GEO_API_KEY", GeoApiKey
         }
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
     compile project(':authenticator')
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'

@@ -184,18 +184,6 @@ public class chat_database extends SQLiteOpenHelper {
 			    QON+ContractChatListMessage.TN_COLUMN_CONTACT_ID+QEQUAL+ContractContacts.TN_COLUMN_CONTACT_ID+QAND+
 			    ContractChatListMessage.TN_COLUMN_IS_BOT+QEQUAL+ContractContacts.TN_COLUMN_IS_BOT+QSEMICOLON;
 
-
-        Log.d("findme",SQL_CREATE_CONTACTS_TABLE);
-        Log.d("findme",SQL_CREATE_CHAT_TABLE);
-        Log.d("findme",SQL_CREATE_NOTIFICATION_TEMP_LIST_TABLE);
-        Log.d("findme",SQL_CREATE_NOTIFICATION_LIST_TABLE);
-        Log.d("findme",SQL_CREATE_UNREAD_COUNT_TABLE);
-        Log.d("findme",SQL_CREATE_LAST_MESSAGE_TIME);
-        Log.d("findme",SQL_CREATE_LAST_MESSAGE_ID);
-        Log.d("findme",SQL_CREATE_LAST_MESSAGE);
-        Log.d("findme",SQL_CREATE_CHAT_LIST_MESSAGE);
-        Log.d("findme",SQL_CREATE_CHAT_LIST_TABLE);
-
             db.execSQL(SQL_CREATE_CONTACTS_TABLE);
             db.execSQL(SQL_CREATE_CHAT_TABLE);
             db.execSQL(SQL_CREATE_NOTIFICATION_TEMP_LIST_TABLE);

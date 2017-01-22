@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'arunrajora'
+            keyPassword 'newpassword'
+            storeFile file('$rootdir/keystore.jks')
+            storePassword 'newpassword'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-
     defaultConfig {
         applicationId "com.rajora.arun.chat.chit.chitchatdevelopers"
         minSdkVersion 16
@@ -15,13 +22,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
     compile project(':authenticator')
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.google.firebase:firebase-auth:10.0.1'

@@ -5,9 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-/**
- * Created by arc on 19/10/16.
- */
 
 public class BotDatabase extends SQLiteOpenHelper {
 
@@ -34,7 +31,6 @@ public class BotDatabase extends SQLiteOpenHelper {
                 BotContracts.COLUMN_TIMESTAMP+" INTEGER,"+
                 BotContracts.COLUMN_UPLOADED+" BOOLEAN"+
                 " );";
-        Log.d("findme",SQL_CREATE_BOTS_TABLE);
         db.execSQL(SQL_CREATE_BOTS_TABLE);
     }
 

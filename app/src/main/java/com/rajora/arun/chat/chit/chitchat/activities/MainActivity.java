@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.mainAppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 		checkPlayServices();
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showProfileEdit(){
-        Intent intent=new Intent(MainActivity.this,ProfileEditActivity.class);
+        Intent intent=new Intent(this,ProfileEditActivity.class);
         startActivityForResult(intent,REQUEST_CODE_PROFILE);
     }
 

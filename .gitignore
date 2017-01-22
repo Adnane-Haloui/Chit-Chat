@@ -5,8 +5,6 @@ build/
 *.iml
 .idea/
 
-*.jks
-
 captures/
 .navigation/
 *.log

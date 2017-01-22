@@ -326,7 +326,6 @@ public class LoginSplashFragment extends Fragment {
                         if(!task.isSuccessful()){
 	                        if(task.getException()!=null)
 	                        FirebaseCrash.log(task.getException().getMessage());
-                            Log.d("findme",task.getException().getMessage().toString());
                             showErrorMessage("Please check network Connectivity!");
                             mLoginButton.setText("TRY AGAIN");
                             mProgressBar.setVisibility(View.GONE);
