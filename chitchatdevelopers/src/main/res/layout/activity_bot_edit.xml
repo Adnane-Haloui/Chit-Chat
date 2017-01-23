@@ -59,6 +59,7 @@
                     android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/bot_endpoint_textInputLayout"
                 android:layout_gravity="center"
                 app:counterEnabled="true"
                 android:paddingTop="10dp"
@@ -73,6 +74,7 @@
                     android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
+	            android:id="@+id/bot_secret_textInputLayout"
                 android:layout_gravity="center"
                 app:counterMaxLength="200"
                 app:counterEnabled="true"
@@ -90,6 +92,7 @@
             </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
                 android:layout_gravity="center"
+                android:id="@+id/bot_about_textInputLayout"
                 app:counterMaxLength="100"
                 app:counterEnabled="true"
                 android:paddingTop="10dp"
@@ -113,7 +116,7 @@
                 android:elevation="12dp">
                 <ImageButton
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_done_white"
+                    android:src="@drawable/ic_done_black_24dp"
                     android:id="@+id/finish_button_bot_upload"
                     android:layout_width="60dp"
                     android:layout_height="60dp" />

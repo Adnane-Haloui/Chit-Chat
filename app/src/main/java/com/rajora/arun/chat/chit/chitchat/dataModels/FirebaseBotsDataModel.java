@@ -3,10 +3,6 @@ package com.rajora.arun.chat.chit.chitchat.dataModels;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by arc on 4/1/17.
- */
-
 public class FirebaseBotsDataModel implements Parcelable {
 	
 	private String Gid;

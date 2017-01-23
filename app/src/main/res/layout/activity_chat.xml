@@ -7,11 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.rajora.arun.chat.chit.chitchat.activities.ChatActivity">
-
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,8 +60,7 @@
 		                android:layout_width="match_parent"
 		                android:maxLines="1"
 		                android:ellipsize="end"
-		                android:layout_height="wrap_content"
-		                android:text="Arun Rajora"/>
+		                android:layout_height="wrap_content"/>
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
@@ -79,6 +76,7 @@
     </android.support.design.widget.CoordinatorLayout>
     <android.support.v7.widget.RecyclerView
         android:layout_marginLeft="-64dp"
+        android:layout_marginStart="-64dp"
         android:id="@+id/sidebar_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

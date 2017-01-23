@@ -1,13 +1,20 @@
 package com.rajora.arun.chat.chit.chitchatdevelopers.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,63 +32,41 @@ import com.rajora.arun.chat.chit.chitchatdevelopers.services.UploadProfileDetail
 import com.rajora.arun.chat.chit.chitchatdevelopers.utils.ImageUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ProfileEditActivity extends AppCompatActivity {
-
     private ImageView mProfilePicHolder;
-    private Button mButtonChangeProfilePic;
-    private ImageButton mSubmitDetails;
     private EditText mProfileName;
     private EditText mProfileAbout;
-    private TextInputLayout mNameTextInputLayout;
-    private Bitmap mProfilePic;
-    private String mName;
-    private String mAbout;
+
+    private String mProfilePicUri;
+    private String mCurrentPhotoPath;
 
     final static int REQUEST_CAPTURE_IMAGE=1;
     final static int REQUEST_PICK_IMAGE=2;
+
+    int mRequestCode;
+    String dataUri;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
+
         mProfilePicHolder=(ImageView)findViewById(R.id.profile_pic_holder);
-        mButtonChangeProfilePic=(Button)findViewById(R.id.upload_profile_pic_button);
-        mSubmitDetails=(ImageButton) findViewById(R.id.finish_button_profile_upload);
         mProfileName=(EditText) findViewById(R.id.profile_name);
         mProfileAbout=(EditText) findViewById(R.id.profile_about);
-        mNameTextInputLayout=(TextInputLayout)findViewById(R.id.name_textInputLayout);
-        mProfileName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(count==0 && mSubmitDetails.getVisibility()!= View.GONE){
-                    mSubmitDetails.setVisibility(View.GONE);
-                }
-                else if(count!=0 && mSubmitDetails.getVisibility()!=View.VISIBLE){
-                    mSubmitDetails.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(count==0 && mSubmitDetails.getVisibility()!= View.GONE){
-                    mSubmitDetails.setVisibility(View.GONE);
-                }
-                else if(count!=0 && mSubmitDetails.getVisibility()!=View.VISIBLE){
-                    mSubmitDetails.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length()==0 && mSubmitDetails.getVisibility()!= View.GONE){
-                    mSubmitDetails.setVisibility(View.GONE);
-                }
-                else if(s.length()!=0 && mSubmitDetails.getVisibility()!=View.VISIBLE){
-                    mSubmitDetails.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        if(savedInstanceState!=null)
+        {
+            restoreLayoutValues(savedInstanceState);
+            mRequestCode=savedInstanceState.getInt("requestCode");
+            if(savedInstanceState.containsKey("datauri"))
+                dataUri=savedInstanceState.getString("datauri");
+        }
         mProfilePicHolder.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -89,52 +74,83 @@ public class ProfileEditActivity extends AppCompatActivity {
                 changeProfilePic();
             }
         });
-        mButtonChangeProfilePic.setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.upload_profile_pic_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeProfilePic();
-            }
-        });
-        mSubmitDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mProfileName.getText().toString()!=null && mProfileName.getText().toString().length()>0){
-                    mName=mProfileName.getText().toString();
-                    mAbout=mProfileAbout.getText().toString();
-                    SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
-                    final String ph_no=sharedPreferences.getString("phone","null");
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    if(mProfilePic!=null)
-                        mProfilePic.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    byte[] data = baos.toByteArray();
-                    SharedPreferences preferences=getSharedPreferences("user-details",MODE_PRIVATE);
-                    SharedPreferences.Editor editor=preferences.edit();
-                    editor.putString("failed","0");
-                    editor.commit();
-                    UploadProfileDetails.startUploadProfile(ProfileEditActivity.this,ph_no,data,mName,mAbout);
-                    ProfileEditActivity.this.finish();
+                mRequestCode=-100;
+                dataUri=null;
+                if (ContextCompat.checkSelfPermission(ProfileEditActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED
+                        || ContextCompat.checkSelfPermission(ProfileEditActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ProfileEditActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE} ,550);
                 }
                 else{
-                    mNameTextInputLayout.setError("Required!");
+                    changeProfilePic();
                 }
             }
         });
-        restoreLayoutValues(savedInstanceState);
+
+        findViewById(R.id.cancel_button_profile_upload).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        findViewById(R.id.finish_button_profile_upload).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finalizeProfileDetails();
+            }
+        });
     }
+
+    private void finalizeProfileDetails(){
+        getSharedPreferences("user-details",MODE_PRIVATE).edit().putString("profile-pic",mProfilePicUri).commit();
+	    if(mProfileName.getText()==null || mProfileName.getText().toString().isEmpty()){
+		    Toast.makeText(this, "Developer name cannot be empty", Toast.LENGTH_SHORT).show();
+	    }
+	    else{
+		    Intent uploadProfileIntent=new Intent(this,UploadProfileDetails.class);
+		    uploadProfileIntent.putExtra(UploadProfileDetails.PARAM_NAME,mProfileName.getText().toString());
+		    uploadProfileIntent.putExtra(UploadProfileDetails.PARAM_ABOUT,mProfileAbout.getText().toString());
+		    uploadProfileIntent.putExtra(UploadProfileDetails.PARAM_PIC_URI,mProfilePicUri);
+		    startService(uploadProfileIntent);
+		    getSharedPreferences("user-details",MODE_PRIVATE).edit().putBoolean("first_profile_edit",true).commit();
+		    finish();
+
+	    }
+    }
+
     private void restoreLayoutValues(Bundle savedInstanceState){
-        if(true){
-            SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
-            String imageString=sharedPreferences.getString("pic",null);
-            if(imageString!=null && imageString.length()!=0)
-                mProfilePicHolder.setImageBitmap(ImageUtils.stringToBitmap(imageString));
-            mProfileName.setText(sharedPreferences.getString("name",""));
-            mProfileAbout.setText(sharedPreferences.getString("about",""));
-            if(mProfileName.getText().toString().length()!=0)
-                mSubmitDetails.setVisibility(View.VISIBLE);
-
+        SharedPreferences sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+        if(savedInstanceState!=null && savedInstanceState.containsKey("profile_pic")){
+            mProfilePicUri=savedInstanceState.getString("profile_pic");
+            if(mProfilePicUri!=null){
+                mProfilePicHolder.setImageURI(Uri.parse(mProfilePicUri));
+            }
         }
-
+        else{
+            String mPicBase64=sharedPreferences.getString("profile_pic",null);
+            if(mPicBase64!=null && mPicBase64.length()>=10)
+                mProfilePicHolder.setImageBitmap(ImageUtils.stringToBitmap(mPicBase64));
+        }
+        if(savedInstanceState!=null && savedInstanceState.containsKey("name")){
+            mProfileName.setText(savedInstanceState.getString("name"));
+        }
+        else{
+            mProfileName.setText(sharedPreferences.getString("name",""));
+        }
+        if(savedInstanceState!=null && savedInstanceState.containsKey("about")){
+            mProfileAbout.setText(savedInstanceState.getString("about"));
+        }
+        else{
+            mProfileAbout.setText(sharedPreferences.getString("about",""));
+        }
+        if(savedInstanceState!=null && savedInstanceState.containsKey("profile_pic_current_path")){
+            mCurrentPhotoPath=savedInstanceState.getString("profile_pic_current_path");
+        }
     }
+
     private void changeProfilePic(){
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         builder.setTitle(R.string.pick_image_from)
@@ -143,41 +159,100 @@ public class ProfileEditActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if(which==0){
                             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                                startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
+                            File photoFile = createImageFile();
+                            if (photoFile == null) {
+                                Toast.makeText(ProfileEditActivity.this,"Error creating file for image!",Toast.LENGTH_SHORT).show();
                             }
                             else{
-                                Toast.makeText(ProfileEditActivity.this,"No Camera App found !",Toast.LENGTH_SHORT).show();
+                                Uri photoURI = FileProvider.getUriForFile(ProfileEditActivity.this,
+                                        "com.rajora.arun.chat.chit.chitchatdevelopers.fileprovider",
+                                        photoFile);
+                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                                    startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
+                                }
+                                else{
+                                    Toast.makeText(ProfileEditActivity.this,"No camera app found!",Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                         else if(which==1){
-                            Intent intent = new Intent().setType("image/*").setAction(Intent.ACTION_GET_CONTENT);
-                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_PICK_IMAGE);
+                            Intent PickImageintent = new Intent().setType("image/*").setAction(Intent.ACTION_GET_CONTENT);
+                            if (PickImageintent.resolveActivity(getPackageManager()) != null) {
+                                startActivityForResult(PickImageintent,REQUEST_PICK_IMAGE);
+                            }
+                            else{
+                                Toast.makeText(ProfileEditActivity.this,"No app found to pick image!",Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });
         builder.create().show();
     }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CAPTURE_IMAGE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            mProfilePic = (Bitmap) extras.get("data");
-            mProfilePicHolder.setImageBitmap(mProfilePic);
-        }
-        else if(requestCode == REQUEST_PICK_IMAGE && resultCode == RESULT_OK){
-            Uri uri = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                if(bitmap!=null){
-                    bitmap= ThumbnailUtils.extractThumbnail(bitmap,512,512);
-                    mProfilePic=bitmap;
-                    mProfilePicHolder.setImageBitmap(mProfilePic);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if(mRequestCode==REQUEST_CAPTURE_IMAGE){
+                mProfilePicUri = Uri.fromFile(new File(mCurrentPhotoPath)).toString();
+                mProfilePicHolder.setImageURI(Uri.parse(mProfilePicUri));
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.parse(mProfilePicUri)));
+            }
+            else if(mRequestCode==REQUEST_PICK_IMAGE){
+                mProfilePicUri = dataUri;
+                mProfilePicHolder.setImageURI(Uri.parse(dataUri));
+            }
+            else{
+                changeProfilePic();
             }
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode==RESULT_OK){
+            mRequestCode=requestCode;
+            dataUri=mRequestCode==REQUEST_PICK_IMAGE?data.getData().toString():null;
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE} ,550);
+            }
+            else{
+                if(requestCode==REQUEST_CAPTURE_IMAGE){
+                    mProfilePicUri = Uri.fromFile(new File(mCurrentPhotoPath)).toString();
+                    mProfilePicHolder.setImageURI(Uri.parse(mProfilePicUri));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.parse(mProfilePicUri)));
+                }
+                else if(requestCode==REQUEST_PICK_IMAGE){
+                    mProfilePicUri = data.getData().toString();
+                    mProfilePicHolder.setImageURI(data.getData());
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mProfileName!=null)
+            outState.putString("name",mProfileName.getText().toString());
+        if(mProfileAbout!=null)
+            outState.putString("about",mProfileAbout.getText().toString());
+        if(mProfilePicUri!=null)
+            outState.putString("profile_pic",mProfilePicUri);
+        if(mCurrentPhotoPath!=null)
+            outState.putString("profile_pic_current_path",mCurrentPhotoPath);
+        outState.putInt("requestCode",mRequestCode);
+        if(dataUri!=null)
+            outState.putString("datauri",dataUri);
+    }
+
+    private File createImageFile(){
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+Math.floor(Math.random()*1000);
+        String imageFileName = "JPEG_" + timeStamp + "_.jpg";
+        File image =new  File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),imageFileName);
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
 }

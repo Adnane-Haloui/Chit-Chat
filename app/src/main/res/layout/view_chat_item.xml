@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
-	        android:layout_gravity="center_vertical"
+	        android:layout_gravity="bottom"
 	        android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -59,9 +59,11 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:background="@drawable/badge"
-		        android:text="1103"/>
+		        android:textColor="@android:color/white"
+		        tools:text="1103"/>
 	        <TextView
-                android:text="6:02 pm\n9 dec 2016"
+		        android:layout_gravity="bottom"
+                tools:text="6:02 pm\n9 dec 2016"
                 android:paddingRight="@dimen/chatlist_time_padding_right"
                 android:lines="2"
                 android:gravity="top"
@@ -69,6 +71,5 @@
                 android:id="@+id/chat_item_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-
         </LinearLayout>
 </LinearLayout>

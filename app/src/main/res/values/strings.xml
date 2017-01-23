@@ -13,4 +13,6 @@
 	<string name="submit_profile_pic_content_description">Submit Profile Details</string>
 	<string name="appwidget_text">EXAMPLE</string>
 	<string name="add_widget">Add widget</string>
+	<string name="about_chit_chat">Created by Arun Rajora.\nVisit github.com/arunrajora/chit-chat for the source code of this app.</string>
+	<string name="empty_contacts">No contacts!</string>
 </resources>

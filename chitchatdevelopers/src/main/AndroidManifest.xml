@@ -1,52 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.rajora.arun.chat.chit.chitchatdevelopers">
+          package="com.rajora.arun.chat.chit.chitchatdevelopers">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<uses-permission android:name="android.permission.RECEIVE_SMS"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
+	<uses-feature
+		android:name="android.hardware.camera"
+		android:required="false"/>
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".activities.MainActivity"
-            android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+	<application
+		android:allowBackup="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme">
+		<activity
+			android:name=".activities.MainActivity"
+			android:theme="@style/SplashTheme">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.ProfileEditActivity"
-            android:windowSoftInputMode="stateHidden" />
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+		<activity
+			android:name=".activities.ProfileEditActivity"
+			android:windowSoftInputMode="stateHidden"/>
 
-        <service
-            android:name=".services.UploadProfileDetails"
-            android:exported="false" />
+		<service
+			android:name=".services.UploadProfileDetails"
+			android:exported="false"/>
 
-        <activity
-            android:name=".activities.BotEditActivity"
-            android:theme="@style/Theme.AppCompat.Dialog"
-            android:windowSoftInputMode="stateHidden" />
+		<activity
+			android:name=".activities.BotEditActivity"
+			android:theme="@style/Theme.AppCompat.Dialog"
+			android:windowSoftInputMode="stateHidden"/>
 
-        <service
-            android:name=".services.UploadBotDetails"
-            android:exported="false" />
+		<service
+			android:name=".services.UploadBotDetails"
+			android:exported="false"/>
 
-        <provider
-            android:name=".contentProviders.BotContentProvider"
-            android:authorities="com.rajora.arun.chit.chatdevelopers.bots.provider"
-            android:enabled="true"
-            android:exported="false"></provider>
-    </application>
+		<provider
+			android:name=".contentProviders.BotContentProvider"
+			android:authorities="com.rajora.arun.chit.chatdevelopers.bots.provider"
+			android:enabled="true"
+			android:exported="false"/>
+
+		<provider
+			android:name="android.support.v4.content.FileProvider"
+			android:authorities="com.rajora.arun.chat.chit.chitchatdevelopers.fileprovider"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/file_paths"/>
+		</provider>
+
+		<activity android:name=".activities.BotDetailsActivity"
+			android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+		</activity>
+	</application>
 
 </manifest>

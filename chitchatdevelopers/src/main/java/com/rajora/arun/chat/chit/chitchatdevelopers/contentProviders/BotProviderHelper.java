@@ -2,8 +2,10 @@ package com.rajora.arun.chat.chit.chitchatdevelopers.contentProviders;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 
+import com.rajora.arun.chat.chit.chitchatdevelopers.dataModel.LocalBotDataModel;
 import com.rajora.arun.chat.chit.chitchatdevelopers.database.BotContracts;
 
 /**
@@ -11,62 +13,75 @@ import com.rajora.arun.chat.chit.chitchatdevelopers.database.BotContracts;
  */
 
 public class BotProviderHelper {
-    public static Uri AddBot(Context context,String id,String g_id,String name,String about,String url,String secret,byte[] pic,String pic_url,long timestamp,long img_timestamp,boolean updated){
-        ContentValues values = new ContentValues();
-        values.put(BotContracts.COLUMN_ID,id);
-        values.put(BotContracts.COLUMN_BOT_NAME,name);
-        values.put(BotContracts.COLUMN_ABOUT,about);
-        values.put(BotContracts.COLUMN_API_ENDPOINT,url);
-        values.put(BotContracts.COLUMN_SECRET,secret);
-        values.put(BotContracts.COLUMN_PIC,pic);
-        values.put(BotContracts.COLUMN_GLOBAL_ID,g_id);
-        values.put(BotContracts.COLUMN_PIC_URL,pic_url);
-        values.put(BotContracts.COLUMN_TIMESTAMP,timestamp);
-        values.put(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP,img_timestamp);
-        values.put(BotContracts.COLUMN_UPLOADED,updated);
 
-        return context.getContentResolver().insert(BotContentProvider.CONTENT_URI, values);
-    }
-    public static Uri AddBot(Context context,String id,String g_id,String name,String about,String url,String secret,byte[] pic,long timestamp,boolean updated){
-        ContentValues values = new ContentValues();
-        values.put(BotContracts.COLUMN_ID,id);
-        values.put(BotContracts.COLUMN_BOT_NAME,name);
-        values.put(BotContracts.COLUMN_ABOUT,about);
-        values.put(BotContracts.COLUMN_API_ENDPOINT,url);
-        values.put(BotContracts.COLUMN_SECRET,secret);
-        values.put(BotContracts.COLUMN_PIC,pic);
-        values.put(BotContracts.COLUMN_GLOBAL_ID,g_id);
-        values.put(BotContracts.COLUMN_TIMESTAMP,timestamp);
-        values.put(BotContracts.COLUMN_UPLOADED,updated);
-
-        return context.getContentResolver().insert(BotContentProvider.CONTENT_URI, values);
+    public static Uri AddBot(Context context, LocalBotDataModel item){
+        if(!botExists(context,item.Gid)){
+            ContentValues values = new ContentValues();
+            values.put(BotContracts.COLUMN_ID,item.id);
+            values.put(BotContracts.COLUMN_BOT_NAME,item.name);
+            values.put(BotContracts.COLUMN_ABOUT,item.desc);
+            values.put(BotContracts.COLUMN_API_ENDPOINT,item.endpoint);
+            values.put(BotContracts.COLUMN_SECRET,item.secret);
+            values.put(BotContracts.COLUMN_GLOBAL_ID,item.Gid);
+            values.put(BotContracts.COLUMN_TIMESTAMP,item.timestamp);
+            values.put(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP,item.image_last_update_timestamp);
+            return context.getContentResolver().insert(BotContentProvider.CONTENT_URI, values);
+        }
+        return null;
     }
 
-    public static int UpdateBot(Context context,String id,String g_id,String name,String about,String url,String secret,byte[] pic,String pic_url,long timestamp,long img_timestamp,boolean updated){
-        ContentValues values = new ContentValues();
-        values.put(BotContracts.COLUMN_ID,id);
-        values.put(BotContracts.COLUMN_BOT_NAME,name);
-        values.put(BotContracts.COLUMN_ABOUT,about);
-        values.put(BotContracts.COLUMN_API_ENDPOINT,url);
-        values.put(BotContracts.COLUMN_SECRET,secret);
-        values.put(BotContracts.COLUMN_PIC,pic);
-        values.put(BotContracts.COLUMN_GLOBAL_ID,g_id);
-        values.put(BotContracts.COLUMN_PIC_URL,pic_url);
-        values.put(BotContracts.COLUMN_TIMESTAMP,timestamp);
-        values.put(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP,img_timestamp);
-        values.put(BotContracts.COLUMN_UPLOADED,updated);
+	public static Uri AddBot(Context context, LocalBotDataModel item,String pic){
+		if(!botExists(context,item.Gid)){
+			ContentValues values = new ContentValues();
+			values.put(BotContracts.COLUMN_ID,item.id);
+			values.put(BotContracts.COLUMN_BOT_NAME,item.name);
+			values.put(BotContracts.COLUMN_ABOUT,item.desc);
+			values.put(BotContracts.COLUMN_API_ENDPOINT,item.endpoint);
+			values.put(BotContracts.COLUMN_SECRET,item.secret);
+			values.put(BotContracts.COLUMN_GLOBAL_ID,item.Gid);
+			values.put(BotContracts.COLUMN_PIC_URI,pic);
+			values.put(BotContracts.COLUMN_TIMESTAMP,item.timestamp);
+			values.put(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP,item.image_last_update_timestamp);
+			return context.getContentResolver().insert(BotContentProvider.CONTENT_URI, values);
+		}
+		return null;
+	}
 
-        return context.getContentResolver().update(BotContentProvider.CONTENT_URI, values,BotContracts.COLUMN_ID+" = ?", new String[]{id});
-    }
+	public static int UpdateBot(Context context, LocalBotDataModel item){
+		ContentValues values = new ContentValues();
+		values.put(BotContracts.COLUMN_ID,item.id);
+		values.put(BotContracts.COLUMN_BOT_NAME,item.name);
+		values.put(BotContracts.COLUMN_ABOUT,item.desc);
+		values.put(BotContracts.COLUMN_API_ENDPOINT,item.endpoint);
+		values.put(BotContracts.COLUMN_SECRET,item.secret);
+		values.put(BotContracts.COLUMN_GLOBAL_ID,item.Gid);
+		values.put(BotContracts.COLUMN_TIMESTAMP,item.timestamp);
+		values.put(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP,item.image_last_update_timestamp);
+		return context.getContentResolver().update(BotContentProvider.CONTENT_URI, values,BotContracts.COLUMN_ID+" = ?",new String[]{item.id});
+	}
 
-    public static int update_Image_Timestamp_Updated(Context context,String id,String pic_url,long img_timestamp,boolean updated){
-        ContentValues values = new ContentValues();
-        values.put(BotContracts.COLUMN_ID,id);
-        values.put(BotContracts.COLUMN_PIC_URL,pic_url);
-        values.put(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP,img_timestamp);
-        values.put(BotContracts.COLUMN_UPLOADED,updated);
+	public static int UpdateBot(Context context, LocalBotDataModel item,String img){
+		ContentValues values = new ContentValues();
+		values.put(BotContracts.COLUMN_ID,item.id);
+		values.put(BotContracts.COLUMN_BOT_NAME,item.name);
+		values.put(BotContracts.COLUMN_ABOUT,item.desc);
+		values.put(BotContracts.COLUMN_API_ENDPOINT,item.endpoint);
+		values.put(BotContracts.COLUMN_SECRET,item.secret);
+		values.put(BotContracts.COLUMN_GLOBAL_ID,item.Gid);
+		values.put(BotContracts.COLUMN_TIMESTAMP,item.timestamp);
+		values.put(BotContracts.COLUMN_PIC_URI,img);
+		values.put(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP,item.image_last_update_timestamp);
+		return context.getContentResolver().update(BotContentProvider.CONTENT_URI, values,BotContracts.COLUMN_ID+" = ?",new String[]{item.id});
+	}
 
-        return context.getContentResolver().update(BotContentProvider.CONTENT_URI, values,BotContracts.COLUMN_ID+" = ?", new String[]{id});
+    private static boolean botExists(Context context,String  Gid){
+        Cursor cursor=context.getContentResolver().query(BotContentProvider.CONTENT_URI,new String[]{BotContracts._ID}
+                ,BotContracts.COLUMN_GLOBAL_ID+" = ? ",new String[]{Gid},null);
+        boolean result=cursor!=null && cursor.getCount()>0;
+	    if(cursor!=null && !cursor.isClosed()){
+		    cursor.close();
+	    }
+	    return result;
     }
 
 }

@@ -7,9 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.facebook.stetho.Stetho;
 import com.rajora.arun.chat.chit.authenticator.login.Login;
 import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.fcm.MyFirebaseInstanceIDService;
@@ -34,9 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 		checkPlayServices();
-        Stetho.initializeWithDefaults(this);
-
-	    sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
+        sharedPreferences=getSharedPreferences("user-details",MODE_PRIVATE);
         if(sharedPreferences.contains("login_status") && sharedPreferences.getString("login_status","").equals("complete")) {
             if(sharedPreferences.contains("first_profile_edit") && sharedPreferences.getBoolean("first_profile_edit",false)){
                 showChatFragment(false);

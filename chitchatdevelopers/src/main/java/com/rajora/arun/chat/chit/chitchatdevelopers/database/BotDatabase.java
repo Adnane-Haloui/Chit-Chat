@@ -8,8 +8,8 @@ import android.util.Log;
 
 public class BotDatabase extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION=5;
-    public static final String DATABASE_NAME="bot.db";
+    private static final int DATABASE_VERSION=8;
+    private static final String DATABASE_NAME="bot.db";
 
     public BotDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -19,18 +19,16 @@ public class BotDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         final String SQL_CREATE_BOTS_TABLE="CREATE TABLE "+BotContracts.TABLE_NAME+"("+
-                BotContracts.COLUMN_ID+" STRING PRIMARY KEY NOT NULL,"+
-                BotContracts.COLUMN_GLOBAL_ID+" STRING NOT NULL,"+
-                BotContracts.COLUMN_BOT_NAME+" STRING NOT NULL,"+
-                BotContracts.COLUMN_ABOUT+" STRING NOT NULL,"+
-                BotContracts.COLUMN_PIC+" BLOB,"+
-                BotContracts.COLUMN_PIC_URL+" STRING,"+
-                BotContracts.COLUMN_API_ENDPOINT+" STRING NOT NULL,"+
-                BotContracts.COLUMN_SECRET+" STRING,"+
-                BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP+" INTEGER,"+
-                BotContracts.COLUMN_TIMESTAMP+" INTEGER,"+
-                BotContracts.COLUMN_UPLOADED+" BOOLEAN"+
-                " );";
+                BotContracts._ID+" INTEGER PRIMARY KEY AUTOINCREMENT ,"+
+                BotContracts.COLUMN_ID+" STRING NOT NULL UNIQUE ,"+
+                BotContracts.COLUMN_GLOBAL_ID+" STRING NOT NULL ,"+
+                BotContracts.COLUMN_BOT_NAME+" STRING NOT NULL ,"+
+                BotContracts.COLUMN_ABOUT+" STRING NOT NULL ,"+
+                BotContracts.COLUMN_PIC_URI+" STRING ,"+
+                BotContracts.COLUMN_API_ENDPOINT+" STRING NOT NULL ,"+
+                BotContracts.COLUMN_SECRET+" STRING ,"+
+                BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP+" INTEGER ,"+
+                BotContracts.COLUMN_TIMESTAMP+" INTEGER "+ " );";
         db.execSQL(SQL_CREATE_BOTS_TABLE);
     }
 

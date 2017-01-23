@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.rajora.arun.chat.chit.chitchat.activities.MainActivity">
-
     <FrameLayout
         android:id="@+id/fragment_chat_list_holder"
         android:layout_width="wrap_content"

@@ -23,7 +23,6 @@ public class BotContentProvider extends ContentProvider {
     public static final String URL = "content://" + PROVIDER_NAME + "/bot";
     public static final Uri CONTENT_URI = Uri.parse(URL);
     private static final UriMatcher sUriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
-    private static HashMap<String, String> STUDENTS_PROJECTION_MAP;
     private BotDatabase mBotDatabase;
     private SQLiteDatabase db;
 
@@ -47,7 +46,7 @@ public class BotContentProvider extends ContentProvider {
             case 2:
                 String id = uri.getPathSegments().get(1);
                 count = db.delete( BotContracts.TABLE_NAME, BotContracts.COLUMN_ID +  " = " + id +
-                        (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                        (TextUtils.isEmpty(selection) ? "" : " AND (" + selection + ')'), selectionArgs);
                 break;
 
             default:
@@ -73,7 +72,7 @@ public class BotContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         db=mBotDatabase.getWritableDatabase();
-        long rowId=db.insert(BotContracts.TABLE_NAME,"",values);
+        long rowId=db.insertWithOnConflict(BotContracts.TABLE_NAME,"",values,SQLiteDatabase.CONFLICT_IGNORE);
         if (rowId > 0)
         {
             Uri _uri = ContentUris.withAppendedId(CONTENT_URI,rowId);
@@ -97,7 +96,6 @@ public class BotContentProvider extends ContentProvider {
         queryBuilder.setTables(BotContracts.TABLE_NAME);
         switch (sUriMatcher.match(uri)){
             case 1:
-                queryBuilder.setProjectionMap(STUDENTS_PROJECTION_MAP);
                 break;
             case 2:
                 queryBuilder.appendWhere( BotContracts.COLUMN_ID+ "=" + uri.getPathSegments().get(1));

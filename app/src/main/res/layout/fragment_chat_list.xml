@@ -7,6 +7,7 @@
 	<TextView
 		android:id="@+id/chat_list_empty"
 		android:text="Chat history empty!"
+		android:padding="12dp"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:textAlignment="center"/>

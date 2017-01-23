@@ -38,6 +38,16 @@ function sendMessaggeToUser(data,userContact,sender){
   } else {
     console.log("Data saved successfully.");
   }
+  var botstatref=db.ref("botStat/"+sender);
+  botstatref.transaction(function (cur_val){ return (cur_val)+1});
+	var dd = new Date().getDate();
+	var mm = new Date().getMonth()+1;
+	var yyyy = new Date().getFullYear();
+	if(dd<10){dd='0'+dd;} 
+	if(mm<10){mm='0'+mm;} 
+	var today = yyyy+'_'+mm+'_'+dd;
+  var botlog=db.ref("botLog/"+sender+"/"+today);
+  botlog.transaction(function (cur_val){ return (cur_val)+1});
 });
  
 }

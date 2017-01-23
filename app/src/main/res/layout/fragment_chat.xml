@@ -72,7 +72,8 @@
             android:background="@drawable/edittext_round_border"/>
             <ImageView
                 android:id="@+id/send_message_button"
-                android:background="#6CFF9C"
+                android:background="@color/colorAccent"
+                android:tint="@android:color/white"
                 android:layout_width="@dimen/imageview_circular_small"
                 android:layout_height="@dimen/imageview_circular_small"
                 android:padding="@dimen/send_message_padding"
