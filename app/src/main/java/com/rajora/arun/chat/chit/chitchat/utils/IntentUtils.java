@@ -39,7 +39,7 @@ public class IntentUtils {
 			fragment.startActivityForResult(Intent.createChooser(pickFileIntent,"Pick a file"), requestCode);
 		}
 		else{
-			Toast.makeText(fragment.getContext(),"No file picker app found!",Toast.LENGTH_SHORT).show();
+			Toast.makeText(fragment.getContext(), string.cc_warn_no_picker,Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -48,9 +48,9 @@ public class IntentUtils {
 		try {
 			fragment.startActivityForResult(builder.build(fragment.getActivity()), requestCode);
 		} catch (GooglePlayServicesRepairableException e) {
-			Toast.makeText(fragment.getContext(),"Please try again later!",Toast.LENGTH_SHORT).show();
+			Toast.makeText(fragment.getContext(), string.cc_twy_later,Toast.LENGTH_SHORT).show();
 		} catch (GooglePlayServicesNotAvailableException e) {
-			Toast.makeText(fragment.getContext(),"Please install google play services",Toast.LENGTH_SHORT).show();
+			Toast.makeText(fragment.getContext(), string.cc_install_gps,Toast.LENGTH_SHORT).show();
 		}
 	}
 	public static void fireContactPickerIntent(Fragment fragment,int requestCode){
@@ -59,14 +59,14 @@ public class IntentUtils {
 			fragment.startActivityForResult(pickContactIntent,requestCode);
 		}
 		else{
-			Toast.makeText(fragment.getContext(),"No contact picker app found!",Toast.LENGTH_SHORT).show();
+			Toast.makeText(fragment.getContext(), string.cc_no_cpicker,Toast.LENGTH_SHORT).show();
 		}
 	}
 
 
 
 	public static void showVideoSelectionPopup(final Fragment fragment, final int requestCodeCapture, final int requestCodePick){
-		new Builder(fragment.getContext()).setTitle("Pick video from")
+		new Builder(fragment.getContext()).setTitle(string.cc_pick_video_from)
 				.setItems(array.pick_video_option_list_array, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -76,7 +76,7 @@ public class IntentUtils {
 								fragment.startActivityForResult(takePictureIntent,requestCodeCapture);
 							}
 							else{
-								Toast.makeText(fragment.getContext(),"No camera app found!",Toast.LENGTH_SHORT).show();
+								Toast.makeText(fragment.getContext(), string.cc_no_camera_app,Toast.LENGTH_SHORT).show();
 							}
 						}
 						else if(which==1){
@@ -85,7 +85,7 @@ public class IntentUtils {
 								fragment.startActivityForResult(PickImageintent,requestCodePick);
 							}
 							else{
-								Toast.makeText(fragment.getContext(),"No app found to pick video!",Toast.LENGTH_SHORT).show();
+								Toast.makeText(fragment.getContext(), string.cc_no_video_picker,Toast.LENGTH_SHORT).show();
 							}
 						}
 					}

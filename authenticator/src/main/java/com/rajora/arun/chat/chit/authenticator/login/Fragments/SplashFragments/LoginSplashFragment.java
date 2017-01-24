@@ -267,8 +267,8 @@ public class LoginSplashFragment extends Fragment {
                             if(response.getString("token").equals("auth_failed")){
                                 FirebaseCrash.log("AUTH_FAILED TOKEN RECEIVED");
                                 errorOccurred=true;
-                                showErrorMessage("Our servers are under maintenance. Please try again later!");
-                                mLoginButton.setText("TRY AGAIN");
+                                showErrorMessage(getString(R.string.server_error));
+                                mLoginButton.setText(R.string.try_again);
                                 mProgressBar.setVisibility(View.GONE);
                                 mLoginButton.setOnClickListener(fetchFirebaseAuthTokenClickListener);
                                 mLoginButton.setVisibility(View.VISIBLE);
@@ -293,8 +293,8 @@ public class LoginSplashFragment extends Fragment {
                             e.printStackTrace();
                             errorOccurred=true;
 	                        FirebaseCrash.log("JSON PARSING ERROR "+e.getStackTrace().toString());
-                            showErrorMessage("Please check network Connectivity!");
-                            mLoginButton.setText("TRY AGAIN");
+                            showErrorMessage(getString(R.string.net_conn_msg));
+                            mLoginButton.setText(R.string.try_again);
                             mProgressBar.setVisibility(View.GONE);
                             mLoginButton.setOnClickListener(fetchFirebaseAuthTokenClickListener);
                             mLoginButton.setVisibility(View.VISIBLE);
@@ -308,8 +308,8 @@ public class LoginSplashFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                showErrorMessage("Please check network Connectivity!");
-                mLoginButton.setText("TRY AGAIN");
+                showErrorMessage(getString(R.string.net_conn_msg));
+                mLoginButton.setText(R.string.try_again);
                 mProgressBar.setVisibility(View.GONE);
                 mLoginButton.setOnClickListener(fetchFirebaseAuthTokenClickListener);
                 mLoginButton.setVisibility(View.VISIBLE);
@@ -326,8 +326,8 @@ public class LoginSplashFragment extends Fragment {
                         if(!task.isSuccessful()){
 	                        if(task.getException()!=null)
 	                        FirebaseCrash.log(task.getException().getMessage());
-                            showErrorMessage("Please check network Connectivity!");
-                            mLoginButton.setText("TRY AGAIN");
+                            showErrorMessage(getString(R.string.net_conn_msg));
+                            mLoginButton.setText(R.string.try_again);
                             mProgressBar.setVisibility(View.GONE);
                             mLoginButton.setOnClickListener(authOnFirebaseAuthClickListener);
                             mLoginButton.setVisibility(View.VISIBLE);
@@ -344,7 +344,7 @@ public class LoginSplashFragment extends Fragment {
     }
 
     private void onDigitVerificationFailed(){
-        showErrorMessage("Phone number verification failed. Please try after sometime later.");
+        showErrorMessage(getString(R.string.digit_veri_failed));
     }
     public void authenticate(){
         mCurrentAuthStatus=Auth_Status.AUTHENTICATE_ON_DIGIT;

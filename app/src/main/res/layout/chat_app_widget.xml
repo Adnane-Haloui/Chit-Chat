@@ -20,12 +20,12 @@
 		android:layout_height="match_parent">
 	</ListView>
 	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-	          android:contentDescription="chat with someone"
+	          android:contentDescription="@string/cc_chat_with_someone"
 	          android:layout_width="match_parent"
 	          android:layout_height="wrap_content"
 	          android:padding="10dp"
 	          android:visibility="gone"
-	          android:text="Chat with someone"
+	          android:text="@string/cc_chat_with_someone"
 	          android:id="@+id/ListViewEmpty"
 	          android:gravity="center"
 	          android:textSize="30sp"/>

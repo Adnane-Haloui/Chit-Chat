@@ -56,8 +56,8 @@ public class adapter_sidebar_contact_item extends CursorRecyclerViewAdapter<VH>{
 	    holder.sidebarPanel.setVisibility(mOpenIndexes.contains(holder.getAdapterPosition())?View.VISIBLE:View.GONE);
 	    ImageUtils.loadImageIntoView(mContext,item,holder.mImage);
 	    holder.mName.setText(item.name==null?"":item.name);
-        holder.mName.setContentDescription("Contact "+(item.name==null?"Unknown":item.name));
-        holder.mImageContainerCardView.setContentDescription("Profile pic of "+(item.name==null?"Unknown":item.name));
+        holder.mName.setContentDescription(String.format("Contact %s", item.name == null ? "Unknown" : item.name));
+        holder.mImageContainerCardView.setContentDescription(String.format("Profile pic of %s", item.name == null ? "Unknown" : item.name));
         bind(holder,mItemClickListener,item);
     }
 

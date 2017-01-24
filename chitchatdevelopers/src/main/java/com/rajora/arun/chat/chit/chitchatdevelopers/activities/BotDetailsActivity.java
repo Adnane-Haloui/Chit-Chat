@@ -32,7 +32,7 @@ import java.util.Date;
 
 public class BotDetailsActivity extends AppCompatActivity implements android.app.LoaderManager.LoaderCallbacks<Cursor>{
 
-	private  static int CURSOR_LOADER_ID=10;
+	private final static int CURSOR_LOADER_ID=10;
 
 	private int arr[]=new int[7];
 	private String gid;

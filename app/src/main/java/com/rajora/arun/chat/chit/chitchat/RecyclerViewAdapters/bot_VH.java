@@ -44,13 +44,13 @@ public class bot_VH extends RecyclerView.ViewHolder {
 	}
 
 	public void setContentDescription(FirebaseBotsDataModel model){
-		mName.setContentDescription("Bot item "+model.getName());
-		itemView.setContentDescription("Bot item "+model.getName()+" by "+
-				(model.getDev_name()==null || model.getDev_name().isEmpty() ?"Unknown":model.getDev_name()));
-		mImageContainerCardView.setContentDescription("Image of "+model.getName()+" bot");
-		mDeveloperName.setContentDescription("Bot developed by "+model.getDev_name());
-		mAbout.setContentDescription("About "+model.getName()+" is "+
-				(model.getDesc()==null || model.getDesc().isEmpty() ?"Unknown":model.getDesc()));
+		mName.setContentDescription(String.format("Bot item %s", model.getName()));
+		itemView.setContentDescription(String.format("Bot item %s by %s", model.getName(),
+				model.getDev_name() == null || model.getDev_name().isEmpty() ? "Unknown" : model.getDev_name()));
+		mImageContainerCardView.setContentDescription(String.format("Image of %s bot", model.getName()));
+		mDeveloperName.setContentDescription(String.format("Bot developed by %s", model.getDev_name()));
+		mAbout.setContentDescription(String.format("About %s is %s", model.getName(),
+				model.getDesc() == null || model.getDesc().isEmpty() ? "Unknown" : model.getDesc()));
 	}
 
 	public void setClickListeners(final FirebaseBotsDataModel model, final Context context){

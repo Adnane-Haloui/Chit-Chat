@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.rajora.arun.chat.chit.chitchatdevelopers.fragments.BotsListFragment">
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -15,9 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_black_24dp"
-        app:backgroundTint="@color/colorPrimary"
-        android:elevation="24dp"
-        android:layout_gravity="bottom|right"
-        app:fabSize="normal"
-        />
+        android:tint="@android:color/white"
+        app:elevation="24dp"
+        android:layout_gravity="bottom|end"
+        app:fabSize="normal"/>
 </android.support.design.widget.CoordinatorLayout>

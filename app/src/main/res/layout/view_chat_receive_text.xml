@@ -16,7 +16,7 @@
         android:layout_marginTop="@dimen/chat_item_margin"
         android:layout_marginBottom="@dimen/chat_item_margin"
         app:cardCornerRadius="@dimen/chat_item_corner_radius"
-        android:elevation="@dimen/chat_item_card_elevation">
+        app:elevation="@dimen/chat_item_card_elevation">
         <LinearLayout
             android:layout_margin="@dimen/chat_item_linearlayout_margin"
             android:orientation="vertical"

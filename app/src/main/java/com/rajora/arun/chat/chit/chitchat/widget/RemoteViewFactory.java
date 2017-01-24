@@ -23,10 +23,6 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChatList;
 import com.rajora.arun.chat.chit.chitchat.dataModels.ChatListDataModel;
 import com.rajora.arun.chat.chit.chitchat.utils.utils;
 
-/**
- * Created by arc on 30/12/16.
- */
-
 public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
 	private Context mContext;
@@ -135,29 +131,30 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 			else{
 				remoteViews.setTextViewText(R.id.chat_unread_count,String.valueOf(item.unread_count));
 				remoteViews.setViewVisibility(R.id.chat_unread_count,View.GONE);
-				remoteViews.setContentDescription(R.id.chat_unread_count, item.unread_count +" new messages.");
+				remoteViews.setContentDescription(R.id.chat_unread_count, String.format("%d%s", item.unread_count, mContext.getString(R.string.cc_new_messages)));
 			}
 
 			remoteViews.setTextViewText(R.id.chat_item_name, item.name==null ||
 					item.name.isEmpty() ?item.contact_id:item.name);
 			remoteViews.setTextViewText(R.id.chat_item_time,utils.getTimeFromTimestamp(item.last_message_time,true));
 
-			remoteViews.setContentDescription(R.id.chat_item_root_layout,"Contact "+
-					(item.name==null || item.name.isEmpty() ?item.contact_id:item.name));
-			remoteViews.setContentDescription(R.id.chat_item_image,"Profile picture of "+
-					(item.name==null || item.name.isEmpty() ?item.contact_id:item.name));
-			remoteViews.setContentDescription(R.id.chat_item_time,"Last message at "+
-					utils.getTimeFromTimestamp(item.last_message_time,true));
-			remoteViews.setContentDescription(R.id.chat_item_name,"Contact "+
-					(item.name==null || item.name.isEmpty() ?item.contact_id:item.name));
+			remoteViews.setContentDescription(R.id.chat_item_root_layout, String.format("%s%s", mContext.getString(R.string.cc_contact_cdesc),
+					item.name == null || item.name.isEmpty() ? item.contact_id : item.name));
+			remoteViews.setContentDescription(R.id.chat_item_image, String.format("%s%s", mContext.getString(R.string.cc_profile_pic_cd),
+					item.name == null || item.name.isEmpty() ? item.contact_id : item.name));
+			remoteViews.setContentDescription(R.id.chat_item_time, String.format("%s%s", mContext.getString(R.string.cc_lmat_cd),
+					utils.getDateTimeFromTimestamp(item.last_message_time, true)));
+			remoteViews.setContentDescription(R.id.chat_item_name, String.format("%s%s", mContext.getString(R.string.cc_contact_cdesc),
+					item.name == null || item.name.isEmpty() ? item.contact_id : item.name));
 
 			if(item.last_message_type!=null && item.last_message_type.equals("text")){
 				remoteViews.setTextViewText(R.id.chat_item_last_message,item.last_message);
-				remoteViews.setContentDescription(R.id.chat_item_last_message,"Last message is "+item.last_message);
+				remoteViews.setContentDescription(R.id.chat_item_last_message, String.format("%s%s",
+						mContext.getString(R.string.cc_last_message_is_cd), item.last_message));
 			}
 			else{
-				remoteViews.setTextViewText(R.id.chat_item_last_message,"["+item.last_message_type+"]");
-				remoteViews.setContentDescription(R.id.chat_item_last_message,"["+item.last_message_type+"]");
+				remoteViews.setTextViewText(R.id.chat_item_last_message, String.format("[%s]", item.last_message_type));
+				remoteViews.setContentDescription(R.id.chat_item_last_message, String.format("[%s]", item.last_message_type));
 			}
 
 			Intent intent=new Intent(mContext, ChatActivity.class);

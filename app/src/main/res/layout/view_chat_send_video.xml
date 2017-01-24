@@ -15,51 +15,62 @@
 		android:layout_marginTop="@dimen/chat_item_margin"
 		android:layout_marginBottom="@dimen/chat_item_margin"
 		app:cardCornerRadius="@dimen/chat_item_corner_radius"
-		android:elevation="@dimen/chat_item_card_elevation">
+		app:elevation="@dimen/chat_item_card_elevation">
 		<ImageView
+			android:contentDescription="@string/cc_vm_thumbnail"
 			android:id="@+id/video_thumbnail"
-			android:layout_width="100dp"
-			android:layout_height="100dp"/>
-		<LinearLayout
+			android:layout_width="200dp"
+			android:layout_height="200dp"
+			android:scaleType="centerCrop"/>
+		<RelativeLayout
 			android:orientation="vertical"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
+			android:layout_width="200dp"
+			android:layout_height="200dp">
 			<TextView
 				android:id="@+id/video_name"
-				android:layout_margin="@dimen/chat_item_linearlayout_margin"
 				tools:text="Video Name"
-				android:layout_width="wrap_content"
+				android:layout_alignParentTop="true"
+				android:layout_margin="@dimen/chat_item_linearlayout_margin"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:textAlignment="center"
 				android:maxLines="1"
 				android:ellipsize="end"/>
 			<TextView
 				android:id="@+id/video_size"
 				android:layout_margin="@dimen/chat_item_linearlayout_margin"
+				android:layout_below="@id/video_name"
 				tools:text="103 MB"
-				android:layout_width="wrap_content"
+				android:textAlignment="center"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"/>
 			<TextView
 				android:id="@+id/video_time"
+				android:layout_alignParentBottom="true"
 				android:layout_margin="@dimen/chat_item_linearlayout_margin"
 				tools:text="12:03 PM"
 				android:textSize="@dimen/chat_message_sub_text_size"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:textAlignment="viewEnd"
-				android:layout_gravity="end"/>
+				android:textAlignment="viewStart"
+				android:layout_gravity="start"/>
 			<ImageView
+				android:contentDescription="@string/cc_download_play_button"
 				android:id="@+id/video_button"
-				android:layout_gravity="center"
+				android:layout_centerInParent="true"
 				android:textSize="@dimen/chat_item_text_size"
 				android:layout_width="24dp"
 				android:layout_height="24dp" />
 			<ProgressBar
 				android:id="@+id/video_progressbar"
+				android:layout_below="@id/video_size"
+				android:layout_centerHorizontal="true"
 				android:layout_gravity="center"
 				android:layout_width="48dp"
 				android:layout_height="48dp"
-				style="?android:attr/progressBarStyleLarge"
-				android:indeterminate="true"/>
-		</LinearLayout>
+				android:indeterminate="true"
+				android:indeterminateOnly="true"
+				android:indeterminateDrawable="@drawable/circular_progress"/>
+		</RelativeLayout>
 	</android.support.v7.widget.CardView>
 </RelativeLayout>

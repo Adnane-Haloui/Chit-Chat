@@ -1,6 +1,25 @@
 <resources>
-	<string name="app_name">Chit Chat Developers</string>
-	<string name="pick_image_from">Pick image from</string>
-	<string name="change_profile_pic_content_description">\"change profile pic\"</string>
-	<string name="submit_profile_pic_content_description">submit</string>
+	<string name="app_name" translatable="false">Chit Chat Developers</string>
+	<string name="pick_image_from" translatable="true">Pick image from</string>
+	<string name="change_profile_pic_content_description" translatable="true">change profile pic</string>
+	<string name="submit_profile_pic_content_description" translatable="true">submit</string>
+	<string name="change" translatable="true">Change</string>
+	<string name="hint_name" translatable="true">Name</string>
+	<string name="hint_about" translatable="true">About</string>
+	<string name="bot_pic" translatable="true">Bot Pic</string>
+	<string name="edit_bot_text" translatable="true">Edit Bot</string>
+	<string name="delete_bot_text" translatable="true">Delete Bot</string>
+	<string name="profile_pic" translatable="true">Profile Pic</string>
+	<string name="cancel_upload_profile" translatable="true">Cancel upload profile</string>
+	<string name="save_bot_details" translatable="true">Save bot details</string>
+	<string name="about_the_bot" translatable="true">About the bot</string>
+	<string name="bot_secret_key_optional" translatable="true">Bot Secret Key(optional)</string>
+	<string name="bot_api_endpoint" translatable="true">Bot API Endpoint</string>
+	<string name="bot_name" translatable="true">Bot Name</string>
+	<string name="change_bot_pic" translatable="true">Change</string>
+	<string name="stats_of_bot_usage" translatable="true">Stats of bot usage</string>
+	<string name="error_creating_file" translatable="true">Error creating file for image!</string>
+	<string name="no_camera_found" translatable="true">No camera app found!</string>
+	<string name="no_img_picker_found" translatable="true">No app found to pick image!</string>
+	<string name="wait_for_data_to_load" translatable="true">Please wait for data to load</string>
 </resources>

@@ -1,18 +1,94 @@
 <resources>
-	<string name="app_name">Chit Chat</string>
-	<string name="pick_image_from">Pick image from</string>
+	<string translatable="false" name="app_name">Chit Chat</string>
+	<string translatable="true" name="pick_image_from">Pick image from</string>
 
-	<string name="hello_blank_fragment">Hello blank fragment</string>
-	<string name="title_activity_chat">ChatActivity</string>
-	<string name="action_settings">Settings</string>
-	<string name="send_message_edittext_hint">Enter Message</string>
-	<string name="send_message_content_description">Send message Button</string>
-	<string name="go_back_content_description">Go Back Button</string>
-	<string name="profile_pic_content_description">Profile Picture</string>
-	<string name="change_profile_pic_content_description">Change Profile Picture</string>
-	<string name="submit_profile_pic_content_description">Submit Profile Details</string>
-	<string name="appwidget_text">EXAMPLE</string>
-	<string name="add_widget">Add widget</string>
-	<string name="about_chit_chat">Created by Arun Rajora.\nVisit github.com/arunrajora/chit-chat for the source code of this app.</string>
-	<string name="empty_contacts">No contacts!</string>
+	<string translatable="true" name="hello_blank_fragment">Hello blank fragment</string>
+	<string translatable="true" name="title_activity_chat">ChatActivity</string>
+	<string translatable="true" name="action_settings">Settings</string>
+	<string translatable="true" name="send_message_edittext_hint">Enter Message</string>
+	<string translatable="true" name="send_message_content_description">Send message Button</string>
+	<string translatable="true" name="go_back_content_description">Go Back Button</string>
+	<string translatable="true" name="profile_pic_content_description">Profile Picture</string>
+	<string translatable="true" name="change_profile_pic_content_description">Change Profile Picture</string>
+	<string translatable="true" name="submit_profile_pic_content_description">Submit Profile Details</string>
+	<string translatable="true" name="appwidget_text">EXAMPLE</string>
+	<string translatable="true" name="add_widget">Add widget</string>
+	<string translatable="true" name="about_chit_chat">Created by Arun Rajora.\nVisit github.com/arunrajora/chit-chat for the source code of this app.</string>
+	<string translatable="true" name="empty_contacts">No contacts!</string>
+	<string translatable="true" name="cc_change">Change</string>
+	<string translatable="true" name="cc_name">Name</string>
+	<string translatable="true" name="cc_about">About</string>
+	<string translatable="true" name="cc_cancel">Cancel</string>
+	<string translatable="true" name="cc_chat_with_someone">Chat with someone</string>
+	<string translatable="true" name="no_bot_service_available">No bot service available!</string>
+	<string translatable="true" name="cc_chat_history_empty">Chat history empty!</string>
+	<string translatable="true" name="cc_set_an_alarm">Set an alarm</string>
+	<string translatable="true" name="cc_assistant_bot_set_an_alarm">Assistant Bot- Set an alarm.</string>
+	<string translatable="true" name="cc_ppic_contact">Profile pic of contact</string>
+	<string translatable="true" name="cc_bot_ppic">Bot profile pic</string>
+	<string translatable="true" name="cc_vm_thumbnail">Video message thumbnail</string>
+	<string translatable="true" name="cc_download_play_button">Download/Play button</string>
+	<string translatable="true" name="cc_location_image">Location Image</string>
+	<string translatable="true" name="cc_message_image">Received message image</string>
+	<string translatable="true" name="cc_download_image">Download image</string>
+	<string translatable="true" name="cc_file_download_open">File download/open</string>
+	<string translatable="true" name="cc_add_to_contacts">Add To Contacts</string>
+	<string translatable="true" name="cc_error_create_file">Error creating file for image!</string>
+	<string translatable="true" name="cc_error_camera">No camera app found!</string>
+	<string translatable="true" name="cc_error_img_picker">No app found to pick image!</string>
+	<string translatable="true" name="cc_developed_by">"Developed By : "</string>
+	<string translatable="true" name="cc_bot_name_is">"bot name is "</string>
+	<string translatable="true" name="cc_about_bot">"about the bot : "</string>
+	<string translatable="true" name="cc_deve_by">"developed by : "</string>
+	<string translatable="true" name="cc_con_name_is">"contact name is "</string>
+	<string translatable="true" name="cc_contact_about_is">"about : "</string>
+	<string translatable="true" name="cc_contact_no_is">"contact number is "</string>
+	<string translatable="true" name="cc_developed_by_dev">"Developed by : "</string>
+	<string translatable="true" name="cc_invitation_title">Chit Chat Invitation</string>
+	<string translatable="true" name="cc_invitation_message">"you have been invited to Chit Chat App by "</string>
+	<string translatable="true" name="cc_deep_link_url">" . https://vc8hx.app.goo.gl/naxz"</string>
+	<string translatable="true" name="cc_user_nr_warning">This user might not have registered.Any message sent will be delivered after the user registers</string>
+	<string translatable="true" name="cc_user_nr_title">User not registered</string>
+	<string translatable="true" name="cc_bd_message">This bot has been discontinued. Any message sent to this bot will not get any response</string>
+	<string translatable="true" name="cc_bd_title">Bot Service discontinued</string>
+	<string translatable="true" name="cc_gpse">Google Play Services Error</string>
+	<string translatable="true" name="cc_dnsupported">This device is not supported for required Goole Play Services</string>
+	<string translatable="true" name="cc_ok">OK</string>
+	<string translatable="true" name="cc_cbot_cd">"Chat bot - "</string>
+	<string translatable="true" name="cc_cb_p_cd">"Profile picture of chat bot - "</string>
+	<string translatable="true" name="cc_contact_cd">"Contact - "</string>
+	<string translatable="true" name="cc_ppic_cd">"Profile picture of contact - "</string>
+	<string translatable="true" name="cc_file_size_error">Please upload a file less than 100MB</string>
+	<string translatable="true" name="cc_warn_no_picker">No file picker app found!</string>
+	<string translatable="true" name="cc_twy_later">Please try again later!</string>
+	<string translatable="true" name="cc_install_gps">Please install google play services</string>
+	<string translatable="true" name="cc_no_cpicker">No contact picker app found!</string>
+	<string translatable="true" name="cc_pick_video_from">Pick video from</string>
+	<string translatable="true" name="cc_no_camera_app">No camera app found!</string>
+	<string translatable="true" name="cc_no_video_picker">No app found to pick video!</string>
+	<string translatable="true" name="cc_new_messages">" new messages."</string>
+	<string translatable="true" name="cc_contact_cdesc">"Contact "</string>
+	<string translatable="true" name="cc_profile_pic_cd">"Profile picture of "</string>
+	<string translatable="true" name="cc_lmat_cd">"Last message at "</string>
+	<string translatable="true" name="cc_last_message_is_cd">"Last message is "</string>
+	<string translatable="true" name="cc_no_alarm_app_found">No Alarm app found!</string>
+	<string translatable="true" name="cc_perm_location">Permissions needed to access your location to enable you to pick it.</string>
+	<string translatable="true" name="cc_files_c_soon">Sending files to chatbots comming soon!</string>
+	<string translatable="true" name="cc_user">User</string>
+	<string translatable="true" name="cc_invite">Invite</string>
+	<string translatable="true" name="cc_no_contact_app">No contact app found!</string>
+	<string translatable="true" name="cc_no_map_app">No map app found!</string>
+	<string translatable="true" name="cc_failed_download">Failed to download !</string>
+	<string translatable="true" name="cc_no_app_found">No app found to open this app !</string>
+	<string translatable="true" name="cc_no_video_app">No app found to open this video !</string>
+	<string translatable="true" name="cc_no_image_app">No app found to open this image !</string>
+	<string name="cc_menu_profile">Profile</string>
+	<string name="cc_menu_add_contact">Add Contact</string>
+	<string name="cc_menu_about">About</string>
+	<string name="cc_menu_update_profile">Update Profile</string>
+	<string name="cc_menu_upload_image">Upload Image</string>
+	<string name="cc_menu_upload_video">Upload Video</string>
+	<string name="cc_menu_upload_file">Upload File</string>
+	<string name="cc_menu_upload_contact">Upload contact</string>
+	<string name="cc_menu_upload_location">Upload location</string>
 </resources>

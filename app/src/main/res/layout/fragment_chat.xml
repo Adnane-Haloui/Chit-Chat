@@ -35,6 +35,7 @@
 			    android:orientation="horizontal"
 			    android:padding="4dp">
 			    <ImageView
+				    android:contentDescription="@string/cc_assistant_bot_set_an_alarm"
 				    android:id="@+id/assistant_bot_icon"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
@@ -42,12 +43,14 @@
 				    android:src="@drawable/ic_alarm_add_black_24dp"
 				    android:layout_marginRight="4dp"/>
 			    <TextView
+				    android:contentDescription="@string/cc_set_an_alarm"
 				    android:id="@+id/assistant_bot_text"
-				    android:text="Set an alarm"
+				    android:text="@string/cc_set_an_alarm"
 				    android:textSize="16sp"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"/>
 			    <ImageView
+				    android:contentDescription="@string/cc_cancel"
 				    android:id="@+id/assistant_bot_cancel"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
@@ -71,6 +74,7 @@
             android:layout_height="@dimen/send_message_edit_text_height"
             android:background="@drawable/edittext_round_border"/>
             <ImageView
+	            android:contentDescription="@string/send_message_content_description"
                 android:id="@+id/send_message_button"
                 android:background="@color/colorAccent"
                 android:tint="@android:color/white"

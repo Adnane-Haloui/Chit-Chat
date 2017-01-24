@@ -202,7 +202,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 				    startActivity(alarmIntent);
 			    }
 			    else{
-				    Toast.makeText(getContext(),"No Alarm app found!",Toast.LENGTH_SHORT).show();
+				    Toast.makeText(getContext(), string.cc_no_alarm_app_found,Toast.LENGTH_SHORT).show();
 			    }
 			    mAssistantBotContainer.setVisibility(View.GONE);
 		    }
@@ -217,7 +217,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 				    startActivity(alarmIntent);
 			    }
 			    else{
-				    Toast.makeText(getContext(),"No Alarm app found!",Toast.LENGTH_SHORT).show();
+				    Toast.makeText(getContext(),string.cc_no_alarm_app_found,Toast.LENGTH_SHORT).show();
 			    }
 			    mAssistantBotContainer.setVisibility(View.GONE);
 		    }
@@ -289,7 +289,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 			Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			File photoFile = createImageFile();
 			if (photoFile == null) {
-				Toast.makeText(getContext(),"Error creating file for image!",Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(),string.cc_error_create_file,Toast.LENGTH_SHORT).show();
 			}
 			else{
 				Uri photoURI = FileProvider.getUriForFile(getContext(),
@@ -300,7 +300,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 					startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
 				}
 				else{
-					Toast.makeText(getContext(),"No camera app found!",Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(),string.cc_no_camera_app,Toast.LENGTH_SHORT).show();
 				}
 			}
 		}
@@ -330,15 +330,15 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 			case id.action_Update_location:
 				if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
 					if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),permission.ACCESS_FINE_LOCATION)) {
-						new AlertDialog.Builder(getContext())
-								.setMessage("Permissions needed to access your location to enable you to pick it.")
-								.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+						new Builder(getContext())
+								.setMessage(string.cc_perm_location)
+								.setPositiveButton(string.cc_ok, new OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										requestPermissions(new String[]{permission.ACCESS_FINE_LOCATION} ,500);
 									}
 								})
-								.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+								.setNegativeButton(string.cc_cancel, new OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i) {
 										dialogInterface.dismiss();
@@ -365,13 +365,14 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 		super.onActivityResult(requestCode, resultCode, data);
 		if(resultCode== Activity.RESULT_OK){
 			mPickRequestCode=requestCode;
-			mDataUri=data.getData().toString();
+			if(data!=null && data.getData()!=null)
+				mDataUri=data.getData().toString();
 			switch (requestCode){
 				case REQUEST_CAPTURE_IMAGE:
 					mImagePickedUri = Uri.fromFile(new File(mCurrentPhotoPath)).toString();
 					getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).setData(Uri.parse(mImagePickedUri)));
 					if(contactData.is_bot()){
-						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+						Toast.makeText(getContext(), string.cc_files_c_soon,Toast.LENGTH_SHORT).show();
 					}
 					else if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
 						requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE} ,600);
@@ -382,7 +383,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 					break;
 				case REQUEST_PICK_IMAGE:
 					if(contactData.is_bot()){
-						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+						Toast.makeText(getContext(),string.cc_files_c_soon,Toast.LENGTH_SHORT).show();
 					}
 					else if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
 						requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE} ,610);
@@ -394,7 +395,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 				case REQUEST_CAPTURE_VIDEO:
 				case REQUEST_PICK_VIDEO:
 					if(contactData.is_bot()){
-						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+						Toast.makeText(getContext(),string.cc_files_c_soon,Toast.LENGTH_SHORT).show();
 					}
 					else if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
 						requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE} ,620);
@@ -405,7 +406,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 					break;
 				case REQUEST_PICK_FILE:
 					if(contactData.is_bot()){
-						Toast.makeText(getContext(),"Sending files to chatbots comming soon!",Toast.LENGTH_SHORT).show();
+						Toast.makeText(getContext(),string.cc_files_c_soon,Toast.LENGTH_SHORT).show();
 					}
 					else if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
 						requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE} ,630);
@@ -529,7 +530,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 								fragment.startActivityForResult(PickImageintent,requestCodePick);
 							}
 							else{
-								Toast.makeText(fragment.getContext(),"No app found to pick image!",Toast.LENGTH_SHORT).show();
+								Toast.makeText(fragment.getContext(),string.cc_error_img_picker,Toast.LENGTH_SHORT).show();
 							}
 						}
 					}
@@ -544,7 +545,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 			Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			File photoFile = createImageFile();
 			if (photoFile == null) {
-				Toast.makeText(getContext(),"Error creating file for image!",Toast.LENGTH_SHORT).show();
+				Toast.makeText(getContext(),string.cc_error_create_file,Toast.LENGTH_SHORT).show();
 			}
 			else{
 				Uri photoURI = FileProvider.getUriForFile(getContext(),
@@ -555,7 +556,7 @@ public class ChatActivityFragment extends Fragment implements LoaderCallbacks<Cu
 					startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
 				}
 				else{
-					Toast.makeText(getContext(),"No camera app found!",Toast.LENGTH_SHORT).show();
+					Toast.makeText(getContext(),string.cc_error_img_picker,Toast.LENGTH_SHORT).show();
 				}
 			}
 		}

@@ -148,7 +148,7 @@ public class ProfileEditActivity extends AppCompatChatListenerActivity{
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 	                File photoFile = createImageFile();
 	                if (photoFile == null) {
-		                Toast.makeText(ProfileEditActivity.this,"Error creating file for image!",Toast.LENGTH_SHORT).show();
+		                Toast.makeText(ProfileEditActivity.this, R.string.cc_error_create_file,Toast.LENGTH_SHORT).show();
 	                }
 	                else{
 		                Uri photoURI = FileProvider.getUriForFile(ProfileEditActivity.this,
@@ -159,7 +159,7 @@ public class ProfileEditActivity extends AppCompatChatListenerActivity{
 			                startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
 		                }
 		                else{
-			                Toast.makeText(ProfileEditActivity.this,"No camera app found!",Toast.LENGTH_SHORT).show();
+			                Toast.makeText(ProfileEditActivity.this, R.string.cc_error_camera,Toast.LENGTH_SHORT).show();
 		                }
 	                }
                 }
@@ -169,7 +169,7 @@ public class ProfileEditActivity extends AppCompatChatListenerActivity{
 		                startActivityForResult(PickImageintent,REQUEST_PICK_IMAGE);
 	                }
 	                else{
-		                Toast.makeText(ProfileEditActivity.this,"No app found to pick image!",Toast.LENGTH_SHORT).show();
+		                Toast.makeText(ProfileEditActivity.this, R.string.cc_error_img_picker,Toast.LENGTH_SHORT).show();
 	                }
                 }
             }

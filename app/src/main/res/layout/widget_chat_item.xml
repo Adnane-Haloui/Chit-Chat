@@ -7,6 +7,7 @@
               android:id="@+id/chat_item_root_layout"
               android:padding="@dimen/chatlist_padding">
 		<ImageView
+			android:contentDescription="@string/cc_ppic_contact"
 			android:id="@+id/chat_item_image"
 			android:layout_width="@dimen/imageview_circular_small"
 			android:layout_height="@dimen/imageview_circular_small"

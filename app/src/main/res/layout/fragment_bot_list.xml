@@ -6,7 +6,7 @@
     tools:context="com.rajora.arun.chat.chit.chitchat.fragments.fragment_bot_list">
 	<TextView
 		android:id="@+id/bot_list_empty"
-		android:text="No bot service available!"
+		android:text="@string/no_bot_service_available"
 		android:padding="24dp"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"

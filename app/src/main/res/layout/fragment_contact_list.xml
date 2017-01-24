@@ -40,6 +40,7 @@
 		android:id="@+id/refresh_fab"
 		android:src="@drawable/refresh_icon"
 		app:fabSize="mini"
+		android:tint="@color/colorAccent"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_above="@id/add_contact_fab"
@@ -47,5 +48,5 @@
 		android:layout_alignParentRight="true"
 		android:layout_marginEnd="20dp"
 		android:layout_marginRight="20dp"
-		android:backgroundTint="@android:color/white"/>
+		app:backgroundTint="@android:color/white"/>
 </RelativeLayout>

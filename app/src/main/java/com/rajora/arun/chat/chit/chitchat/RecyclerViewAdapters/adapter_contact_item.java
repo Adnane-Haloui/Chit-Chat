@@ -39,23 +39,24 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
     public void onBindViewHolder(final VH holder, Cursor cursor) {
         ContactDetailDataModel item=new ContactDetailDataModel(cursor);
         if(item.is_user){
-            holder.mIsUserTextView.setText("User");
+            holder.mIsUserTextView.setText(R.string.cc_user);
         }
         else{
-            holder.mIsUserTextView.setText("Invite");
+            holder.mIsUserTextView.setText(R.string.cc_invite);
         }
         holder.mNumber.setText(item.contact_id);
         holder.mName.setText(item.name==null || item.name.isEmpty()?item.contact_id:item.name);
         holder.mAbout.setText(item.about==null?"":item.about);
         ImageUtils.loadImageIntoView(mContext,item,holder.mImage);
 
-        holder.itemView.setContentDescription("Contact item with name "+
-                (item.name==null || item.name.isEmpty()?"Unknown":item.name)+" and number "+item.contact_id);
-        holder.mNumber.setContentDescription("Contact phone number "+item.contact_id);
-        holder.mName.setContentDescription("Contact name "+(item.name==null || item.name.isEmpty()?item.contact_id:item.name));
-        holder.mAbout.setContentDescription("About "+
-                (item.name==null || item.name.isEmpty()?item.contact_id:item.name)+" : "+(item.about==null?"":item.about));
-        holder.mImage.setContentDescription("Profile picture of "+item.name);
+        holder.itemView.setContentDescription(String.format("Contact item with name %s and number %s",
+                item.name == null || item.name.isEmpty() ? "Unknown" : item.name, item.contact_id));
+        holder.mNumber.setContentDescription(String.format("Contact phone number %s", item.contact_id));
+        holder.mName.setContentDescription(String.format("Contact name %s", item.name == null ||
+                item.name.isEmpty() ? item.contact_id : item.name));
+        holder.mAbout.setContentDescription(String.format("About %s : %s", item.name == null ||
+                item.name.isEmpty() ? item.contact_id : item.name, item.about == null ? "" : item.about));
+        holder.mImage.setContentDescription(String.format("Profile picture of %s", item.name));
 
         bind(holder,mItemClickListener,item);
     }

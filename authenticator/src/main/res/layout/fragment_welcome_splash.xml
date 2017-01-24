@@ -12,7 +12,7 @@ android:background="@android:color/holo_red_light">
     android:textAlignment="center"
     android:textAllCaps="false"
     android:layout_margin="48dp"
-    android:text="Welcome to Chit-Chat"
+    android:text="@string/welcome_to_chit_chat"
     android:textColor="@android:color/white"
     android:textSize="36sp"
     android:layout_marginBottom="18dp"/>
@@ -22,11 +22,10 @@ android:background="@android:color/holo_red_light">
     android:layout_centerInParent="true"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Get Started"
+    android:text="@string/get_started"
     android:padding="18dp"
     android:elevation="4dp"
     android:textSize="12sp"
     android:textColor="@android:color/white"
     android:background="@android:color/holo_red_dark"/>
-
 </RelativeLayout>

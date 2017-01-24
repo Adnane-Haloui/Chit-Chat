@@ -4,35 +4,35 @@
 	<item
 		android:id="@+id/action_upload_image"
 		android:orderInCategory="1"
-		android:title="Upload Image"
+		android:title="@string/cc_menu_upload_image"
 		android:titleCondensed="Image"
 		android:icon="@drawable/ic_add_a_photo_black_24dp"
 		app:showAsAction="ifRoom"/>
 	<item
 		android:id="@+id/action_upload_video"
 		android:orderInCategory="2"
-		android:title="Upload Video"
+		android:title="@string/cc_menu_upload_video"
 		android:titleCondensed="Video"
 		android:icon="@drawable/ic_videocam_black_24dp"
 		app:showAsAction="ifRoom" />
 	<item
 		android:id="@+id/action_upload_file"
 		android:orderInCategory="3"
-		android:title="Upload File"
+		android:title="@string/cc_menu_upload_file"
 		android:titleCondensed="File"
 		android:icon="@drawable/ic_attach_file_black_24dp"
 		app:showAsAction="ifRoom" />
 	<item
 		android:id="@+id/action_upload_contact"
 		android:orderInCategory="4"
-		android:title="Upload contact"
+		android:title="@string/cc_menu_upload_contact"
 		android:titleCondensed="Contact"
 		android:icon="@drawable/ic_contact_phone_black_24dp"
 		app:showAsAction="ifRoom" />
 	<item
 		android:id="@+id/action_Update_location"
 		android:orderInCategory="5"
-		android:title="Upload location"
+		android:title="@string/cc_menu_upload_location"
 		android:titleCondensed="Location"
 		android:icon="@drawable/ic_add_location_black_24dp"
 		app:showAsAction="ifRoom" />

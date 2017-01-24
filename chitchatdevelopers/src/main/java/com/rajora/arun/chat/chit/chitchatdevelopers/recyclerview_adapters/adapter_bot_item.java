@@ -43,7 +43,9 @@ public class adapter_bot_item extends CursorRecyclerViewAdapter<VH>{
     public void onBindViewHolder(VH holder, Cursor cursor) {
 		LocalBotDataModel item=new LocalBotDataModel(cursor);
 	    holder.mName.setText(item.name);
+	    holder.mName.setContentDescription(item.name);
 	    holder.mAbout.setText(item.desc);
+	    holder.mAbout.setContentDescription(item.desc);
 	    if(item.image_url!=null){
 		    Glide.with(mContext)
 				    .load(Uri.parse(item.image_url))

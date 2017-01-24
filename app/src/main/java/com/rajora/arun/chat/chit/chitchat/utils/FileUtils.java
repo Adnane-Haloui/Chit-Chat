@@ -10,10 +10,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
-/**
- * Created by arc on 20/1/17.
- */
-
 public class FileUtils {
 
 	public static String getPath(final Context context, final Uri uri) {

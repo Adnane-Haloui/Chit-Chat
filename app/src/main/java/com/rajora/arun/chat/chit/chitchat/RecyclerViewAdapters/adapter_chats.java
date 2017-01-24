@@ -30,6 +30,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rajora.arun.chat.chit.chitchat.BuildConfig;
+import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.R.drawable;
 import com.rajora.arun.chat.chit.chitchat.R.id;
 import com.rajora.arun.chat.chit.chitchat.R.layout;
@@ -84,7 +85,8 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
     }
 
 	private void handleText(VH_TEXT holder,ChatItemDataModel item){
-		holder.itemView.setContentDescription("message "+ item.message+ " . Time "+ utils.getTimeFromTimestamp(item.timestamp,false));
+		holder.itemView.setContentDescription(String.format("message %s . Time %s",
+				item.message, utils.getTimeFromTimestamp(item.timestamp, false)));
 		holder.mMessage.setText(item.message);
 		holder.mTime.setText(utils.getTimeFromTimestamp(item.timestamp,false));
 	}
@@ -181,7 +183,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 									mContext.startActivity(intent);
 								}
 								else{
-									Toast.makeText(mContext,"No app found to open this image !",Toast.LENGTH_SHORT).show();
+									Toast.makeText(mContext, R.string.cc_no_image_app,Toast.LENGTH_SHORT).show();
 								}
 							}
 						});
@@ -193,7 +195,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 						holder.itemView.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View view) {
-								Snackbar.make(holder.itemView,"Failed to download !",Snackbar.LENGTH_SHORT).show();
+								Snackbar.make(holder.itemView,R.string.cc_failed_download,Snackbar.LENGTH_SHORT).show();
 							}
 						});
 						break;
@@ -292,7 +294,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 									mContext.startActivity(intent);
 								}
 								else{
-									Toast.makeText(mContext,"No app found to open this video !",Toast.LENGTH_SHORT).show();
+									Toast.makeText(mContext, R.string.cc_no_video_app,Toast.LENGTH_SHORT).show();
 								}
 							}
 						});
@@ -304,7 +306,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 						holder.itemView.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View view) {
-								Snackbar.make(holder.itemView,"Failed to download !",Snackbar.LENGTH_SHORT).show();
+								Snackbar.make(holder.itemView,R.string.cc_failed_download,Snackbar.LENGTH_SHORT).show();
 							}
 						});
 						break;
@@ -388,7 +390,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 									mContext.startActivity(intent);
 								}
 								else{
-									Toast.makeText(mContext,"No app found to open this app !",Toast.LENGTH_SHORT).show();
+									Toast.makeText(mContext, R.string.cc_no_app_found,Toast.LENGTH_SHORT).show();
 								}
 							}
 						});
@@ -400,7 +402,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 						holder.itemView.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View view) {
-								Snackbar.make(holder.itemView, "Failed to download !", Snackbar.LENGTH_SHORT).show();
+								Snackbar.make(holder.itemView, R.string.cc_failed_download, Snackbar.LENGTH_SHORT).show();
 							}
 						});
 						break;
@@ -431,7 +433,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 						mContext.startActivity(Intent.createChooser(intent, "Select an application"));
 					}
 					else{
-						Toast.makeText(mContext,"No map app found!",Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, R.string.cc_no_map_app,Toast.LENGTH_SHORT).show();
 					}
 
 				}
@@ -462,7 +464,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 						mContext.startActivity(intent);
 					}
 					else{
-						Toast.makeText(mContext,"No contact app found!",Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, R.string.cc_no_contact_app,Toast.LENGTH_SHORT).show();
 					}
 
 				}

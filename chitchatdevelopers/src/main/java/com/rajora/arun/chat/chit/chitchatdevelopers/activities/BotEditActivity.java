@@ -122,14 +122,13 @@ public class BotEditActivity extends AppCompatActivity implements LoaderManager.
 	                }
 	                else{
 		                if(id==null){
-			                Toast.makeText(BotEditActivity.this,"Please wait for data to load",Toast.LENGTH_SHORT).show();
+			                Toast.makeText(BotEditActivity.this, R.string.wait_for_data_to_load,Toast.LENGTH_SHORT).show();
 		                }
 		                else{
 			                UploadBotDetails.startUpdateBot(BotEditActivity.this,Gid,id,url,mProfilePicUri,name,about,secret);
 		                }
 	                }
-
-                    BotEditActivity.this.finish();
+                    finish();
                 }
                 else{
 	                if(mBotName.getText()==null || mBotName.getText().toString().isEmpty()){
@@ -180,7 +179,7 @@ public class BotEditActivity extends AppCompatActivity implements LoaderManager.
 							Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 							File photoFile = createImageFile();
 							if (photoFile == null) {
-								Toast.makeText(BotEditActivity.this,"Error creating file for image!",Toast.LENGTH_SHORT).show();
+								Toast.makeText(BotEditActivity.this,R.string.error_creating_file,Toast.LENGTH_SHORT).show();
 							}
 							else{
 								Uri photoURI = FileProvider.getUriForFile(BotEditActivity.this,
@@ -191,7 +190,7 @@ public class BotEditActivity extends AppCompatActivity implements LoaderManager.
 									startActivityForResult(takePictureIntent,REQUEST_CAPTURE_IMAGE);
 								}
 								else{
-									Toast.makeText(BotEditActivity.this,"No camera app found!",Toast.LENGTH_SHORT).show();
+									Toast.makeText(BotEditActivity.this,R.string.no_camera_found,Toast.LENGTH_SHORT).show();
 								}
 							}
 						}
@@ -201,7 +200,7 @@ public class BotEditActivity extends AppCompatActivity implements LoaderManager.
 								startActivityForResult(PickImageintent,REQUEST_PICK_IMAGE);
 							}
 							else{
-								Toast.makeText(BotEditActivity.this,"No app found to pick image!",Toast.LENGTH_SHORT).show();
+								Toast.makeText(BotEditActivity.this,R.string.no_img_picker_found,Toast.LENGTH_SHORT).show();
 							}
 						}
 					}

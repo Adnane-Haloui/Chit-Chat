@@ -36,24 +36,21 @@ public class utils {
 	    return DateUtils.getRelativeTimeSpanString(Long.getLong(sTimestamp),getCurrentTimestamp(),
 			    DateUtils.MINUTE_IN_MILLIS,DateUtils.FORMAT_ABBREV_RELATIVE).toString()
 			    .replace(',','\n');
-/*        long timestamp=Long.parseLong(sTimestamp);
+    }
+
+	public static String getDateTimeFromTimestamp(long timestamp,boolean newLine){
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(timestamp);
         SimpleDateFormat format = new SimpleDateFormat("hh:mm a"+(newLine?"\n":"")+" d-MMM",
 		        Locale.getDefault());
-        return format.format(c.getTime());*/
-    }
+        return format.format(c.getTime());
+	}
 
     public static String getTimeFromTimestamp(long timestamp,boolean newLine){
 
         return DateUtils.getRelativeTimeSpanString(timestamp,getCurrentTimestamp(),
 		        DateUtils.MINUTE_IN_MILLIS,DateUtils.FORMAT_ABBREV_RELATIVE).toString()
 		        .replace(',','\n');
-/*        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(timestamp);
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm a"+(newLine?"\n":"")+" d-MMM",
-		        Locale.getDefault());
-        return format.format(c.getTime());*/
     }
 
     public static String convertPhoneNumberToE164(Context context,String ph_no){

@@ -282,20 +282,20 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 			if (item.name == null || item.name.isEmpty()) {
 				chat_name_textview.setText(item.contact_id);
 				if (item.is_bot) {
-					chat_name_textview.setContentDescription("Chat bot - " + item.contact_id);
-					chat_image_imageview.setContentDescription("Profile picture of chat bot - " + item.contact_id);
+					chat_name_textview.setContentDescription(String.format("%s%s", getString(R.string.cc_cbot_cd), item.contact_id));
+					chat_image_imageview.setContentDescription(String.format("%s%s", getString(R.string.cc_cb_p_cd), item.contact_id));
 				} else {
-					chat_name_textview.setContentDescription("Contact - " + item.contact_id);
-					chat_image_imageview.setContentDescription("Profile picture of contact - " + item.contact_id);
+					chat_name_textview.setContentDescription(String.format("%s%s", getString(R.string.cc_contact_cd), item.contact_id));
+					chat_image_imageview.setContentDescription(String.format("%s%s", getString(R.string.cc_ppic_cd), item.contact_id));
 				}
 			} else {
 				chat_name_textview.setText(item.name);
 				if (item.is_bot) {
-					chat_name_textview.setContentDescription("Chat bot - " + item.name);
-					chat_image_imageview.setContentDescription("Profile picture of chat bot - " + item.name);
+					chat_name_textview.setContentDescription(String.format("%s%s", getString(R.string.cc_cbot_cd), item.name));
+					chat_image_imageview.setContentDescription(String.format("%s%s", getString(R.string.cc_cb_p_cd), item.name));
 				} else {
-					chat_name_textview.setContentDescription("Contact - " + item.name);
-					chat_image_imageview.setContentDescription("Profile picture of contact - " + item.name);
+					chat_name_textview.setContentDescription(String.format("%s%s", getString(R.string.cc_contact_cd), item.name));
+					chat_image_imageview.setContentDescription(String.format("%s%s", getString(R.string.cc_ppic_cd), item.name));
 				}
 			}
 		}
@@ -338,9 +338,9 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 				apiAvailability.getErrorDialog(this, resultCode, REQUEST_PLAY_SERVICES_RESOLUTION)
 						.show();
 			} else {
-				new AlertDialog.Builder(this).setMessage("Google Play Services Error")
-						.setTitle("This device is not supported for required Goole Play Services")
-						.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(this).setMessage(R.string.cc_gpse)
+						.setTitle(R.string.cc_dnsupported)
+						.setPositiveButton(R.string.cc_ok, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialogInterface, int i) {
 								finish();
@@ -358,8 +358,8 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		mNotUserWarningProgress=1;
 		mAlertDialog=new AlertDialog.Builder(this);
 		mAlertDialog.setCancelable(false);
-		mAlertDialog.setTitle("Bot Service discontinued");
-		mAlertDialog.setMessage("This bot has been discontinued. Any message sent to this bot will not get any response");
+		mAlertDialog.setTitle(R.string.cc_bd_title);
+		mAlertDialog.setMessage(R.string.cc_bd_message);
 		mAlertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -381,8 +381,8 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		mNotUserWarningProgress=1;
 		mAlertDialog=new AlertDialog.Builder(this);
 		mAlertDialog.setCancelable(false);
-		mAlertDialog.setTitle("User not registered");
-		mAlertDialog.setMessage("This user might not have registered.Any message sent will be delivered after the user registers");
+		mAlertDialog.setTitle(R.string.cc_user_nr_title);
+		mAlertDialog.setMessage(R.string.cc_user_nr_warning);
 		mAlertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -395,9 +395,9 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 			public void onClick(DialogInterface dialogInterface, int i) {
 				mNotUserWarningProgress=2;
 				dialogInterface.dismiss();
-				Intent intent = new AppInviteInvitation.IntentBuilder("Chit Chat Invitation")
-						.setMessage("you have been invited to Chit Chat App by "+my_ph_no+" . https://vc8hx.app.goo.gl/naxz")
-						.setDeepLink(Uri.parse("https://vc8hx.app.goo.gl/naxz"))
+				Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.cc_invitation_title))
+						.setMessage(String.format("%s%s%s", getString(R.string.cc_invitation_message), my_ph_no, getString(R.string.cc_deep_link_url)))
+						.setDeepLink(Uri.parse(getString(R.string.cc_deep_link_url)))
 						.build();
 				startActivityForResult(intent,1023);
 			}

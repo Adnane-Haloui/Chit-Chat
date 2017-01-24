@@ -3,6 +3,7 @@ package com.rajora.arun.chat.chit.chitchat.activities;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
@@ -15,6 +16,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.rajora.arun.chat.chit.chitchat.R;
+import com.rajora.arun.chat.chit.chitchat.R.drawable;
+import com.rajora.arun.chat.chit.chitchat.R.id;
+import com.rajora.arun.chat.chit.chitchat.R.layout;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractContacts;
 import com.rajora.arun.chat.chit.chitchat.dataModels.ContactDetailDataModel;
@@ -24,7 +28,7 @@ import com.rajora.arun.chat.chit.chitchat.utils.ImageUtils;
 import com.rajora.arun.chat.chit.chitchat.utils.utils;
 
 public class ProfileDetailsActivity extends AppCompatChatListenerActivity
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderCallbacks<Cursor> {
 
     ImageView image;
     TextView textView1;
@@ -39,11 +43,11 @@ public class ProfileDetailsActivity extends AppCompatChatListenerActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_details);
-        image= ((ImageView) findViewById(R.id.details_image));
-        textView1= (TextView) findViewById(R.id.details_text1);
-        textView2= (TextView) findViewById(R.id.details_text2);
-        textView3= (TextView) findViewById(R.id.details_text3);
+        setContentView(layout.activity_profile_details);
+        image= (ImageView) findViewById(id.details_image);
+        textView1= (TextView) findViewById(id.details_text1);
+        textView2= (TextView) findViewById(id.details_text2);
+        textView3= (TextView) findViewById(id.details_text3);
 
         Bundle extras=getIntent().getExtras();
         if(extras!=null){
@@ -73,12 +77,12 @@ public class ProfileDetailsActivity extends AppCompatChatListenerActivity
             botData=bundle.getParcelable("data");
             textView1.setText(botData.getName());
             textView2.setText(botData.getDesc());
-            textView3.setText("Developed By : "+botData.getDev_name());
-            textView1.setContentDescription("bot name is "+botData.getName());
-            textView2.setContentDescription("about the bot : "+botData.getDesc());
-            textView3.setContentDescription("developed by : "+botData.getDev_name());
+            textView3.setText(String.format("%s%s", getString(R.string.cc_developed_by), botData.getDev_name()));
+            textView1.setContentDescription(String.format("%s%s", getString(R.string.cc_bot_name_is), botData.getName()));
+            textView2.setContentDescription(String.format("%s%s", getString(R.string.cc_about_bot), botData.getDesc()));
+            textView3.setContentDescription(String.format("%s%s", getString(R.string.cc_deve_by), botData.getDev_name()));
             if(botData.getImage_url()!=null){
-	            ImageUtils.loadBitmapFromFirebase(this,botData.getImage_url(),R.drawable.empty_profile_pic,image);
+	            ImageUtils.loadBitmapFromFirebase(this,botData.getImage_url(), drawable.empty_profile_pic,image);
             }
         }
         else{
@@ -110,17 +114,17 @@ public class ProfileDetailsActivity extends AppCompatChatListenerActivity
 	        ContactDetailDataModel item = new ContactDetailDataModel(data);
 	        ImageUtils.loadImageIntoView(this,item,image);
 	        if (item.is_bot) {
-		        textView1.setContentDescription("bot name is " + (item.name == null ? "" : item.name));
-		        textView2.setContentDescription("about the bot : " + (item.about == null ? "" : item.about));
-		        textView3.setContentDescription("developed by : " + (item.dev_name == null ? "" : item.dev_name));
+		        textView1.setContentDescription(String.format("%s%s", getString(R.string.cc_bot_name_is), botData.getName()));
+		        textView2.setContentDescription(String.format("%s%s", getString(R.string.cc_about_bot), botData.getDesc()));
+		        textView3.setContentDescription(String.format("%s%s", getString(R.string.cc_deve_by), botData.getDev_name()));
 	        } else {
-		        textView1.setContentDescription("contact name is " + (item.name == null ? "" : item.name));
-		        textView2.setContentDescription("about : " + (item.about == null ? "" : item.about));
-		        textView3.setContentDescription("contact number is " + item.contact_id);
+		        textView1.setContentDescription(String.format("%s%s", getString(R.string.cc_con_name_is), item.name == null ? "" : item.name));
+		        textView2.setContentDescription(String.format("%s%s", getString(R.string.cc_contact_about_is), item.about == null ? "" : item.about));
+		        textView3.setContentDescription(String.format("%s%s", getString(R.string.cc_contact_no_is), item.contact_id));
 	        }
 	        textView1.setText(item.name == null ? "" : item.name);
 	        textView2.setText(item.about == null ? "" : item.about);
-	        textView3.setText(item.is_bot ? ("Developed by : " + item.dev_name) : item.contact_id);
+	        textView3.setText(item.is_bot ? String.format("%s%s", getString(R.string.cc_developed_by_dev), item.dev_name) : item.contact_id);
 
         }
     }

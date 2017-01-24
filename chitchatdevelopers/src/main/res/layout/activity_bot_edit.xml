@@ -10,7 +10,7 @@
     android:layout_gravity="center"
     tools:context="com.rajora.arun.chat.chit.chitchatdevelopers.activities.BotEditActivity">
     <android.support.v7.widget.CardView
-        android:elevation="12dp"
+        app:elevation="12dp"
         android:padding="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -26,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+	                android:contentDescription="@string/bot_pic"
                     android:id="@+id/bot_pic_holder"
                     android:scaleType="centerCrop"
                     android:src="@drawable/empty_profile_pic"
@@ -39,7 +40,7 @@
                     android:fontFamily="Times New Roman"
                     android:textColor="@android:color/white"
                     android:background="#43434313"
-                    android:text="Change"/>
+                    android:text="@string/change_bot_pic"/>
             </android.support.v7.widget.CardView>
             <android.support.design.widget.TextInputLayout
                 android:layout_gravity="center"
@@ -51,7 +52,7 @@
                 android:layout_height="wrap_content">
                 <EditText
                     android:id="@+id/bot_name"
-                    android:hint="Bot Name"
+                    android:hint="@string/bot_name"
                     android:inputType="text"
                     android:maxLines="1"
                     android:maxLength="60"
@@ -69,7 +70,7 @@
                     android:id="@+id/bot_link"
                     android:maxLines="1"
                     android:inputType="textUri"
-                    android:hint="Bot API Endpoint"
+                    android:hint="@string/bot_api_endpoint"
                     android:layout_width="350dp"
                     android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>
@@ -86,7 +87,7 @@
                     android:maxLines="1"
                     android:inputType="text"
                     android:maxLength="200"
-                    android:hint="Bot Secret Key(optional)"
+                    android:hint="@string/bot_secret_key_optional"
                     android:layout_width="350dp"
                     android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>
@@ -103,7 +104,7 @@
                     android:maxLines="1"
                     android:inputType="text"
                     android:maxLength="100"
-                    android:hint="About the bot"
+                    android:hint="@string/about_the_bot"
                     android:layout_width="350dp"
                     android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>
@@ -113,15 +114,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 app:cardCornerRadius="30dp"
-                android:elevation="12dp">
+                app:elevation="12dp">
                 <ImageButton
+                    android:contentDescription="@string/save_bot_details"
+	                style="?android:attr/borderlessButtonStyle"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_done_black_24dp"
                     android:id="@+id/finish_button_bot_upload"
                     android:layout_width="60dp"
                     android:layout_height="60dp" />
             </android.support.v7.widget.CardView>
-
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </ScrollView>

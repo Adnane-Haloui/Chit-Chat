@@ -46,8 +46,8 @@ public class PermissionsSplashFragment extends Fragment {
 		super.onResume();
 		if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED &&
 				ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE)== PackageManager.PERMISSION_GRANTED){
-			askPermissionButton.setText("Permissions Granted!");
-			askPermissionButton.setContentDescription("Permissions Granted");
+			askPermissionButton.setText(getResources().getString(R.string.perm_granted));
+			askPermissionButton.setContentDescription(getResources().getString(R.string.perm_granted));
 			askPermissionButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -56,8 +56,8 @@ public class PermissionsSplashFragment extends Fragment {
 			});
 		}
 		else {
-			askPermissionButton.setText("Give Permissions");
-			askPermissionButton.setContentDescription("Give Permissions");
+			askPermissionButton.setText(R.string.give_permissions);
+			askPermissionButton.setContentDescription(getResources().getString(R.string.give_permissions));
 			askPermissionButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -116,15 +116,15 @@ public class PermissionsSplashFragment extends Fragment {
 		if(permission1!=null && ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),permission1)
 				|| permission2!=null && ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),permission2)) {
 			new AlertDialog.Builder(getContext())
-					.setMessage("Permissions needed to read OTP automatically and auto fill your contact no")
-					.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					.setMessage(R.string.permission_reason_dialog)
+					.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							ActivityCompat.requestPermissions(getActivity(),
 									permission2==null? new String[]{permission1} : new String[]{permission1,permission2},request_code);
 						}
 					})
-					.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialogInterface, int i) {
 							dialogInterface.dismiss();
@@ -138,8 +138,8 @@ public class PermissionsSplashFragment extends Fragment {
 	}
 
     private void setPermissionGranted(){
-        askPermissionButton.setText("Permissions Granted!");
-        askPermissionButton.setContentDescription("Permissions Granted");
+        askPermissionButton.setText(getResources().getString(R.string.perm_granted));
+        askPermissionButton.setContentDescription(getResources().getString(R.string.perm_granted));
         askPermissionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

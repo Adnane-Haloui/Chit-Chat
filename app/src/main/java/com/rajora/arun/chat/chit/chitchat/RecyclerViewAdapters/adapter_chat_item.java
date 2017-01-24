@@ -55,27 +55,24 @@ public class adapter_chat_item extends CursorRecyclerViewAdapter<VH>{
         else{
             holder.mUnreadCount.setText(String.valueOf(item.unread_count));
             holder.mUnreadCount.setVisibility(View.VISIBLE);
-            holder.mUnreadCount.setContentDescription(item.unread_count +" unread messages.");
+            holder.mUnreadCount.setContentDescription(String.format("%d unread messages.", item.unread_count));
         }
         holder.mName.setText(item.name==null || item.name.isEmpty() ?item.contact_id:item.name);
         holder.mTime.setText(utils.getTimeFromTimestamp(item.last_message_time,true));
-	    holder.itemView.setContentDescription("Contact "+
-			    (item.name==null || item.name.isEmpty() ?item.contact_id:item.name));
-	    holder.mImage.setContentDescription("Profile picture of "+
-			    (item.name==null || item.name.isEmpty() ?item.contact_id:item.name));
-	    holder.mTime.setContentDescription("Last message at "+utils.getTimeFromTimestamp(item.last_message_time,true));
+	    holder.itemView.setContentDescription(String.format("Contact %s", item.name == null || item.name.isEmpty() ? item.contact_id : item.name));
+	    holder.mImage.setContentDescription(String.format("Profile picture of %s", item.name == null || item.name.isEmpty() ? item.contact_id : item.name));
+	    holder.mTime.setContentDescription(String.format("Last message at %s", utils.getTimeFromTimestamp(item.last_message_time, true)));
 	    if(item.last_message_type!=null){
             if(item.last_message_type.equals("text")){
                 holder.mLastMessage.setText(item.last_message);
-                holder.mLastMessage.setContentDescription("Last message is "+item.last_message);
+                holder.mLastMessage.setContentDescription(String.format("Last message is %s", item.last_message));
             }
             else{
-                holder.mLastMessage.setText("["+item.last_message_type+"]");
-                holder.mLastMessage.setContentDescription("Received "+item.last_message_type+" last.");
+                holder.mLastMessage.setText(String.format("[%s]", item.last_message_type));
+                holder.mLastMessage.setContentDescription(String.format("Received %s last.", item.last_message_type));
             }
         }
-        holder.mName.setContentDescription("Contact "+
-		        (item.name==null || item.name.isEmpty() ?item.contact_id:item.name));
+        holder.mName.setContentDescription(String.format("Contact %s", item.name == null || item.name.isEmpty() ? item.contact_id : item.name));
         bind(holder,mItemClickListener,item);
     }
 

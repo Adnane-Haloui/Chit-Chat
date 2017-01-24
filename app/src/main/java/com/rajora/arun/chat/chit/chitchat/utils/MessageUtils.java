@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.places.Place;
 import com.google.gson.JsonObject;
+import com.rajora.arun.chat.chit.chitchat.R;
 import com.rajora.arun.chat.chit.chitchat.dataModels.ContactItemDataModel;
 import com.rajora.arun.chat.chit.chitchat.services.FirebaseFileUploadService;
 import com.rajora.arun.chat.chit.chitchat.services.SendMessageService;
@@ -86,7 +87,7 @@ public class MessageUtils {
 		fileDetails.addProperty("name",displayName);
 		fileDetails.addProperty("size",size);
 		if(size/(1024*1024)>100){
-			Toast.makeText(context, "Please upload a file less than 100MB", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, R.string.cc_file_size_error, Toast.LENGTH_SHORT).show();
 		}
 		else{
 			FirebaseFileUploadService.startSendFileMessage(context,ph_no,

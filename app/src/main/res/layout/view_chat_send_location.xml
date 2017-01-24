@@ -14,8 +14,9 @@
 		android:layout_marginTop="@dimen/chat_item_margin"
 		android:layout_marginBottom="@dimen/chat_item_margin"
 		app:cardCornerRadius="@dimen/chat_item_corner_radius"
-		android:elevation="@dimen/chat_item_card_elevation">
+		app:elevation="@dimen/chat_item_card_elevation">
 		<ImageView
+			android:contentDescription="@string/cc_location_image"
 			android:id="@+id/location_background_image"
 			android:layout_width="200dp"
 			android:layout_height="200dp"

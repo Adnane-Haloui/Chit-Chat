@@ -1,26 +1,11 @@
 package com.rajora.arun.chat.chit.chitchat.utils;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.support.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
-import com.rajora.arun.chat.chit.chitchat.contentProviders.ProviderHelper;
 import com.rajora.arun.chat.chit.chitchat.dataModels.ChatItemDataModel;
 
 import java.util.HashMap;
-
-/**
- * Created by arc on 25/12/16.
- */
 
 public class FirebaseUtils {
 
