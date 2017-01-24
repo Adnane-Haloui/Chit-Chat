@@ -5,12 +5,15 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:id="@+id/chat_item_root_layout"
+              android:background="@color/colorPrimary"
+              style="?attr/selectableItemBackground"
               android:padding="@dimen/chatlist_padding">
 		<ImageView
 			android:contentDescription="@string/cc_ppic_contact"
 			android:id="@+id/chat_item_image"
 			android:layout_width="@dimen/imageview_circular_small"
 			android:layout_height="@dimen/imageview_circular_small"
+			android:layout_margin="@dimen/widget_image_padding"
 			android:src="@drawable/empty_profile_pic"/>
 	<LinearLayout
 		android:layout_gravity="center_vertical"
@@ -22,12 +25,14 @@
 			tools:text="Contact Name"
 			android:layout_width="match_parent"
 			android:textSize="@dimen/chatlist_name_textsize"
+			android:textColor="@color/colortextIcons"
 			android:id="@+id/chat_item_name"
 			android:maxLines="1"
 			android:ellipsize="end"
 			android:layout_height="wrap_content"/>
 		<TextView
 			tools:text="last message here"
+			android:textColor="@color/colortextIcons"
 			android:id="@+id/chat_item_last_message"
 			android:layout_marginTop="@dimen/chatlist_about_margin_top"
 			android:paddingLeft="@dimen/chatlist_about_padding_left"
@@ -42,25 +47,26 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content">
 		<TextView
+			android:textColor="@color/colortextIcons"
 			android:layout_marginTop="@dimen/contactlist_about_margin_top"
 			android:id="@+id/chat_unread_count"
-			android:paddingLeft="12dp"
-			android:paddingStart="12dp"
-			android:paddingRight="12dp"
-			android:paddingEnd="12dp"
+			android:paddingLeft="@dimen/widget_unread_count_padding"
+			android:paddingStart="@dimen/widget_unread_count_padding"
+			android:paddingRight="@dimen/widget_unread_count_padding"
+			android:paddingEnd="@dimen/widget_unread_count_padding"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:background="@drawable/badge"
 			tools:text="1103"/>
 		<TextView
+			android:textColor="@color/colortextIcons"
 			tools:text="6:02 pm\n9 dec 2016"
 			android:paddingRight="@dimen/chatlist_time_padding_right"
-			android:lines="2"
+			android:maxLines="2"
 			android:gravity="top"
 			android:textAlignment="center"
 			android:id="@+id/chat_item_time"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
-
 	</LinearLayout>
 </LinearLayout>

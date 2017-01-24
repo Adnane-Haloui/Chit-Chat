@@ -24,7 +24,7 @@
 	<dimen name="chat_item_margin">4dp</dimen>
 	<dimen name="chat_item_corner_radius">12dp</dimen>
 	<dimen name="chat_item_card_elevation">4dp</dimen>
-	<dimen name="chat_item_linearlayout_margin">12dp</dimen>
+	<dimen name="chat_item_linearlayout_margin">8dp</dimen>
 	<dimen name="chat_item_text_size">16sp</dimen>
 
 	<dimen name="chatlist_padding">4dp</dimen>
@@ -54,10 +54,82 @@
 	<dimen name="contactlist_about_padding_left">4dp</dimen>
 	<dimen name="contactlist_number_padding_right">8dp</dimen>
 
-	<!--
-Refer to App Widget Documentation for margin information
-http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
-    -->
 	<dimen name="widget_margin">8dp</dimen>
+	<dimen name="about_the_app_textsize">24sp</dimen>
+	<dimen name="chat_app_widget_heading_textsize">50sp</dimen>
+	<dimen name="widget_empty_padding">10dp</dimen>
+	<dimen name="widget_empty_textsize">24sp</dimen>
+	<dimen name="sidebar_recyclerview_margin">-64dp</dimen>
+	<dimen name="chat_heading_textsize">28sp</dimen>
+	<dimen name="chat_image_dime">44dp</dimen>
+	<dimen name="chat_image_radius">22dp</dimen>
+	<dimen name="chat_image_margin">10dp</dimen>
+	<dimen name="chat_go_back_padding">10dp</dimen>
+	<dimen name="pr_det_ts3">24sp</dimen>
+	<dimen name="pr_det_ts_margin3">10dp</dimen>
+	<dimen name="pr_det_text2_size">32sp</dimen>
+	<dimen name="pr_det_text2_margin">10dp</dimen>
+	<dimen name="pr_det_text1_size">48sp</dimen>
+	<dimen name="pr_det_tex1t_margin">10dp</dimen>
+	<dimen name="pr_det_image_dimen">300dp</dimen>
+	<dimen name="pr_det_radius">150dp</dimen>
+	<dimen name="pr_det_min_width">400dp</dimen>
+	<dimen name="pr_det_padding">16dp</dimen>
+	<dimen name="pr_det_elevation">12dp</dimen>
+	<dimen name="pr_det_margin">16dp</dimen>
+	<dimen name="bot_list_padding">24dp</dimen>
+	<dimen name="chat_list_padding">12dp</dimen>
+	<dimen name="contact_list_padding">12dp</dimen>
+	<dimen name="contact_list_fab_margin">12dp</dimen>
+	<dimen name="contact_list_margin2">20dp</dimen>
+	<dimen name="as_bot_margin">10dp</dimen>
+	<dimen name="as_bot_padding">10dp</dimen>
+	<dimen name="as_bot_radius">12dp</dimen>
+	<dimen name="as_bot_ll_pad">4dp</dimen>
+	<dimen name="as_bot_alarm_marginend">4dp</dimen>
+	<dimen name="as_bot_text_size">16sp</dimen>
+	<dimen name="as_bot_cancel_margin">4dp</dimen>
+	<dimen name="unread_count_padding">12dp</dimen>
+	<dimen name="widget_image_padding">12dp</dimen>
+	<dimen name="widget_unread_count_padding">12dp</dimen>
+	<dimen name="sidePandel_send_margin">4dp</dimen>
+	<dimen name="view_ci_padding">4dp</dimen>
+	<dimen name="is_user_container_padding">12dp</dimen>
+	<dimen name="is_user_padding">12dp</dimen>
+	<dimen name="prof_edit_margin">20dp</dimen>
+	<dimen name="prof_edit_image_radius">100dp</dimen>
+	<dimen name="prof_edit_image_elevation">12dp</dimen>
+	<dimen name="prof_edit_image_dime">200dp</dimen>
+	<dimen name="prof_edit_margin_starttext">24dp</dimen>
+	<dimen name="prof_edit_ok_padding_right">20dp</dimen>
+	<dimen name="prof_edit_ok_padding_bottom">5dp</dimen>
+	<dimen name="prof_edit_ok_margin_top">10dp</dimen>
+	<dimen name="prof_edit_ok_elevation">12dp</dimen>
+	<dimen name="prof_edit_ok_padding_left">20dp</dimen>
+	<dimen name="prof_edit_cancel_elevation">12dp</dimen>
+	<dimen name="prof_edit_cancel_padding_left">20dp</dimen>
+	<dimen name="prof_edit_cancel_padding_top">5dp</dimen>
+	<dimen name="prof_edit_cancel_margin_top">10dp</dimen>
+	<dimen name="prof_edit_cancel_padding_bottom">5dp</dimen>
+	<dimen name="prof_edit_cancel_padding_right">20dp</dimen>
+	<dimen name="chat_contact_side_margin">8dp</dimen>
+	<dimen name="contact_time_margin">4dp</dimen>
+	<dimen name="contact_button_minwidth">200dp</dimen>
+	<dimen name="msg_location_image_dimen">200dp</dimen>
+	<dimen name="msg_location_text_padding">12dp</dimen>
+	<dimen name="msg_location_time_padding">12dp</dimen>
+	<dimen name="msg_location_location_icon_dimen">24dp</dimen>
+	<dimen name="msg_location_icon_margin">12dp</dimen>
+	<dimen name="msg_image_dimen">200dp</dimen>
+	<dimen name="msg_image_icon_dimen">24dp</dimen>
+	<dimen name="msg_image_time_margin">12dp</dimen>
+	<dimen name="msg_image_time_padding">8dp</dimen>
+	<dimen name="msg_image_pic_dimen">24dp</dimen>
+	<dimen name="msg_image_img_margin">8dp</dimen>
+	<dimen name="video_padding">4dp</dimen>
+	<dimen name="video_dimen">200dp</dimen>
+	<dimen name="msg_video_pb_dimen">48dp</dimen>
+	<dimen name="msg_video_icon_dimen">24dp</dimen>
+	<dimen name="msg_video_time_padding">4dp</dimen>
 
 </resources>

@@ -36,27 +36,28 @@
                     android:layout_height="wrap_content">
                     <ImageView
                         android:contentDescription="@string/go_back_content_description"
-                        android:padding="10dp"
+                        android:padding="@dimen/chat_go_back_padding"
                         android:id="@+id/go_back"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:scaleType="centerInside"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_keyboard_arrow_left_white"/>
                     <android.support.v7.widget.CardView
                         android:id="@+id/chat_image_container"
-                        android:layout_margin="10dp"
-                        app:cardCornerRadius="22dp"
+                        android:layout_margin="@dimen/chat_image_margin"
+                        app:cardCornerRadius="@dimen/chat_image_radius"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
                         <ImageView
 	                        android:contentDescription="@string/profile_pic_content_description"
                             android:id="@+id/chat_image"
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
+                            android:layout_width="@dimen/chat_image_dime"
+                            android:layout_height="@dimen/chat_image_dime"
                             android:src="@drawable/empty_profile_pic"/>
                     </android.support.v7.widget.CardView>
 	                <TextView
-		                android:textSize="28sp"
+		                android:textSize="@dimen/chat_heading_textsize"
 		                android:id="@+id/chat_name"
 		                android:layout_width="match_parent"
 		                android:maxLines="1"
@@ -76,8 +77,8 @@
             tools:layout="@layout/fragment_chat" />
     </android.support.design.widget.CoordinatorLayout>
     <android.support.v7.widget.RecyclerView
-        android:layout_marginLeft="-64dp"
-        android:layout_marginStart="-64dp"
+        android:layout_marginLeft="@dimen/sidebar_recyclerview_margin"
+        android:layout_marginStart="@dimen/sidebar_recyclerview_margin"
         android:id="@+id/sidebar_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

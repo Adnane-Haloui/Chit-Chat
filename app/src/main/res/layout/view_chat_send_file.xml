@@ -9,6 +9,7 @@
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
 		android:layout_width="wrap_content"
+		android:background="?attr/selectableItemBackground"
 		android:layout_height="wrap_content"
 		android:layout_marginRight="@dimen/chat_item_margin"
 		android:layout_marginLeft="@dimen/chat_item_margin"
@@ -17,11 +18,13 @@
 		app:cardCornerRadius="@dimen/chat_item_corner_radius"
 		app:elevation="@dimen/chat_item_card_elevation">
 		<LinearLayout
+			android:padding="8dp"
 			android:orientation="vertical"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content">
 			<TextView
-				android:layout_margin="@dimen/chat_item_linearlayout_margin"
+				android:maxLines="1"
+				android:ellipsize="marquee"
 				tools:text="File: myprofile.docx"
 				android:id="@+id/file_name"
 				android:layout_gravity="start"
@@ -29,39 +32,50 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" />
 			<LinearLayout
+				android:paddingTop="8dp"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal">
 				<TextView
-					android:layout_margin="@dimen/chat_item_linearlayout_margin"
+					android:paddingEnd="@dimen/chat_item_linearlayout_margin"
+					android:paddingRight="@dimen/chat_item_linearlayout_margin"
 					tools:text="Size: 100 MB "
 					android:id="@+id/file_size"
-					android:layout_gravity="start"
+					android:layout_gravity="center_vertical|start"
 					android:textSize="@dimen/chat_item_text_size"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content" />
 				<ProgressBar
 					android:id="@+id/file_progressbar"
-					android:layout_gravity="end"
+					android:layout_gravity="center_vertical|end"
 					android:layout_width="24dp"
 					android:layout_height="24dp"
 					android:indeterminate="true"
 					android:indeterminateOnly="true"
-					android:indeterminateDrawable="@drawable/circular_progress"/>
+					android:indeterminateDrawable="@drawable/circular_progress_small"/>
 			</LinearLayout>
-			<ImageView
-				android:contentDescription="@string/cc_file_download_open"
-				android:id="@+id/file_button"
+			<LinearLayout
+				android:orientation="horizontal"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
-			<TextView
-				tools:text="2:3 pm"
-				android:id="@+id/file_time"
-				android:textSize="@dimen/chat_message_sub_text_size"
-				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:textAlignment="viewStart"
-				android:layout_gravity="start"/>
+				android:layout_marginBottom="4dp">
+				<TextView
+					tools:text="2:3 pm"
+					android:id="@+id/file_time"
+					android:textSize="@dimen/chat_message_sub_text_size"
+					android:layout_width="0dp"
+					android:layout_weight="1"
+					android:layout_height="wrap_content"
+					android:textAlignment="viewStart"
+					android:layout_gravity="center_vertical|start"/>
+				<ImageView
+					android:contentDescription="@string/cc_file_download_open"
+					android:id="@+id/file_button"
+					android:layout_gravity="center_vertical|end"
+					android:layout_width="@dimen/msg_location_location_icon_dimen"
+					android:layout_height="@dimen/msg_location_location_icon_dimen"
+					android:tint="@android:color/black"/>
+			</LinearLayout>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
 </RelativeLayout>

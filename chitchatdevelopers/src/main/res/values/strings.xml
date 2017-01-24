@@ -22,4 +22,5 @@
 	<string name="no_camera_found" translatable="true">No camera app found!</string>
 	<string name="no_img_picker_found" translatable="true">No app found to pick image!</string>
 	<string name="wait_for_data_to_load" translatable="true">Please wait for data to load</string>
+	<string name="change_bot_pic_content_description">change bot pic</string>
 </resources>

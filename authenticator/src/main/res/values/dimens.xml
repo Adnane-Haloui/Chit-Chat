@@ -2,4 +2,23 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="lib_welcome_margin">48dp</dimen>
+    <dimen name="get_started_padding">18dp</dimen>
+    <dimen name="lib_button_start_elevation">4dp</dimen>
+    <dimen name="lib_start_text_size">12sp</dimen>
+    <dimen name="lib_intro_text_size">36sp</dimen>
+    <dimen name="lib_intro_margin_top">18dp</dimen>
+    <dimen name="lib_perm_margin">48dp</dimen>
+    <dimen name="lib_perm_textsize">34sp</dimen>
+    <dimen name="lib_perm_margin_bottom">18dp</dimen>
+    <dimen name="lib_perm_title_textsize">16sp</dimen>
+    <dimen name="lib_perm_title_paddingstart">24dp</dimen>
+    <dimen name="lib_perm_title_paddding_end">24dp</dimen>
+    <dimen name="lib_perm_title_margin_bottom">24dp</dimen>
+    <dimen name="lib_perm_button_padding">12dp</dimen>
+    <dimen name="lib_perm_button_elevation">4dp</dimen>
+    <dimen name="lib_perm_button_textsize">20sp</dimen>
+    <dimen name="lib_login_error_padding_bottom">12dp</dimen>
+    <dimen name="lib_login_button_textsize">20sp</dimen>
+    <dimen name="lib_login_button_padding">18dp</dimen>
 </resources>

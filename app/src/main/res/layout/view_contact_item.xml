@@ -5,7 +5,9 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="4dp">
+    android:padding="@dimen/view_ci_padding"
+    android:clickable="true"
+    android:background="?android:attr/selectableItemBackground">
     <android.support.v7.widget.CardView
         android:id="@+id/contact_item_image_container"
         android:layout_margin="@dimen/contactlist_margin"
@@ -13,6 +15,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageView
+	        android:contentDescription="@string/contact_pic"
+	        android:background="?attr/selectableItemBackground"
             android:id="@+id/contact_item_image"
             android:layout_width="@dimen/imageview_circular_small"
             android:layout_height="@dimen/imageview_circular_small"
@@ -74,16 +78,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/contactlist_about_margin_top"
-                android:paddingLeft="12dp"
-                android:paddingStart="12dp"
-                android:paddingRight="12dp"
-                android:paddingEnd="12dp">
+                android:paddingLeft="@dimen/is_user_container_padding"
+                android:paddingStart="@dimen/is_user_container_padding"
+                android:paddingRight="@dimen/is_user_container_padding"
+                android:paddingEnd="@dimen/is_user_container_padding">
                 <TextView
                     android:id="@+id/contact_is_user_textview"
-                    android:paddingLeft="12dp"
-                    android:paddingStart="12dp"
-                    android:paddingRight="12dp"
-                    android:paddingEnd="12dp"
+                    android:paddingLeft="@dimen/is_user_padding"
+                    android:paddingStart="@dimen/is_user_padding"
+                    android:paddingRight="@dimen/is_user_padding"
+                    android:paddingEnd="@dimen/is_user_padding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="Invite"/>

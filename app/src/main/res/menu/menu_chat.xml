@@ -6,7 +6,8 @@
         android:id="@+id/action_Update_Profile"
         android:orderInCategory="7"
         android:title="@string/cc_menu_update_profile"
-        app:showAsAction="never" />
+        android:icon="@drawable/account_icon"
+        app:showAsAction="never|withText" />
     <item
         android:id="@+id/action_about"
         android:orderInCategory="8"

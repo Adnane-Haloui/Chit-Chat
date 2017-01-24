@@ -10,47 +10,47 @@
     android:scrollbars="none">
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/pr_det_margin"
         android:layout_height="wrap_content"
-        app:elevation="12dp">
+        app:elevation="@dimen/pr_det_elevation">
         <LinearLayout
             android:id="@+id/activity_profile_details"
             android:layout_width="wrap_content"
-            android:minWidth="400dp"
+            android:minWidth="@dimen/pr_det_min_width"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/pr_det_padding">
             <android.support.v7.widget.CardView
                 android:layout_gravity="center"
-                app:cardCornerRadius="150dp"
+                app:cardCornerRadius="@dimen/pr_det_radius"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
                     android:contentDescription="@string/profile_pic_content_description"
                     android:id="@+id/details_image"
                     android:src="@drawable/empty_profile_pic"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp" />
+                    android:layout_width="@dimen/pr_det_image_dimen"
+                    android:layout_height="@dimen/pr_det_image_dimen" />
             </android.support.v7.widget.CardView>
             <TextView
                 android:id="@+id/details_text1"
                 android:gravity="center"
-                android:layout_margin="10dp"
-                android:textSize="48sp"
+                android:layout_margin="@dimen/pr_det_tex1t_margin"
+                android:textSize="@dimen/pr_det_text1_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/details_text2"
                 android:gravity="center"
-                android:layout_margin="10dp"
-                android:textSize="32sp"
+                android:layout_margin="@dimen/pr_det_text2_margin"
+                android:textSize="@dimen/pr_det_text2_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/details_text3"
                 android:gravity="center"
-                android:layout_margin="10dp"
-                android:textSize="24sp"
+                android:layout_margin="@dimen/pr_det_ts_margin3"
+                android:textSize="@dimen/pr_det_ts3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

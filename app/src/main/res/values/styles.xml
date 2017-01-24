@@ -6,7 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="ChangeProfileTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -21,8 +20,7 @@
 		<item name="android:windowBackground">@drawable/splash_screen</item>
 	</style>
 
-	<style name="mainAppTheme" parent="Theme.AppCompat.NoActionBar">
-		<item name="android:windowBackground">@drawable/splash_screen</item>
+	<style name="mainAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
 	</style>
 
     <style name="AppTheme.NoActionBar">

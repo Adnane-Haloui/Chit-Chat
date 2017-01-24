@@ -7,7 +7,7 @@
 	<TextView
 		android:id="@+id/bot_list_empty"
 		android:text="@string/no_bot_service_available"
-		android:padding="24dp"
+		android:padding="@dimen/bot_list_padding"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:textAlignment="center"/>

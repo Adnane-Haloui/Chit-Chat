@@ -99,7 +99,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 			if(item.extra_uri!=null && !item.extra_uri.isEmpty()){
 				Glide.with(mContext)
 						.load(Uri.parse(item.extra_uri))
-						.fitCenter()
+						.centerCrop()
 						.diskCacheStrategy(DiskCacheStrategy.RESULT)
 						.into(holder.image);
 			}
@@ -114,7 +114,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 				Glide.with(mContext)
 						.using(new FirebaseImageLoader())
 						.load(mref)
-						.fitCenter()
+						.centerCrop()
 						.diskCacheStrategy(DiskCacheStrategy.RESULT)
 						.into(holder.image);
 
@@ -220,7 +220,7 @@ public class adapter_chats extends CursorRecyclerViewAdapter<VH>{
 				if(thumbnailUriPath!=null){
 					Glide.with(mContext)
 							.load(Uri.fromFile(new File(thumbnailUriPath)))
-							.fitCenter()
+							.centerCrop()
 							.diskCacheStrategy(DiskCacheStrategy.RESULT)
 							.into(holder.mThumbnail);
 				}

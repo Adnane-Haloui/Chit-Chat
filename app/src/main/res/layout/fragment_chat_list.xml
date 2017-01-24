@@ -7,7 +7,7 @@
 	<TextView
 		android:id="@+id/chat_list_empty"
 		android:text="@string/cc_chat_history_empty"
-		android:padding="12dp"
+		android:padding="@dimen/chat_list_padding"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:textAlignment="center"/>

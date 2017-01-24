@@ -44,8 +44,8 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            app:cardCornerRadius="@dimen/cardview_corner_radius_small"
-	            android:layout_marginStart="4dp"
-	            android:layout_marginLeft="4dp">
+	            android:layout_marginStart="@dimen/sidePandel_send_margin"
+	            android:layout_marginLeft="@dimen/sidePandel_send_margin">
                 <ImageView
                     android:contentDescription="@string/send_message_content_description"
                     android:background="@color/colorAccent"

@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login"
-        android:padding="18dp"
-        android:textSize="20sp"
+        android:padding="@dimen/lib_login_button_padding"
+        android:textSize="@dimen/lib_login_button_textsize"
         android:textColor="@android:color/white"
         android:background="@android:color/holo_red_dark"/>
     <TextView
@@ -22,7 +22,7 @@
         android:textColor="@android:color/white"
         android:layout_centerInParent="true"
         android:layout_above="@id/splash_login_button"
-        android:paddingBottom="12dp"
+        android:paddingBottom="@dimen/lib_login_error_padding_bottom"
         android:visibility="gone"/>
     <ProgressBar
         style="@android:style/Widget.ProgressBar.Inverse"

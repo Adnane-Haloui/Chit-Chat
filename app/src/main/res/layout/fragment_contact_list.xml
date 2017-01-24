@@ -17,7 +17,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:textAlignment="center"
-				android:padding="12dp"/>
+				android:padding="@dimen/contact_list_padding"/>
 			<android.support.v7.widget.RecyclerView
 				android:id="@+id/contact_recycler_view"
 				android:layout_width="match_parent"
@@ -28,7 +28,7 @@
 	<android.support.design.widget.FloatingActionButton
 		android:id="@+id/add_contact_fab"
 		android:src="@drawable/ic_add_black_24dp"
-		android:layout_margin="12dp"
+		android:layout_margin="@dimen/contact_list_fab_margin"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
@@ -46,7 +46,7 @@
 		android:layout_above="@id/add_contact_fab"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_marginEnd="20dp"
-		android:layout_marginRight="20dp"
+		android:layout_marginEnd="@dimen/contact_list_margin2"
+		android:layout_marginRight="@dimen/contact_list_margin2"
 		app:backgroundTint="@android:color/white"/>
 </RelativeLayout>

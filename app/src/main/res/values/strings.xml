@@ -91,4 +91,5 @@
 	<string name="cc_menu_upload_file">Upload File</string>
 	<string name="cc_menu_upload_contact">Upload contact</string>
 	<string name="cc_menu_upload_location">Upload location</string>
+	<string name="contact_pic">Contact Pic</string>
 </resources>

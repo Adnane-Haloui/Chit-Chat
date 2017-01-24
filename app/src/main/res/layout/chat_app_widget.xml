@@ -7,26 +7,31 @@
 	android:orientation="vertical"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<TextView android:layout_width="match_parent"
+	          android:background="@color/colorPrimaryDark"
+	          android:textColor="@color/colortextIcons"
 	          android:layout_height="wrap_content"
 	          android:padding="10dp"
 	          android:contentDescription="@string/app_name"
 	          android:text="@string/app_name"
 	          android:id="@+id/heading_widget"
 	          android:gravity="center"
-	          android:textSize="50sp"/>
+	          android:textSize="@dimen/chat_app_widget_heading_textsize"/>
 	<ListView
+		android:background="@color/colorPrimary"
 		android:id="@+id/widget_linear"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 	</ListView>
 	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
 	          android:contentDescription="@string/cc_chat_with_someone"
+	          android:background="@color/colorPrimary"
+	          android:textColor="@color/colortextIcons"
 	          android:layout_width="match_parent"
 	          android:layout_height="wrap_content"
-	          android:padding="10dp"
+	          android:padding="@dimen/widget_empty_padding"
 	          android:visibility="gone"
 	          android:text="@string/cc_chat_with_someone"
 	          android:id="@+id/ListViewEmpty"
 	          android:gravity="center"
-	          android:textSize="30sp"/>
+	          android:textSize="@dimen/widget_empty_textsize"/>
 </LinearLayout>

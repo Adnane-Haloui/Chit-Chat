@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.rajora.arun.chat.chit.chitchat.activities.AboutActivity">
     <TextView
-        android:textSize="24sp"
+        android:textSize="@dimen/about_the_app_textsize"
         android:layout_centerInParent="true"
         android:textAlignment="center"
         android:autoLink="web"

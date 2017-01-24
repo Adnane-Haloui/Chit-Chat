@@ -16,7 +16,7 @@
 				android:id="@+id/details_toolbar"
 				android:layout_width="match_parent"
 				android:layout_height="?attr/actionBarSize"
-				app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+				app:theme="@style/Widget.AppCompat.ActionBar"
 				app:layout_scrollFlags="scroll|enterAlways"/>
 		</android.support.design.widget.AppBarLayout>
 		<com.db.chart.view.LineChartView
@@ -24,7 +24,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
 			android:contentDescription="@string/stats_of_bot_usage"
-			android:padding="10dp"
+			android:padding="@dimen/linechart_padding"
 			android:layout_weight="1"/>
 	</LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

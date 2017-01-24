@@ -12,10 +12,11 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add_black_24dp"
         android:tint="@android:color/white"
-        app:elevation="24dp"
+        app:elevation="@dimen/fab_elevation"
+        app:pressedTranslationZ="@dimen/pressed_fab_elevation"
         android:layout_gravity="bottom|end"
         app:fabSize="normal"/>
 </android.support.design.widget.CoordinatorLayout>
