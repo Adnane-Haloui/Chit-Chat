@@ -131,5 +131,6 @@
 	<dimen name="msg_video_pb_dimen">48dp</dimen>
 	<dimen name="msg_video_icon_dimen">24dp</dimen>
 	<dimen name="msg_video_time_padding">4dp</dimen>
+	<dimen name="mg_top">10dp</dimen>
 
 </resources>

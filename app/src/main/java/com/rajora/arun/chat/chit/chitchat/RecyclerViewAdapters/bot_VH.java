@@ -35,12 +35,7 @@ public class bot_VH extends RecyclerView.ViewHolder {
 		mName.setText(model.getName());
 		mDeveloperName.setText(model.getDev_name());
 		mAbout.setText(model.getDesc());
-		if(model.getImage_url()!=null){
-			ImageUtils.loadBitmapFromFirebase(context,model.getImage_url(), R.drawable.empty_profile_pic,mImage);
-		}
-		else{
-			ImageUtils.loadBitmapFromFirebase(context,"/botItem/"+model.getGid()+"/botpic.png",R.drawable.empty_profile_pic,mImage);
-		}
+		ImageUtils.loadBitmapFromFirebase(context,"/botItem/"+model.getGid()+"/botpic.png",R.drawable.empty_profile_pic,mImage);
 	}
 
 	public void setContentDescription(FirebaseBotsDataModel model){

@@ -1,15 +1,12 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="ChangeProfileTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -20,7 +17,12 @@
 		<item name="android:windowBackground">@drawable/splash_screen</item>
 	</style>
 
-	<style name="mainAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+	<style name="mainAppTheme" parent="AppTheme">
+		<item name="actionBarStyle">@style/noElevationActionBar</item>
+	</style>
+
+	<style name="noElevationActionBar" parent="style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+		<item name="elevation">0dp</item>
 	</style>
 
     <style name="AppTheme.NoActionBar">

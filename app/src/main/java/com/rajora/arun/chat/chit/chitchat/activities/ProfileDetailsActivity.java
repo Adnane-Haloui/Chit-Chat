@@ -81,9 +81,7 @@ public class ProfileDetailsActivity extends AppCompatChatListenerActivity
             textView1.setContentDescription(String.format("%s%s", getString(R.string.cc_bot_name_is), botData.getName()));
             textView2.setContentDescription(String.format("%s%s", getString(R.string.cc_about_bot), botData.getDesc()));
             textView3.setContentDescription(String.format("%s%s", getString(R.string.cc_deve_by), botData.getDev_name()));
-            if(botData.getImage_url()!=null){
-	            ImageUtils.loadBitmapFromFirebase(this,botData.getImage_url(), drawable.empty_profile_pic,image);
-            }
+	        ImageUtils.loadBitmapFromFirebase(this,"/botItem/"+botData.getGid()+"/botpic.png",R.drawable.empty_profile_pic,image);
         }
         else{
             contactData=bundle.getParcelable("data");
@@ -112,20 +110,21 @@ public class ProfileDetailsActivity extends AppCompatChatListenerActivity
         if(utils.canCursorMoveToFirst(data)) {
 
 	        ContactDetailDataModel item = new ContactDetailDataModel(data);
-	        ImageUtils.loadImageIntoView(this,item,image);
-	        if (item.is_bot) {
-		        textView1.setContentDescription(String.format("%s%s", getString(R.string.cc_bot_name_is), botData.getName()));
-		        textView2.setContentDescription(String.format("%s%s", getString(R.string.cc_about_bot), botData.getDesc()));
-		        textView3.setContentDescription(String.format("%s%s", getString(R.string.cc_deve_by), botData.getDev_name()));
-	        } else {
-		        textView1.setContentDescription(String.format("%s%s", getString(R.string.cc_con_name_is), item.name == null ? "" : item.name));
-		        textView2.setContentDescription(String.format("%s%s", getString(R.string.cc_contact_about_is), item.about == null ? "" : item.about));
-		        textView3.setContentDescription(String.format("%s%s", getString(R.string.cc_contact_no_is), item.contact_id));
-	        }
-	        textView1.setText(item.name == null ? "" : item.name);
-	        textView2.setText(item.about == null ? "" : item.about);
-	        textView3.setText(item.is_bot ? String.format("%s%s", getString(R.string.cc_developed_by_dev), item.dev_name) : item.contact_id);
-
+	            ImageUtils.loadImageIntoView(this,item,image);
+		        if (item.is_bot) {
+			        textView1.setContentDescription(String.format("%s%s", getString(R.string.cc_bot_name_is), item.name));
+			        textView2.setContentDescription(String.format("%s%s", getString(R.string.cc_about_bot), item.about));
+			        textView3.setContentDescription(String.format("%s%s", getString(R.string.cc_deve_by), item.dev_name));
+			        ImageUtils.loadBitmapFromFirebase(this,"/botItem/"+item.contact_id+"/botpic.png",R.drawable.empty_profile_pic,image);
+		        } else {
+			        textView1.setContentDescription(String.format("%s%s", getString(R.string.cc_con_name_is), item.name == null ? "" : item.name));
+			        textView2.setContentDescription(String.format("%s%s", getString(R.string.cc_contact_about_is), item.about == null ? "" : item.about));
+			        textView3.setContentDescription(String.format("%s%s", getString(R.string.cc_contact_no_is), item.contact_id));
+			        ImageUtils.loadImageIntoView(this,item,image);
+		        }
+		        textView1.setText(item.name == null ? "" : item.name);
+		        textView2.setText(item.about == null ? "" : item.about);
+		        textView3.setText(item.is_bot ? String.format("%s%s", getString(R.string.cc_developed_by_dev), item.dev_name) : item.contact_id);
         }
     }
 

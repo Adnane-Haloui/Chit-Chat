@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.rajora.arun.chat.chit.authenticator.login.Fragments.SplashFragments.LoginSplashFragment"
-    android:background="@android:color/holo_red_light">
+    android:background="@color/colorPrimary">
     <Button
         android:id="@+id/splash_login_button"
         android:layout_centerVertical="true"
@@ -14,7 +14,7 @@
         android:padding="@dimen/lib_login_button_padding"
         android:textSize="@dimen/lib_login_button_textsize"
         android:textColor="@android:color/white"
-        android:background="@android:color/holo_red_dark"/>
+        android:background="@color/colorPrimaryDark"/>
     <TextView
         android:id="@+id/splash_login_error_message_textview"
         android:layout_width="wrap_content"

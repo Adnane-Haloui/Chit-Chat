@@ -60,9 +60,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         mProfilePicHolder=(ImageView)findViewById(R.id.profile_pic_holder);
         mProfileName=(EditText) findViewById(R.id.profile_name);
         mProfileAbout=(EditText) findViewById(R.id.profile_about);
+        restoreLayoutValues(savedInstanceState);
         if(savedInstanceState!=null)
         {
-            restoreLayoutValues(savedInstanceState);
             mRequestCode=savedInstanceState.getInt("requestCode");
             if(savedInstanceState.containsKey("datauri"))
                 dataUri=savedInstanceState.getString("datauri");

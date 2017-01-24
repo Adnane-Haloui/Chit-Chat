@@ -107,7 +107,7 @@
 		<receiver android:name=".widget.ChatAppWidget">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-				<action android:name=".app.ACTION_DATA_UPDATED"/>
+				<action android:name="com.rajora.arun.chat.chit.chitchat.app.ACTION_DATA_UPDATED"/>
 			</intent-filter>
 			<meta-data
 				android:name="android.appwidget.provider"

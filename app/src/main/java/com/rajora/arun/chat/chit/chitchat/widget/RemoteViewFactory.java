@@ -74,6 +74,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 
 		RemoteViews remoteViews=new RemoteViews(mContext.getPackageName(), R.layout.widget_chat_item);
 		BitmapRequestBuilder bitmapRequestBuilder=null;
+		remoteViews.setImageViewResource(R.id.chat_item_image,R.drawable.empty_profile_pic);
 		if(mCursor.moveToPosition(position))
 		{
 			ChatListDataModel item=new ChatListDataModel(mCursor);
@@ -89,8 +90,8 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 							.placeholder(R.drawable.empty_profile_pic)
 							.error(R.drawable.empty_profile_pic);
 				}
-				else if (item.is_bot) {
-					String imgSrc=item.is_bot? "/botItem/" + item.contact_id + "/botpic.webp" :
+				else {
+					String imgSrc=item.is_bot? "/botItem/" + item.contact_id + "/botpic.png" :
 							item.contact_id.substring(1) + "/profile/profilepic.webp";
 					bitmapRequestBuilder=Glide.with(mContext)
 							.using(new FirebaseImageLoader())
@@ -100,9 +101,6 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 							.centerCrop()
 							.placeholder(R.drawable.empty_profile_pic)
 							.error(R.drawable.empty_profile_pic);
-				}
-				else{
-					remoteViews.setImageViewResource(R.id.chat_item_image,R.drawable.empty_profile_pic);
 				}
 			}
 			else {
@@ -136,7 +134,7 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 
 			remoteViews.setTextViewText(R.id.chat_item_name, item.name==null ||
 					item.name.isEmpty() ?item.contact_id:item.name);
-			remoteViews.setTextViewText(R.id.chat_item_time,utils.getTimeFromTimestamp(item.last_message_time,true));
+			remoteViews.setTextViewText(R.id.chat_item_time,utils.getDateTimeFromTimestamp(item.last_message_time,true));
 
 			remoteViews.setContentDescription(R.id.chat_item_root_layout, String.format("%s%s", mContext.getString(R.string.cc_contact_cdesc),
 					item.name == null || item.name.isEmpty() ? item.contact_id : item.name));
@@ -179,11 +177,11 @@ public class RemoteViewFactory implements RemoteViewsService.RemoteViewsFactory 
 
 	@Override
 	public long getItemId(int position) {
-		return position;
+		return mCursor.getLong(mCursor.getColumnIndex(ContractChatList._ID));
 	}
 
 	@Override
 	public boolean hasStableIds() {
-		return false;
+		return true;
 	}
 }

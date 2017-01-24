@@ -21,7 +21,7 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Helper.chat_database;
 
 public class ChatContentProvider extends ContentProvider {
 
-    public static final String BROADCAST_STRING="com.rajora.arun.chat.chit.chitchat.app.ACTION_CHAT_LIST_DATA_UPDATED";
+    public static final String BROADCAST_STRING="com.rajora.arun.chat.chit.chitchat.app.ACTION_DATA_UPDATED";
 
     public static final String PROVIDER_NAME = "com.rajora.arun.chit.chat.provider";
 

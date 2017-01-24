@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context="com.rajora.arun.chat.chit.authenticator.login.Fragments.SplashFragments.PermissionsSplashFragment"
-                android:background="@android:color/holo_red_light">
+                android:background="@color/colorPrimary">
     <TextView
         android:id="@+id/splash_permission_text"
         android:layout_width="wrap_content"

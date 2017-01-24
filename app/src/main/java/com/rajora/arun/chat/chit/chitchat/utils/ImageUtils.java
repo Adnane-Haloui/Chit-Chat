@@ -84,7 +84,7 @@ public class ImageUtils {
 			}
 			else if (item.is_user || item.is_bot) {
 				if (item.is_bot) {
-					loadBitmapFromFirebase(context, "/botItem/" + item.contact_id + "/botpic.jpg",
+					loadBitmapFromFirebase(context, "/botItem/" + item.contact_id + "/botpic.png",
 							drawable.empty_profile_pic, imageView);
 				} else {
 					loadBitmapFromFirebase(context, item.contact_id.substring(1) + "/profile/profilepic.webp",
@@ -107,7 +107,7 @@ public class ImageUtils {
 						imageView);
 			}
 			else if (item.is_bot) {
-				loadBitmapFromFirebase(context, "/botItem/" + item.contact_id + "/botpic.webp",
+				loadBitmapFromFirebase(context, "/botItem/" + item.contact_id + "/botpic.png",
 						drawable.empty_profile_pic, imageView);
 			}
 			else{
