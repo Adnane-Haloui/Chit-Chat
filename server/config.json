@@ -1,0 +1,8 @@
+{
+   "fcm_auth_key":"",
+   "service_account_file_name":"",
+   "firebase_database_url":"",
+   "twitter_consumer_key":"",
+   "twitter_secret_key":"",
+   "luis_secret":""
+}
