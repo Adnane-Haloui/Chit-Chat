@@ -6,4 +6,38 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+
+	<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:windowContentTransitions">true</item>
+		<item name="android:windowSharedElementEnterTransition">
+			@transition/change_image_transition</item>
+		<item name="android:windowSharedElementExitTransition">
+			@transition/change_image_transition</item>
+	</style>
+
+	<style name="ChangeProfileTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:backgroundDimEnabled">true</item>
+		<item name="android:windowContentTransitions">true</item>
+		<item name="android:windowSharedElementEnterTransition">
+			@transition/change_image_transition</item>
+		<item name="android:windowSharedElementExitTransition">
+			@transition/change_image_transition</item>
+	</style>
+
+	<style name="noElevationActionBar" parent="style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+		<item name="elevation">0dp</item>
+		<item name="android:windowContentTransitions">true</item>
+		<item name="android:windowSharedElementEnterTransition">
+			@transition/change_image_transition</item>
+		<item name="android:windowSharedElementExitTransition">
+			@transition/change_image_transition</item>
+	</style>
+
 </resources>
