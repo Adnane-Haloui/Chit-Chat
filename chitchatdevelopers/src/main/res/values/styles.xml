@@ -3,6 +3,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+	    <item name="android:windowAnimationStyle">@style/slideActivityAnimation</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
@@ -11,14 +12,21 @@
 
     <style name="mainAppTheme" parent="AppTheme">
     </style>
-
 	<style name="noActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:windowAnimationStyle">@style/slideActivityAnimation</item>
 	</style>
 
 	<style name="botDetailsTheme" parent="noActionBarTheme">
+	</style>
+
+	<style name="slideActivityAnimation" parent="@android:style/Animation.Activity">
+		<item name="android:activityOpenEnterAnimation">@anim/right_slide_in</item>
+		<item name="android:activityCloseEnterAnimation">@anim/left_slide_in</item>
+		<item name="android:activityOpenExitAnimation">@anim/left_slide_out</item>
+		<item name="android:activityCloseExitAnimation">@anim/right_slide_out</item>
 	</style>
 
 </resources>

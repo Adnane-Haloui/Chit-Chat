@@ -73,22 +73,22 @@ public class adapter_chat_item extends CursorRecyclerViewAdapter<VH>{
             }
         }
         holder.mName.setContentDescription(String.format("Contact %s", item.name == null || item.name.isEmpty() ? item.contact_id : item.name));
-        bind(holder,mItemClickListener,item);
+        bind(holder,mItemClickListener,item,holder.mImageContainerCardView);
     }
 
-    public void bind(final VH holder,final onItemClickListener mItemClickListener,final ChatListDataModel item) {
+    public void bind(final VH holder,final onItemClickListener mItemClickListener,final ChatListDataModel item,final CardView img) {
         holder.itemView.setOnClickListener(
                 new OnClickListener(){
                     @Override
                     public void onClick(View v) {
-                        mItemClickListener.onItemClick(holder.getAdapterPosition(), item);
+                        mItemClickListener.onItemClick(holder.getAdapterPosition(), item,img);
                     }
                 }
         );
         holder.itemView.findViewById(id.chat_item_image_container).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mItemClickListener.onImageClick(holder.getAdapterPosition(), item);
+                mItemClickListener.onImageClick(holder.getAdapterPosition(), item,img);
             }
         });
     }
@@ -112,7 +112,7 @@ public class adapter_chat_item extends CursorRecyclerViewAdapter<VH>{
         }
     }
     public interface onItemClickListener{
-         void onItemClick(int position,ChatListDataModel item);
-         void onImageClick(int position,ChatListDataModel item);
+         void onItemClick(int position,ChatListDataModel item,CardView img);
+         void onImageClick(int position,ChatListDataModel item,CardView img);
     }
 }

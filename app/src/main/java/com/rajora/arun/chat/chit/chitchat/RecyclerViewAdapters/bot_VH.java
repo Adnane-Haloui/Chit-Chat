@@ -2,6 +2,8 @@ package com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -48,23 +50,23 @@ public class bot_VH extends RecyclerView.ViewHolder {
 				model.getDesc() == null || model.getDesc().isEmpty() ? "Unknown" : model.getDesc()));
 	}
 
-	public void setClickListeners(final FirebaseBotsDataModel model, final Context context){
+	public void setClickListeners(final FirebaseBotsDataModel model, final Fragment fragment){
 		mImageContainerCardView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(context, ProfileDetailsActivity.class);
+				Intent intent=new Intent(fragment.getContext(), ProfileDetailsActivity.class);
 				intent.putExtra("type","bot_data_model");
 				intent.putExtra("data",model);
-				context.startActivity(intent);
+				fragment.getContext().startActivity(intent);
 			}
 		});
 		itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(context, ChatActivity.class);
+				Intent intent=new Intent(fragment.getContext(), ChatActivity.class);
 				intent.putExtra("type","bot_data_model");
 				intent.putExtra("data",model);
-				context.startActivity(intent);
+				fragment.getContext().startActivity(intent);
 			}
 		});
 	}

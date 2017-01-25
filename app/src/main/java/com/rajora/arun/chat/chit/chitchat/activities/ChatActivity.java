@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
@@ -12,6 +13,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -43,6 +45,7 @@ import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseBotsDataModel;
 import com.rajora.arun.chat.chit.chitchat.services.SendMessageService;
 import com.rajora.arun.chat.chit.chitchat.utils.ImageUtils;
 import com.rajora.arun.chat.chit.chitchat.utils.utils;
+import com.twitter.sdk.android.core.models.Card;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,6 +63,7 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 	private TextView chat_name_textview;
 	private ImageView chat_image_imageview;
 	private AlertDialog.Builder mAlertDialog;
+	private CardView chatImageViewHolder;
 
 	private HashSet<Integer> mOpenIndexSet;
 
@@ -82,6 +86,7 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		mNotUserWarningProgress=0;
+		chatImageViewHolder=(CardView) findViewById(R.id.chat_image_container);
 		chat_name_textview= (TextView) findViewById(R.id.chat_name);
 		chat_image_imageview= (ImageView) findViewById(R.id.chat_image);
 		findViewById(R.id.go_back).setOnClickListener(new View.OnClickListener() {
@@ -115,7 +120,10 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 					intent.putExtra("type", "contact_data_model");
 					intent.putExtra("data", contactData);
 				}
-				startActivity(intent);
+				ActivityOptionsCompat options = ActivityOptionsCompat.
+						makeSceneTransitionAnimation(ChatActivity.this,
+								(View)chatImageViewHolder, ChatActivity.this.getString(R.string.pic_transition_name));
+				startActivity(intent,options.toBundle());
 			}
 		});
 
@@ -204,7 +212,7 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				if (NavUtils.getParentActivityName(this) != null)
-					finish();
+					supportFinishAfterTransition();
 				else
 					NavUtils.navigateUpFromSameTask(this);
 				return true;
@@ -372,7 +380,7 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 			public void onClick(DialogInterface dialogInterface, int i) {
 				mNotUserWarningProgress=2;
 				dialogInterface.dismiss();
-				finish();
+				supportFinishAfterTransition();
 			}
 		});
 		mAlertDialog.create().show();
@@ -407,7 +415,7 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 			public void onClick(DialogInterface dialogInterface, int i) {
 				mNotUserWarningProgress=2;
 				dialogInterface.dismiss();
-				finish();
+				supportFinishAfterTransition();
 			}
 		});
 		mAlertDialog.create().show();

@@ -9,15 +9,18 @@ import android.graphics.drawable.Icon;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -63,19 +66,21 @@ public class fragment_chat_list extends Fragment
     }
 
     @Override
-    public void onItemClick(int position,ChatListDataModel item) {
+    public void onItemClick(int position,ChatListDataModel item,CardView img) {
         Intent intent=new Intent(getContext(), ChatActivity.class);
         intent.putExtra("type","contact_data_model");
         intent.putExtra("data",item.getContactItemDataModel());
-        startActivity(intent);
+	    startActivity(intent);
     }
 
     @Override
-    public void onImageClick(int position, ChatListDataModel item) {
+    public void onImageClick(int position, ChatListDataModel item, CardView img) {
         Intent intent=new Intent(getContext(), ProfileDetailsActivity.class);
         intent.putExtra("type","contact_data_model");
         intent.putExtra("data",item.getContactItemDataModel());
-        startActivity(intent);
+	    ActivityOptionsCompat options = ActivityOptionsCompat.
+			    makeSceneTransitionAnimation(getActivity(), (View)img,getString(R.string.pic_transition_name));
+	    startActivity(intent,options.toBundle());
 
     }
 

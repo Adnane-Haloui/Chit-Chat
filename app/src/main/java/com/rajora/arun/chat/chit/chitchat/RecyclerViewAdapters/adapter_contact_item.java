@@ -58,22 +58,22 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
                 item.name.isEmpty() ? item.contact_id : item.name, item.about == null ? "" : item.about));
         holder.mImage.setContentDescription(String.format("Profile picture of %s", item.name));
 
-        bind(holder,mItemClickListener,item);
+        bind(holder,mItemClickListener,item,holder.mImageContainerCardView);
     }
 
-    public void bind(final VH holder,final onItemClickListener mItemClickListener,final ContactDetailDataModel item) {
+    public void bind(final VH holder,final onItemClickListener mItemClickListener,final ContactDetailDataModel item,final CardView img) {
         holder.itemView.setOnClickListener(
                 new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
-                        mItemClickListener.onItemClick(holder.getAdapterPosition(),item);
+                        mItemClickListener.onItemClick(holder.getAdapterPosition(),item,img);
                     }
                 }
         );
         holder.itemView.findViewById(R.id.contact_item_image_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mItemClickListener.onImageClick(holder.getAdapterPosition(),item);
+                mItemClickListener.onImageClick(holder.getAdapterPosition(),item,img);
             }
         });
     }
@@ -98,7 +98,7 @@ public class adapter_contact_item  extends CursorRecyclerViewAdapter<adapter_con
     }
 
     public interface onItemClickListener{
-        void onItemClick(int position,ContactDetailDataModel item);
-        void onImageClick(int position,ContactDetailDataModel item);
+        void onItemClick(int position,ContactDetailDataModel item,CardView img);
+        void onImageClick(int position,ContactDetailDataModel item,CardView img);
     }
 }

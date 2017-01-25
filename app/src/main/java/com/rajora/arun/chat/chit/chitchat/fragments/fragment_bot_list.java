@@ -56,7 +56,7 @@ public class fragment_bot_list extends Fragment{
 			protected void populateViewHolder(bot_VH viewHolder, final FirebaseBotsDataModel model, int position) {
 				viewHolder.setValues(model,getContext());
 				viewHolder.setContentDescription(model);
-				viewHolder.setClickListeners(model,getContext());
+				viewHolder.setClickListeners(model,fragment_bot_list.this);
 			}
 
 			@Override

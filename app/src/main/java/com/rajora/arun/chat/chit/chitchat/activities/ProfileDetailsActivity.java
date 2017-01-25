@@ -8,6 +8,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -88,6 +89,16 @@ public class ProfileDetailsActivity extends AppCompatChatListenerActivity
             getSupportLoaderManager().initLoader(CURSOR_LOADER_ID,null,this);
         }
     }
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				supportFinishAfterTransition();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
