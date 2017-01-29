@@ -1,75 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="4dp"
-    android:clickable="true"
-    android:background="?android:attr/selectableItemBackground">
-    <android.support.v7.widget.CardView
-        android:transitionName="@string/pic_transition_name"
-        android:id="@+id/bot_item_image_container"
-        android:layout_margin="@dimen/botlist_padding"
-        app:cardCornerRadius="@dimen/cardview_corner_radius_small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:contentDescription="@string/cc_bot_ppic"
-            android:id="@+id/bot_item_image"
-            android:layout_width="@dimen/imageview_circular_small"
-            android:layout_height="@dimen/imageview_circular_small"
-            android:src="@drawable/empty_profile_pic"/>
-    </android.support.v7.widget.CardView>
-    <LinearLayout
-        android:paddingTop="@dimen/botlist_linearlayout_padding_top"
-        android:paddingLeft="@dimen/botlist_linearlayout_padding_end"
-        android:paddingStart="@dimen/botlist_linearlayout_padding_end"
-        android:paddingRight="0dp"
-        android:paddingEnd="0dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                tools:text="Bot Name"
-                android:textSize="@dimen/botlist_name_textsize"
-                android:id="@+id/bot_item_name"
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_height="wrap_content" />
-            <TextView
-                tools:text="Bot dev name"
-                android:paddingEnd="@dimen/botlist_dev_name_padding_left"
-                android:paddingRight="@dimen/botlist_dev_name_padding_left"
-                android:paddingLeft="0dp"
-                android:paddingStart="0dp"
-                android:id="@+id/bot_item_developer_name"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:gravity="end"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <TextView
-            tools:text="about the bot!!!"
-            android:id="@+id/bot_item_about"
-            android:layout_marginTop="@dimen/botlist_about_margin_top"
-            android:paddingStart="@dimen/botlist_about_padding_left"
-            android:paddingLeft="@dimen/botlist_about_padding_left"
-            android:paddingRight="0dp"
-            android:paddingEnd="0dp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?android:attr/selectableItemBackground"
+              android:clickable="true"
+              android:orientation="horizontal"
+              android:padding="4dp">
+
+	<android.support.v7.widget.CardView
+		android:id="@+id/bot_item_image_container"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/botlist_padding"
+		android:transitionName="@string/pic_transition_name"
+		app:cardCornerRadius="@dimen/cardview_corner_radius_small">
+
+		<ImageView
+			android:id="@+id/bot_item_image"
+			android:layout_width="@dimen/imageview_circular_small"
+			android:layout_height="@dimen/imageview_circular_small"
+			android:contentDescription="@string/cc_bot_ppic"
+			android:src="@drawable/empty_profile_pic"/>
+	</android.support.v7.widget.CardView>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:baselineAligned="false"
+		android:orientation="vertical"
+		android:paddingEnd="0dp"
+		android:paddingLeft="@dimen/botlist_linearlayout_padding_end"
+		android:paddingRight="0dp"
+		android:paddingStart="@dimen/botlist_linearlayout_padding_end"
+		android:paddingTop="@dimen/botlist_linearlayout_padding_top">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+			<TextView
+				android:id="@+id/bot_item_name"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="3"
+				android:ellipsize="end"
+				android:maxLines="1"
+				android:textSize="@dimen/botlist_name_textsize"
+				tools:text="Bot Name"/>
+
+			<TextView
+				android:id="@+id/bot_item_developer_name"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="2"
+				android:ellipsize="end"
+				android:gravity="end"
+				android:maxLines="1"
+				android:paddingEnd="@dimen/botlist_dev_name_padding_left"
+				android:paddingLeft="0dp"
+				android:paddingRight="@dimen/botlist_dev_name_padding_left"
+				android:paddingStart="0dp"
+				tools:text="Bot dev name"/>
+		</LinearLayout>
+
+		<TextView
+			android:id="@+id/bot_item_about"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/botlist_about_margin_top"
+			android:ellipsize="end"
+			android:maxLines="1"
+			android:paddingEnd="0dp"
+			android:paddingLeft="@dimen/botlist_about_padding_left"
+			android:paddingRight="0dp"
+			android:paddingStart="@dimen/botlist_about_padding_left"
+			tools:text="about the bot!!!"/>
+	</LinearLayout>
 </LinearLayout>

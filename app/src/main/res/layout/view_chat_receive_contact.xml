@@ -2,68 +2,74 @@
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	xmlns:tools="http://schemas.android.com/tools">
+	android:layout_height="wrap_content">
+
 	<android.support.v7.widget.CardView
-		android:background="?attr/selectableItemBackground"
-		android:layout_alignParentStart="true"
-		android:layout_alignParentLeft="true"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginRight="@dimen/chat_item_margin"
-		android:layout_marginLeft="@dimen/chat_item_margin"
-		android:layout_marginTop="@dimen/chat_item_margin"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
 		android:layout_marginBottom="@dimen/chat_item_margin"
+		android:layout_marginLeft="@dimen/chat_item_margin"
+		android:layout_marginRight="@dimen/chat_item_margin"
+		android:layout_marginTop="@dimen/chat_item_margin"
+		android:background="?attr/selectableItemBackground"
 		app:cardCornerRadius="@dimen/chat_item_corner_radius"
 		app:elevation="@dimen/chat_item_card_elevation">
+
 		<LinearLayout
-			android:orientation="vertical"
-			android:layout_marginStart="@dimen/chat_contact_side_margin"
-			android:layout_marginLeft="@dimen/chat_contact_side_margin"
-			android:layout_marginEnd="@dimen/chat_contact_side_margin"
-			android:layout_marginRight="@dimen/chat_contact_side_margin"
-			android:layout_marginBottom="@dimen/chat_contact_side_margin"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/chat_contact_side_margin"
+			android:layout_marginEnd="@dimen/chat_contact_side_margin"
+			android:layout_marginLeft="@dimen/chat_contact_side_margin"
+			android:layout_marginRight="@dimen/chat_contact_side_margin"
+			android:layout_marginStart="@dimen/chat_contact_side_margin"
+			android:orientation="vertical">
+
 			<TextView
-				android:layout_marginTop="@dimen/chat_item_linearlayout_margin"
-				tools:text="Contact: +919191919"
-				android:maxLines="1"
-				android:ellipsize="end"
 				android:id="@+id/contact_number"
-				android:layout_gravity="start"
-				android:textSize="@dimen/chat_item_text_size"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
-			<TextView
+				android:layout_height="wrap_content"
+				android:layout_gravity="start"
 				android:layout_marginTop="@dimen/chat_item_linearlayout_margin"
-				tools:text="Name : random person"
-				android:id="@+id/contact_name"
-				android:layout_gravity="start"
-				android:textSize="@dimen/chat_item_text_size"
-				android:maxLines="1"
 				android:ellipsize="end"
+				android:maxLines="1"
+				android:textSize="@dimen/chat_item_text_size"
+				tools:text="Contact: +919191919"/>
+
+			<TextView
+				android:id="@+id/contact_name"
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
+				android:layout_height="wrap_content"
+				android:layout_gravity="start"
+				android:layout_marginTop="@dimen/chat_item_linearlayout_margin"
+				android:ellipsize="end"
+				android:maxLines="1"
+				android:textSize="@dimen/chat_item_text_size"
+				tools:text="Name : random person"/>
+
 			<Button
-				android:minWidth="@dimen/contact_button_minwidth"
 				android:id="@+id/add_to_contacts"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:textColor="@color/colorPrimaryText"
 				android:background="?attr/selectableItemBackground"
-				android:text="@string/cc_add_to_contacts"/>
+				android:minWidth="@dimen/contact_button_minwidth"
+				android:text="@string/cc_add_to_contacts"
+				android:textColor="@color/colorPrimaryText"/>
+
 			<TextView
-				tools:text="2:3 pm"
 				android:id="@+id/contact_time"
-				android:textSize="@dimen/chat_message_sub_text_size"
-				android:layout_marginEnd="@dimen/contact_time_margin"
-				android:layout_marginRight="@dimen/contact_time_margin"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_gravity="end"
+				android:layout_marginEnd="@dimen/contact_time_margin"
+				android:layout_marginRight="@dimen/contact_time_margin"
 				android:textAlignment="viewEnd"
-				android:layout_gravity="end"/>
+				android:textSize="@dimen/chat_message_sub_text_size"
+				tools:text="2:3 pm"/>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
 </RelativeLayout>

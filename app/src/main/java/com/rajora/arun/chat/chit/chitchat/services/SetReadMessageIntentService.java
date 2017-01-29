@@ -2,12 +2,11 @@ package com.rajora.arun.chat.chit.chitchat.services;
 
 import android.app.IntentService;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChat;
-import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractContacts;
 
 public class SetReadMessageIntentService extends IntentService {
 
@@ -30,13 +29,13 @@ public class SetReadMessageIntentService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		if (intent != null) {
 			final String contact_id = intent.getStringExtra(EXTRA_CONTACT_ID);
-			final boolean is_bot = intent.getBooleanExtra(EXTRA_IS_BOT,false);
-			ContentValues contentValues=new ContentValues();
-			contentValues.put(ContractChat.COLUMN_MESSAGE_STATUS,"read");
+			final boolean is_bot = intent.getBooleanExtra(EXTRA_IS_BOT, false);
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(ContractChat.COLUMN_MESSAGE_STATUS, "read");
 			getContentResolver().update(ChatContentProvider.CHAT_URI,
 					contentValues,
-					ContractChat.COLUMN_CONTACT_ID+" = ? AND "+ContractChat.COLUMN_IS_BOT+" = ? ",
-					new String[]{contact_id,is_bot?"1":"0"});
+					ContractChat.COLUMN_CONTACT_ID + " = ? AND " + ContractChat.COLUMN_IS_BOT + " = ? ",
+					new String[]{contact_id, is_bot ? "1" : "0"});
 		}
 	}
 

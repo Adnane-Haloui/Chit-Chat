@@ -12,7 +12,9 @@
 	<uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-	<uses-feature android:name="android.hardware.camera" android:required="false"/>
+	<uses-feature
+		android:name="android.hardware.camera"
+		android:required="false"/>
 
 	<application
 		android:allowBackup="true"
@@ -70,7 +72,7 @@
 			android:exported="true"/>
 
 		<service
-			android:name=".services.updateContactsDbFromPhoneDb"
+			android:name=".services.UpdateContactsDbFromPhoneDb"
 			android:exported="false"/>
 
 		<service

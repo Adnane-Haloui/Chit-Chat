@@ -1,16 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.rajora.arun.chat.chit.chitchat.activities.ChatActivity">
-    <item
-        android:id="@+id/action_Update_Profile"
-        android:orderInCategory="7"
-        android:title="@string/cc_menu_update_profile"
-        android:icon="@drawable/account_icon"
-        app:showAsAction="never|withText" />
-    <item
-        android:id="@+id/action_about"
-        android:orderInCategory="8"
-        android:title="@string/cc_menu_about"
-        app:showAsAction="never" />
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.rajora.arun.chat.chit.chitchat.activities.ChatActivity">
+	<item
+		android:id="@+id/action_Update_Profile"
+		android:icon="@drawable/account_icon"
+		android:orderInCategory="7"
+		android:title="@string/cc_menu_update_profile"
+		app:showAsAction="never|withText"/>
+	<item
+		android:id="@+id/action_about"
+		android:orderInCategory="8"
+		android:title="@string/cc_menu_about"
+		app:showAsAction="never"/>
 </menu>

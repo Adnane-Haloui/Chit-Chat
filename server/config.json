@@ -1,8 +1,8 @@
 {
-   "fcm_auth_key":"",
-   "service_account_file_name":"",
-   "firebase_database_url":"",
-   "twitter_consumer_key":"",
-   "twitter_secret_key":"",
-   "luis_secret":""
+   "fcm_auth_key":"AIzaSyC7JZvGCgEQHtaLHtk-lPKHguNVNXwdPAE",
+   "service_account_file_name":"Chit Chat-bd008038bdd4.json",
+   "firebase_database_url":"https://chit-chat-2e791.firebaseio.com",
+   "twitter_consumer_key":"15abJfGYkeTrehs8sW9VOLEIH",
+   "twitter_secret_key":"o76yXoBrmfdu1Qe8PdjyYPfdzzXiRhNhIX7YhhFJbIoA6eJfGJ",
+   "luis_secret":"https://api.projectoxford.ai/luis/v1/application?id=933da174-b8d1-4b7b-a14e-345602c49417&subscription-key=7d36a8ba78024e5b8e3a83220153a058&q="
 }

@@ -1,10 +1,9 @@
 package com.rajora.arun.chat.chit.chitchat.services;
 
 import android.app.IntentService;
-import android.content.AsyncQueryHandler;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
@@ -29,29 +28,28 @@ public class UpdateBotDetailsIntentService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (intent != null) {
-			FirebaseBotsDataModel botDetails=intent.getParcelableExtra(EXTRA_BOT_DETAILS);
-			if(botDetails!=null){
-				Cursor currendDetailsCursor=getContentResolver().query(ChatContentProvider.CONTACT_LIST_URI,
+			FirebaseBotsDataModel botDetails = intent.getParcelableExtra(EXTRA_BOT_DETAILS);
+			if (botDetails != null) {
+				Cursor currendDetailsCursor = getContentResolver().query(ChatContentProvider.CONTACT_LIST_URI,
 						new String[]{ContractContacts._ID},
-						ContractContacts.COLUMN_CONTACT_ID+" = ? AND "+ContractContacts.COLUMN_IS_BOT+" = ? ",
-						new String[]{botDetails.getGid(),"1"},null);
-				ContentValues contentValues=new ContentValues();
-				contentValues.put(ContractContacts.COLUMN_CONTACT_ID,botDetails.getGid());
-				contentValues.put(ContractContacts.COLUMN_IS_BOT,true);
-				contentValues.put(ContractContacts.COLUMN_NAME,botDetails.getName());
-				contentValues.put(ContractContacts.COLUMN_ABOUT,botDetails.getDesc());
-				contentValues.put(ContractContacts.COLUMN_DEV_NAME,botDetails.getDev_name());
+						ContractContacts.COLUMN_CONTACT_ID + " = ? AND " + ContractContacts.COLUMN_IS_BOT + " = ? ",
+						new String[]{botDetails.getGid(), "1"}, null);
+				ContentValues contentValues = new ContentValues();
+				contentValues.put(ContractContacts.COLUMN_CONTACT_ID, botDetails.getGid());
+				contentValues.put(ContractContacts.COLUMN_IS_BOT, true);
+				contentValues.put(ContractContacts.COLUMN_NAME, botDetails.getName());
+				contentValues.put(ContractContacts.COLUMN_ABOUT, botDetails.getDesc());
+				contentValues.put(ContractContacts.COLUMN_DEV_NAME, botDetails.getDev_name());
 				contentValues.put(ContractContacts.COLUMN_IS_USER, !botDetails.is_deleted());
 
-				if(currendDetailsCursor!=null && currendDetailsCursor.getCount()>0){
-					getContentResolver().update(ChatContentProvider.CONTACT_LIST_URI,contentValues,
-							ContractContacts.COLUMN_CONTACT_ID+" = ? AND "+ContractContacts.COLUMN_IS_BOT+" = ? ",
-							new String[]{botDetails.getGid(),"1"});
+				if (currendDetailsCursor != null && currendDetailsCursor.getCount() > 0) {
+					getContentResolver().update(ChatContentProvider.CONTACT_LIST_URI, contentValues,
+							ContractContacts.COLUMN_CONTACT_ID + " = ? AND " + ContractContacts.COLUMN_IS_BOT + " = ? ",
+							new String[]{botDetails.getGid(), "1"});
+				} else {
+					getContentResolver().insert(ChatContentProvider.CONTACT_LIST_URI, contentValues);
 				}
-				else{
-					getContentResolver().insert(ChatContentProvider.CONTACT_LIST_URI,contentValues);
-				}
-				if(currendDetailsCursor!=null){
+				if (currendDetailsCursor != null) {
 					currendDetailsCursor.close();
 				}
 			}

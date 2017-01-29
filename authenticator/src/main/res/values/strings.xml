@@ -1,17 +1,17 @@
 <resources>
-    <string name="app_name" translatable="false">Authenticator</string>
-    <string name="welcome_to_chit_chat" translatable="true">Welcome to Chit-Chat</string>
-    <string name="get_started" translatable="true">Get Started</string>
-    <string name="permission_reason" translatable="true">Chit-Chat needs permission to know your phone number and automatically read OTP that we send through Messages.</string>
-    <string name="give_permissions" translatable="true">Give Permissions</string>
-    <string name="chit_chat_needs_permission" translatable="true">Chit-Chat needs Permission</string>
-    <string name="login" translatable="true">Login</string>
-    <string name="perm_granted" translatable="true">Permissions Granted!</string>
-    <string name="permission_reason_dialog" translatable="true">Permissions needed to read OTP automatically and auto fill your contact no</string>
-    <string name="ok" translatable="true">OK</string>
-    <string name="cancel" translatable="true">Cancel</string>
-    <string name="server_error" translatable="true">Our servers are under maintenance. Please try again later!</string>
-    <string name="try_again" translatable="true">TRY AGAIN</string>
-    <string name="net_conn_msg" translatable="true">Please check network Connectivity!</string>
-    <string name="digit_veri_failed" translatable="true">Phone number verification failed. Please try after sometime later.</string>
+	<string name="app_name" translatable="false">Authenticator</string>
+	<string name="welcome_to_chit_chat" translatable="true">Welcome to Chit-Chat</string>
+	<string name="get_started" translatable="true">Get Started</string>
+	<string name="permission_reason" translatable="true">Chit-Chat needs permission to know your phone number and automatically read OTP that we send through Messages.</string>
+	<string name="give_permissions" translatable="true">Give Permissions</string>
+	<string name="chit_chat_needs_permission" translatable="true">Chit-Chat needs Permission</string>
+	<string name="login" translatable="true">Login</string>
+	<string name="perm_granted" translatable="true">Permissions Granted!</string>
+	<string name="permission_reason_dialog" translatable="true">Permissions needed to read OTP automatically and auto fill your contact no</string>
+	<string name="ok" translatable="true">OK</string>
+	<string name="cancel" translatable="true">Cancel</string>
+	<string name="server_error" translatable="true">Our servers are under maintenance. Please try again later!</string>
+	<string name="try_again" translatable="true">TRY AGAIN</string>
+	<string name="net_conn_msg" translatable="true">Please check network Connectivity!</string>
+	<string name="digit_veri_failed" translatable="true">Phone number verification failed. Please try after sometime later.</string>
 </resources>

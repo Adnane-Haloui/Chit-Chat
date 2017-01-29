@@ -11,31 +11,31 @@ import com.android.volley.toolbox.Volley;
  */
 
 public class VolleySingletonRequestQueue {
-    private static VolleySingletonRequestQueue mInstance;
-    private RequestQueue mRequestQueue;
-    private static Context mContext;
+	private static VolleySingletonRequestQueue mInstance;
+	private static Context mContext;
+	private RequestQueue mRequestQueue;
 
-    private VolleySingletonRequestQueue(Context context) {
-        mContext = context;
-        mRequestQueue = getRequestQueue();
-    }
+	private VolleySingletonRequestQueue(Context context) {
+		mContext = context;
+		mRequestQueue = getRequestQueue();
+	}
 
-    public static synchronized VolleySingletonRequestQueue getInstance(Context context) {
-        if (mInstance == null) {
-            mInstance = new VolleySingletonRequestQueue(context);
-        }
-        return mInstance;
-    }
+	public static synchronized VolleySingletonRequestQueue getInstance(Context context) {
+		if (mInstance == null) {
+			mInstance = new VolleySingletonRequestQueue(context);
+		}
+		return mInstance;
+	}
 
-    public RequestQueue getRequestQueue() {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
-        }
-        return mRequestQueue;
-    }
+	public RequestQueue getRequestQueue() {
+		if (mRequestQueue == null) {
+			mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
+		}
+		return mRequestQueue;
+	}
 
-    public <T> void addToRequestQueue(Request<T> req) {
-        getRequestQueue().add(req);
-    }
+	public <T> void addToRequestQueue(Request<T> req) {
+		getRequestQueue().add(req);
+	}
 
 }

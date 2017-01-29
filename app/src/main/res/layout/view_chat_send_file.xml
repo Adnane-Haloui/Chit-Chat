@@ -2,78 +2,87 @@
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	xmlns:tools="http://schemas.android.com/tools">
+	android:layout_height="wrap_content">
+
 	<android.support.v7.widget.CardView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_width="wrap_content"
-		android:background="?attr/selectableItemBackground"
-		android:layout_height="wrap_content"
-		android:layout_marginRight="@dimen/chat_item_margin"
-		android:layout_marginLeft="@dimen/chat_item_margin"
-		android:layout_marginTop="@dimen/chat_item_margin"
 		android:layout_marginBottom="@dimen/chat_item_margin"
+		android:layout_marginLeft="@dimen/chat_item_margin"
+		android:layout_marginRight="@dimen/chat_item_margin"
+		android:layout_marginTop="@dimen/chat_item_margin"
+		android:background="?attr/selectableItemBackground"
 		app:cardCornerRadius="@dimen/chat_item_corner_radius"
 		app:elevation="@dimen/chat_item_card_elevation">
+
 		<LinearLayout
-			android:padding="8dp"
-			android:orientation="vertical"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="8dp">
+
 			<TextView
-				android:maxLines="1"
-				android:ellipsize="marquee"
-				tools:text="File: myprofile.docx"
 				android:id="@+id/file_name"
-				android:layout_gravity="start"
-				android:textSize="@dimen/chat_item_text_size"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content" />
-			<LinearLayout
-				android:paddingTop="8dp"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:orientation="horizontal">
+				android:layout_gravity="start"
+				android:ellipsize="marquee"
+				android:maxLines="1"
+				android:textSize="@dimen/chat_item_text_size"
+				tools:text="File: myprofile.docx"/>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingTop="8dp">
+
 				<TextView
+					android:id="@+id/file_size"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical|start"
 					android:paddingEnd="@dimen/chat_item_linearlayout_margin"
 					android:paddingRight="@dimen/chat_item_linearlayout_margin"
-					tools:text="Size: 100 MB "
-					android:id="@+id/file_size"
-					android:layout_gravity="center_vertical|start"
 					android:textSize="@dimen/chat_item_text_size"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content" />
+					tools:text="Size: 100 MB "/>
+
 				<ProgressBar
 					android:id="@+id/file_progressbar"
-					android:layout_gravity="center_vertical|end"
 					android:layout_width="24dp"
 					android:layout_height="24dp"
+					android:layout_gravity="center_vertical|end"
 					android:indeterminate="true"
-					android:indeterminateOnly="true"
-					android:indeterminateDrawable="@drawable/circular_progress_small"/>
+					android:indeterminateDrawable="@drawable/circular_progress_small"
+					android:indeterminateOnly="true"/>
 			</LinearLayout>
+
 			<LinearLayout
-				android:orientation="horizontal"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginBottom="4dp">
+				android:layout_marginBottom="4dp"
+				android:orientation="horizontal">
+
 				<TextView
-					tools:text="2:3 pm"
 					android:id="@+id/file_time"
-					android:textSize="@dimen/chat_message_sub_text_size"
 					android:layout_width="0dp"
-					android:layout_weight="1"
 					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical|start"
+					android:layout_weight="1"
 					android:textAlignment="viewStart"
-					android:layout_gravity="center_vertical|start"/>
+					android:textSize="@dimen/chat_message_sub_text_size"
+					tools:text="2:3 pm"/>
+
 				<ImageView
-					android:contentDescription="@string/cc_file_download_open"
 					android:id="@+id/file_button"
-					android:layout_gravity="center_vertical|end"
 					android:layout_width="@dimen/msg_location_location_icon_dimen"
 					android:layout_height="@dimen/msg_location_location_icon_dimen"
+					android:layout_gravity="center_vertical|end"
+					android:contentDescription="@string/cc_file_download_open"
 					android:tint="@android:color/black"/>
 			</LinearLayout>
 		</LinearLayout>

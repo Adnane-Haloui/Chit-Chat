@@ -27,8 +27,8 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:theme="@style/noActionBarTheme"
 			android:name=".activities.ProfileEditActivity"
+			android:theme="@style/noActionBarTheme"
 			android:windowSoftInputMode="stateHidden"/>
 
 		<service
@@ -60,7 +60,8 @@
 				android:resource="@xml/file_paths"/>
 		</provider>
 
-		<activity android:name=".activities.BotDetailsActivity"
+		<activity
+			android:name=".activities.BotDetailsActivity"
 			android:theme="@style/botDetailsTheme">
 		</activity>
 	</application>

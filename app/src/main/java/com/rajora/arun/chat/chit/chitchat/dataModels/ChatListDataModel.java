@@ -12,9 +12,20 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractChatList;
 
 public class ChatListDataModel implements Parcelable {
 
+	public static final Parcelable.Creator<ChatListDataModel> CREATOR = new Parcelable.Creator<ChatListDataModel>() {
+		@Override
+		public ChatListDataModel createFromParcel(Parcel source) {
+			return new ChatListDataModel(source);
+		}
+
+		@Override
+		public ChatListDataModel[] newArray(int size) {
+			return new ChatListDataModel[size];
+		}
+	};
 	public long id;
-    public String contact_id;
-    public boolean is_bot;
+	public String contact_id;
+	public boolean is_bot;
 	public String name;
 	public String pic_uri;
 	public String pic_url;
@@ -39,48 +50,60 @@ public class ChatListDataModel implements Parcelable {
 		this.last_message_time = last_message_time;
 	}
 
-	public ChatListDataModel(Cursor cursor){
-		if(cursor!=null){
-			if(cursor.getColumnIndex(ContractChatList._ID)>=0){
-				id=cursor.getLong(cursor.getColumnIndex(ContractChatList._ID));
+	public ChatListDataModel(Cursor cursor) {
+		if (cursor != null) {
+			if (cursor.getColumnIndex(ContractChatList._ID) >= 0) {
+				id = cursor.getLong(cursor.getColumnIndex(ContractChatList._ID));
 			}
-			if(cursor.getColumnIndex(ContractChatList.COLUMN_CONTACT_ID)>=0){
-				contact_id=cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_CONTACT_ID));
+			if (cursor.getColumnIndex(ContractChatList.COLUMN_CONTACT_ID) >= 0) {
+				contact_id = cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_CONTACT_ID));
 			}
-			if(cursor.getColumnIndex(ContractChatList.COLUMN_IS_BOT)>=0){
-				is_bot=cursor.getInt(cursor.getColumnIndex(ContractChatList.COLUMN_IS_BOT))!=0;
+			if (cursor.getColumnIndex(ContractChatList.COLUMN_IS_BOT) >= 0) {
+				is_bot = cursor.getInt(cursor.getColumnIndex(ContractChatList.COLUMN_IS_BOT)) != 0;
 			}
-			if(cursor.getColumnIndex(ContractChatList.COLUMN_NAME)>=0){
-				name=cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_NAME));
+			if (cursor.getColumnIndex(ContractChatList.COLUMN_NAME) >= 0) {
+				name = cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_NAME));
 			}
-			if(cursor.getColumnIndex(ContractChatList.COLUMN_PIC_URI)>=0){
-				pic_uri=cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_PIC_URI));
+			if (cursor.getColumnIndex(ContractChatList.COLUMN_PIC_URI) >= 0) {
+				pic_uri = cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_PIC_URI));
 			}
-			if(cursor.getColumnIndex(ContractChatList.COLUMN_PIC_URL)>=0){
-				pic_url=cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_PIC_URL));
+			if (cursor.getColumnIndex(ContractChatList.COLUMN_PIC_URL) >= 0) {
+				pic_url = cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_PIC_URL));
 			}
-			if(cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT)>=0){
-				if(cursor.isNull(cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT))){
-					unread_count=0;
+			if (cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT) >= 0) {
+				if (cursor.isNull(cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT))) {
+					unread_count = 0;
+				} else {
+					unread_count = cursor.getInt(cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT));
 				}
-				else{
-					unread_count=cursor.getInt(cursor.getColumnIndex(ContractChatList.COLUMN_UNREAD_COUNT));
-				}
 			}
-			if(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE)>=0){
-				last_message=cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE));
+			if (cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE) >= 0) {
+				last_message = cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE));
 			}
-			if(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE_TYPE)>=0){
-				last_message_type=cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE_TYPE));
+			if (cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE_TYPE) >= 0) {
+				last_message_type = cursor.getString(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE_TYPE));
 			}
-			if(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE_TIMESTAMP)>=0){
-				last_message_time=cursor.getLong(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE_TIMESTAMP));
+			if (cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE_TIMESTAMP) >= 0) {
+				last_message_time = cursor.getLong(cursor.getColumnIndex(ContractChatList.COLUMN_LAST_MESSAGE_TIMESTAMP));
 			}
 		}
 	}
 
-	public ContactItemDataModel getContactItemDataModel(){
-		return new ContactItemDataModel(contact_id,is_bot);
+	protected ChatListDataModel(Parcel in) {
+		this.id = in.readLong();
+		this.contact_id = in.readString();
+		this.is_bot = in.readByte() != 0;
+		this.name = in.readString();
+		this.pic_uri = in.readString();
+		this.pic_url = in.readString();
+		this.unread_count = in.readInt();
+		this.last_message = in.readString();
+		this.last_message_type = in.readString();
+		this.last_message_time = in.readLong();
+	}
+
+	public ContactItemDataModel getContactItemDataModel() {
+		return new ContactItemDataModel(contact_id, is_bot);
 	}
 
 	@Override
@@ -101,29 +124,4 @@ public class ChatListDataModel implements Parcelable {
 		dest.writeString(this.last_message_type);
 		dest.writeLong(this.last_message_time);
 	}
-
-	protected ChatListDataModel(Parcel in) {
-		this.id = in.readLong();
-		this.contact_id = in.readString();
-		this.is_bot = in.readByte() != 0;
-		this.name = in.readString();
-		this.pic_uri = in.readString();
-		this.pic_url = in.readString();
-		this.unread_count = in.readInt();
-		this.last_message = in.readString();
-		this.last_message_type = in.readString();
-		this.last_message_time = in.readLong();
-	}
-
-	public static final Parcelable.Creator<ChatListDataModel> CREATOR = new Parcelable.Creator<ChatListDataModel>() {
-		@Override
-		public ChatListDataModel createFromParcel(Parcel source) {
-			return new ChatListDataModel(source);
-		}
-
-		@Override
-		public ChatListDataModel[] newArray(int size) {
-			return new ChatListDataModel[size];
-		}
-	};
 }

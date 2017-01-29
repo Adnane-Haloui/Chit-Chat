@@ -4,7 +4,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class FirebaseBotsDataModel implements Parcelable {
-	
+
+	public static final Parcelable.Creator<FirebaseBotsDataModel> CREATOR = new Parcelable.Creator<FirebaseBotsDataModel>() {
+		@Override
+		public FirebaseBotsDataModel createFromParcel(Parcel source) {
+			return new FirebaseBotsDataModel(source);
+		}
+
+		@Override
+		public FirebaseBotsDataModel[] newArray(int size) {
+			return new FirebaseBotsDataModel[size];
+		}
+	};
 	private String Gid;
 	private String desc;
 	private String dev_name;
@@ -28,6 +39,18 @@ public class FirebaseBotsDataModel implements Parcelable {
 		this.name = name;
 		this.timestamp = timestamp;
 		this.is_deleted = is_deleted;
+	}
+
+	protected FirebaseBotsDataModel(Parcel in) {
+		this.Gid = in.readString();
+		this.desc = in.readString();
+		this.dev_name = in.readString();
+		this.dev_no = in.readString();
+		this.image_last_update_timestamp = in.readLong();
+		this.image_url = in.readString();
+		this.name = in.readString();
+		this.timestamp = in.readLong();
+		this.is_deleted = in.readByte() != 0;
 	}
 
 	public String getGid() {
@@ -102,7 +125,6 @@ public class FirebaseBotsDataModel implements Parcelable {
 		this.is_deleted = is_deleted;
 	}
 
-
 	@Override
 	public int describeContents() {
 		return 0;
@@ -120,28 +142,4 @@ public class FirebaseBotsDataModel implements Parcelable {
 		dest.writeLong(this.timestamp);
 		dest.writeByte(this.is_deleted ? (byte) 1 : (byte) 0);
 	}
-
-	protected FirebaseBotsDataModel(Parcel in) {
-		this.Gid = in.readString();
-		this.desc = in.readString();
-		this.dev_name = in.readString();
-		this.dev_no = in.readString();
-		this.image_last_update_timestamp = in.readLong();
-		this.image_url = in.readString();
-		this.name = in.readString();
-		this.timestamp = in.readLong();
-		this.is_deleted = in.readByte() != 0;
-	}
-
-	public static final Parcelable.Creator<FirebaseBotsDataModel> CREATOR = new Parcelable.Creator<FirebaseBotsDataModel>() {
-		@Override
-		public FirebaseBotsDataModel createFromParcel(Parcel source) {
-			return new FirebaseBotsDataModel(source);
-		}
-
-		@Override
-		public FirebaseBotsDataModel[] newArray(int size) {
-			return new FirebaseBotsDataModel[size];
-		}
-	};
 }

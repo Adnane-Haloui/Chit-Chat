@@ -1,70 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true"
-    android:background="?android:attr/selectableItemBackground"
-    android:padding="4dp">
-    <android.support.v7.widget.CardView
-        android:id="@+id/bot_item_image_container"
-        android:layout_margin="@dimen/image_bot_margin"
-        app:cardCornerRadius="@dimen/image_bot_item_radius"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/bot_item_image"
-            android:contentDescription="@string/bot_pic"
-            android:layout_width="@dimen/image_bot_item_dimen"
-            android:layout_height="@dimen/image_bot_item_dimen"
-            android:src="@drawable/empty_profile_pic"/>
-    </android.support.v7.widget.CardView>
-    <LinearLayout
-	    android:paddingTop="@dimen/bot_item_text_padding"
-	    android:paddingStart="@dimen/bot_item_text_padding_start"
-	    android:layout_width="0dp"
-	    android:layout_weight="1"
-	    android:layout_height="wrap_content"
-	    android:baselineAligned="false"
-	    android:orientation="vertical"
-	    android:paddingLeft="@dimen/bot_item_text_padding_start">
-        <TextView
-            android:textSize="@dimen/bot_item_text_size_title"
-            android:id="@+id/bot_item_name"
-            android:layout_width="match_parent"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_height="wrap_content"
-            tools:text="Chit Chat Bot"/>
-        <TextView
-            android:id="@+id/bot_item_about"
-            android:layout_marginTop="@dimen/bot_item_subtitle_margin"
-            android:paddingLeft="@dimen/bot_item_subtitle_margin"
-            android:paddingStart="@dimen/bot_item_subtitle_margin"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Chat with this new bot made for you!!"/>
-    </LinearLayout>
-    <ImageView
-	    android:id="@+id/bot_item_edit"
-	    android:contentDescription="@string/edit_bot_text"
-	    android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="12dp"
-	    android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_edit_color_black_24dp"/>
-	<ImageView
-		android:id="@+id/bot_item_delete"
-		android:contentDescription="@string/delete_bot_text"
-		android:layout_gravity="center"
-		android:padding="12dp"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?android:attr/selectableItemBackground"
+              android:clickable="true"
+              android:orientation="horizontal"
+              android:padding="4dp">
+
+	<android.support.v7.widget.CardView
+		android:id="@+id/bot_item_image_container"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/image_bot_margin"
+		app:cardCornerRadius="@dimen/image_bot_item_radius">
+
+		<ImageView
+			android:id="@+id/bot_item_image"
+			android:layout_width="@dimen/image_bot_item_dimen"
+			android:layout_height="@dimen/image_bot_item_dimen"
+			android:contentDescription="@string/bot_pic"
+			android:src="@drawable/empty_profile_pic"/>
+	</android.support.v7.widget.CardView>
+
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:baselineAligned="false"
+		android:orientation="vertical"
+		android:paddingLeft="@dimen/bot_item_text_padding_start"
+		android:paddingStart="@dimen/bot_item_text_padding_start"
+		android:paddingTop="@dimen/bot_item_text_padding">
+
+		<TextView
+			android:id="@+id/bot_item_name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:ellipsize="end"
+			android:maxLines="1"
+			android:textSize="@dimen/bot_item_text_size_title"
+			tools:text="Chit Chat Bot"/>
+
+		<TextView
+			android:id="@+id/bot_item_about"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/bot_item_subtitle_margin"
+			android:ellipsize="end"
+			android:maxLines="1"
+			android:paddingLeft="@dimen/bot_item_subtitle_margin"
+			android:paddingStart="@dimen/bot_item_subtitle_margin"
+			tools:text="Chat with this new bot made for you!!"/>
+	</LinearLayout>
+
+	<ImageView
+		android:id="@+id/bot_item_edit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
 		android:background="?attr/selectableItemBackgroundBorderless"
+		android:contentDescription="@string/edit_bot_text"
+		android:padding="12dp"
+		android:src="@drawable/ic_edit_color_black_24dp"/>
+
+	<ImageView
+		android:id="@+id/bot_item_delete"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:background="?attr/selectableItemBackgroundBorderless"
+		android:contentDescription="@string/delete_bot_text"
+		android:padding="12dp"
 		android:src="@drawable/ic_delete_black_24dp"/>
 </LinearLayout>

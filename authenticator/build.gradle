@@ -31,11 +31,11 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        buildTypes.each{
-            it.buildConfigField 'String' , "TOKEN_URL", TokenUrl
-            it.buildConfigField 'String' , "TWITTER_KEY", TwitterKey
-            it.buildConfigField 'String' , "TWITTER_SECRET", TwitterSecret
-            it.resValue 'string' , "FABRIC_API_KEY", FabricApiKey
+        buildTypes.each {
+            it.buildConfigField 'String', "TOKEN_URL", TokenUrl
+            it.buildConfigField 'String', "TWITTER_KEY", TwitterKey
+            it.buildConfigField 'String', "TWITTER_SECRET", TwitterSecret
+            it.resValue 'string', "FABRIC_API_KEY", FabricApiKey
         }
     }
 }

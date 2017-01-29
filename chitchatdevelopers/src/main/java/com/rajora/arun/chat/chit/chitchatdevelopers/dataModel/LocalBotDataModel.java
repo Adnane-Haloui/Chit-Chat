@@ -9,6 +9,17 @@ import com.rajora.arun.chat.chit.chitchatdevelopers.database.BotContracts;
 
 public class LocalBotDataModel implements Parcelable {
 
+	public static final Creator<LocalBotDataModel> CREATOR = new Creator<LocalBotDataModel>() {
+		@Override
+		public LocalBotDataModel createFromParcel(Parcel source) {
+			return new LocalBotDataModel(source);
+		}
+
+		@Override
+		public LocalBotDataModel[] newArray(int size) {
+			return new LocalBotDataModel[size];
+		}
+	};
 	public String id;
 	public String Gid;
 	public String name;
@@ -40,41 +51,56 @@ public class LocalBotDataModel implements Parcelable {
 		this.is_deleted = is_deleted;
 	}
 
-	public LocalBotDataModel(Cursor cursor){
-		if(cursor!=null){
-			if(cursor.getColumnIndex(BotContracts.COLUMN_ID)>=0){
-				id=cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_ID));
+
+	public LocalBotDataModel(Cursor cursor) {
+		if (cursor != null) {
+			if (cursor.getColumnIndex(BotContracts.COLUMN_ID) >= 0) {
+				id = cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_ID));
 			}
-			if(cursor.getColumnIndex(BotContracts.COLUMN_GLOBAL_ID)>=0){
-				Gid=cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_GLOBAL_ID));
+			if (cursor.getColumnIndex(BotContracts.COLUMN_GLOBAL_ID) >= 0) {
+				Gid = cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_GLOBAL_ID));
 			}
-			if(cursor.getColumnIndex(BotContracts.COLUMN_BOT_NAME)>=0){
-				name=cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_BOT_NAME));
+			if (cursor.getColumnIndex(BotContracts.COLUMN_BOT_NAME) >= 0) {
+				name = cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_BOT_NAME));
 			}
-			if(cursor.getColumnIndex(BotContracts.COLUMN_ABOUT)>=0){
-				desc=cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_ABOUT));
+			if (cursor.getColumnIndex(BotContracts.COLUMN_ABOUT) >= 0) {
+				desc = cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_ABOUT));
 			}
-			if(cursor.getColumnIndex(BotContracts.COLUMN_API_ENDPOINT)>=0){
-				endpoint=cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_API_ENDPOINT));
+			if (cursor.getColumnIndex(BotContracts.COLUMN_API_ENDPOINT) >= 0) {
+				endpoint = cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_API_ENDPOINT));
 			}
-			if(cursor.getColumnIndex(BotContracts.COLUMN_SECRET)>=0){
-				secret=cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_SECRET));
+			if (cursor.getColumnIndex(BotContracts.COLUMN_SECRET) >= 0) {
+				secret = cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_SECRET));
 			}
 
-			if(cursor.getColumnIndex(BotContracts.COLUMN_PIC_URI)>=0){
-				image_url=cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_PIC_URI));
+			if (cursor.getColumnIndex(BotContracts.COLUMN_PIC_URI) >= 0) {
+				image_url = cursor.getString(cursor.getColumnIndex(BotContracts.COLUMN_PIC_URI));
 			}
-			if(cursor.getColumnIndex(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP)>=0){
-				image_last_update_timestamp=cursor.getLong(cursor.getColumnIndex(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP));
+			if (cursor.getColumnIndex(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP) >= 0) {
+				image_last_update_timestamp = cursor.getLong(cursor.getColumnIndex(BotContracts.COLUMN_IMAGE_UPDATE_TIMESTAMP));
 			}
-			if(cursor.getColumnIndex(BotContracts.COLUMN_TIMESTAMP)>=0){
-				timestamp=cursor.getLong(cursor.getColumnIndex(BotContracts.COLUMN_TIMESTAMP));
+			if (cursor.getColumnIndex(BotContracts.COLUMN_TIMESTAMP) >= 0) {
+				timestamp = cursor.getLong(cursor.getColumnIndex(BotContracts.COLUMN_TIMESTAMP));
 			}
 
-			is_deleted=false;
+			is_deleted = false;
 		}
 	}
 
+	protected LocalBotDataModel(Parcel in) {
+		this.id = in.readString();
+		this.Gid = in.readString();
+		this.name = in.readString();
+		this.desc = in.readString();
+		this.dev_no = in.readString();
+		this.dev_name = in.readString();
+		this.endpoint = in.readString();
+		this.secret = in.readString();
+		this.image_url = in.readString();
+		this.image_last_update_timestamp = in.readLong();
+		this.timestamp = in.readLong();
+		this.is_deleted = in.readByte() != 0;
+	}
 
 	@Override
 	public int describeContents() {
@@ -96,31 +122,4 @@ public class LocalBotDataModel implements Parcelable {
 		dest.writeLong(this.timestamp);
 		dest.writeByte(this.is_deleted ? (byte) 1 : (byte) 0);
 	}
-
-	protected LocalBotDataModel(Parcel in) {
-		this.id = in.readString();
-		this.Gid = in.readString();
-		this.name = in.readString();
-		this.desc = in.readString();
-		this.dev_no = in.readString();
-		this.dev_name = in.readString();
-		this.endpoint = in.readString();
-		this.secret = in.readString();
-		this.image_url = in.readString();
-		this.image_last_update_timestamp = in.readLong();
-		this.timestamp = in.readLong();
-		this.is_deleted = in.readByte() != 0;
-	}
-
-	public static final Creator<LocalBotDataModel> CREATOR = new Creator<LocalBotDataModel>() {
-		@Override
-		public LocalBotDataModel createFromParcel(Parcel source) {
-			return new LocalBotDataModel(source);
-		}
-
-		@Override
-		public LocalBotDataModel[] newArray(int size) {
-			return new LocalBotDataModel[size];
-		}
-	};
 }

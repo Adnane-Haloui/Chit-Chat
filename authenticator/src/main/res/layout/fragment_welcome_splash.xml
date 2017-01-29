@@ -1,32 +1,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="com.rajora.arun.chat.chit.authenticator.login.Fragments.SplashFragments.WelcomeSplashFragment"
-android:background="@color/colorPrimary">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:layout_alignParentTop="true"
-    android:textAlignment="center"
-    android:textAllCaps="false"
-    android:layout_margin="@dimen/lib_welcome_margin"
-    android:text="@string/welcome_to_chit_chat"
-    android:textColor="@android:color/white"
-    android:textSize="@dimen/lib_intro_text_size"
-    android:layout_marginBottom="@dimen/lib_intro_margin_top"/>
-<Button
-    android:id="@+id/splash_get_started_button"
-    android:background="?attr/selectableItemBackgroundBorderless"
-    style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
-    android:layout_centerVertical="true"
-    android:layout_centerInParent="true"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/get_started"
-    android:padding="@dimen/get_started_padding"
-    android:elevation="@dimen/lib_button_start_elevation"
-    android:textSize="@dimen/lib_start_text_size"
-    android:textColor="@android:color/white"/>
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                tools:context="com.rajora.arun.chat.chit.authenticator.login.Fragments.SplashFragments.WelcomeSplashFragment">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_centerInParent="true"
+		android:layout_margin="@dimen/lib_welcome_margin"
+		android:layout_marginBottom="@dimen/lib_intro_margin_top"
+		android:text="@string/welcome_to_chit_chat"
+		android:textAlignment="center"
+		android:textAllCaps="false"
+		android:textColor="@android:color/white"
+		android:textSize="@dimen/lib_intro_text_size"/>
+
+	<Button
+		android:id="@+id/splash_get_started_button"
+		style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:layout_centerVertical="true"
+		android:background="?attr/selectableItemBackgroundBorderless"
+		android:elevation="@dimen/lib_button_start_elevation"
+		android:padding="@dimen/get_started_padding"
+		android:text="@string/get_started"
+		android:textColor="@android:color/white"
+		android:textSize="@dimen/lib_start_text_size"/>
 </RelativeLayout>

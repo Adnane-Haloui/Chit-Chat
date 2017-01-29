@@ -1,37 +1,41 @@
 <LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/appwidget_layout"
-	android:layout_margin="@dimen/widget_margin"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:padding="@dimen/widget_margin"
+	android:layout_margin="@dimen/widget_margin"
 	android:orientation="vertical"
-	xmlns:android="http://schemas.android.com/apk/res/android">
-	<TextView android:layout_width="match_parent"
-	          android:background="@color/colorPrimaryDark"
-	          android:textColor="@color/colortextIcons"
-	          android:layout_height="wrap_content"
-	          android:padding="10dp"
-	          android:contentDescription="@string/app_name"
-	          android:text="@string/app_name"
-	          android:id="@+id/heading_widget"
-	          android:gravity="center"
-	          android:textSize="@dimen/chat_app_widget_heading_textsize"/>
+	android:padding="@dimen/widget_margin">
+
+	<TextView
+		android:id="@+id/heading_widget"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorPrimaryDark"
+		android:contentDescription="@string/app_name"
+		android:gravity="center"
+		android:padding="10dp"
+		android:text="@string/app_name"
+		android:textColor="@color/colortextIcons"
+		android:textSize="@dimen/chat_app_widget_heading_textsize"/>
+
 	<ListView
-		android:background="@color/colorPrimary"
 		android:id="@+id/widget_linear"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:background="@color/colorPrimary">
 	</ListView>
+
 	<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-	          android:contentDescription="@string/cc_chat_with_someone"
-	          android:background="@color/colorPrimary"
-	          android:textColor="@color/colortextIcons"
+	          android:id="@+id/ListViewEmpty"
 	          android:layout_width="match_parent"
 	          android:layout_height="wrap_content"
-	          android:padding="@dimen/widget_empty_padding"
-	          android:visibility="gone"
-	          android:text="@string/cc_chat_with_someone"
-	          android:id="@+id/ListViewEmpty"
+	          android:background="@color/colorPrimary"
+	          android:contentDescription="@string/cc_chat_with_someone"
 	          android:gravity="center"
-	          android:textSize="@dimen/widget_empty_textsize"/>
+	          android:padding="@dimen/widget_empty_padding"
+	          android:text="@string/cc_chat_with_someone"
+	          android:textColor="@color/colortextIcons"
+	          android:textSize="@dimen/widget_empty_textsize"
+	          android:visibility="gone"/>
 </LinearLayout>

@@ -3,9 +3,9 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'arunrajora'
+            keyAlias 'ARdev'
             keyPassword 'newpassword'
-            storeFile file('$rootdir/keystore.jks')
+            storeFile file("$rootDir/keystore.jks")
             storePassword 'newpassword'
         }
     }
@@ -17,7 +17,6 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -41,7 +40,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:25.1.0'
     compile 'com.android.support:support-v4:25.1.0'
     compile 'com.diogobernardino:williamchart:2.2'
-    compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

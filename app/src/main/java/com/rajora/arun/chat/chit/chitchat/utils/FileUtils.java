@@ -20,14 +20,12 @@ public class FileUtils {
 				if ("primary".equalsIgnoreCase(type)) {
 					return Environment.getExternalStorageDirectory() + "/" + ids[1];
 				}
-			}
-			else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+			} else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
 				final Uri contentUri = ContentUris
 						.withAppendedId(Uri.parse("content://downloads/public_downloads"),
 								Long.valueOf(DocumentsContract.getDocumentId(uri)));
 				return getDataColumn(context, contentUri, null, null);
-			}
-			else if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+			} else if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
 				final String[] ids = DocumentsContract.getDocumentId(uri).split(":");
 				final String type = ids[0];
 				Uri contentUri = null;
@@ -40,13 +38,11 @@ public class FileUtils {
 				}
 				return getDataColumn(context, contentUri, "_id=?", new String[]{ids[1]});
 			}
-		}
-		else if ("content".equalsIgnoreCase(uri.getScheme())) {
+		} else if ("content".equalsIgnoreCase(uri.getScheme())) {
 			if ("com.google.android.apps.photos.content".equals(uri.getAuthority()))
 				return uri.getLastPathSegment();
 			return getDataColumn(context, uri, null, null);
-		}
-		else if ("file".equalsIgnoreCase(uri.getScheme())) {
+		} else if ("file".equalsIgnoreCase(uri.getScheme())) {
 			return uri.getPath();
 		}
 		return null;

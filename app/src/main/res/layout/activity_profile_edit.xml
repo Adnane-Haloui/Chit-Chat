@@ -3,126 +3,140 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/prof_edit_margin"
-            android:layout_gravity="center">
-	<LinearLayout android:gravity="center"
-	              android:layout_width="match_parent"
-	              android:layout_height="wrap_content"
-	              android:orientation="vertical">
+            android:scrollbars="none">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="vertical">
+
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
 			android:layout_weight="1">
+
 			<android.support.v7.widget.CardView
-				android:layout_centerInParent="true"
-				android:contentDescription="@string/change_profile_pic_content_description"
-				android:layout_gravity="center"
-				app:cardCornerRadius="@dimen/prof_edit_image_radius"
-				app:cardElevation="@dimen/prof_edit_image_elevation"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:background="?attr/selectableItemBackground">
+				android:layout_centerInParent="true"
+				android:layout_gravity="center"
+				android:background="?attr/selectableItemBackground"
+				android:contentDescription="@string/change_profile_pic_content_description"
+				app:cardCornerRadius="@dimen/prof_edit_image_radius"
+				app:cardElevation="@dimen/prof_edit_image_elevation">
+
 				<ImageView
-					android:contentDescription="@string/profile_pic_content_description"
 					android:id="@+id/profile_pic_holder"
-					android:scaleType="centerCrop"
-					android:src="@drawable/empty_profile_pic"
 					android:layout_width="@dimen/prof_edit_image_dime"
-					android:layout_height="@dimen/prof_edit_image_dime" />
+					android:layout_height="@dimen/prof_edit_image_dime"
+					android:contentDescription="@string/profile_pic_content_description"
+					android:scaleType="centerCrop"
+					android:src="@drawable/empty_profile_pic"/>
+
 				<Button
 					android:id="@+id/upload_profile_pic_button"
 					android:layout_width="@dimen/prof_edit_image_dime"
-					android:layout_gravity="bottom"
 					android:layout_height="wrap_content"
-					android:fontFamily="Times New Roman"
-					android:textColor="@android:color/white"
+					android:layout_gravity="bottom"
 					android:background="#43434313"
-					android:text="@string/cc_change"/>
+					android:fontFamily="Times New Roman"
+					android:text="@string/cc_change"
+					android:textColor="@android:color/white"/>
 			</android.support.v7.widget.CardView>
 		</RelativeLayout>
+
 		<LinearLayout
-			android:layout_gravity="center"
-			android:orientation="vertical"
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
-			android:layout_weight="1">
+			android:layout_gravity="center"
+			android:layout_weight="1"
+			android:orientation="vertical">
+
 			<android.support.design.widget.TextInputLayout
-				android:layout_gravity="center"
 				android:id="@+id/name_textInputLayout"
-				app:counterMaxLength="60"
-				app:counterEnabled="true"
-				android:layout_marginStart="@dimen/prof_edit_margin_starttext"
-				android:layout_marginEnd="@dimen/prof_edit_margin_starttext"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-				<EditText
-					android:id="@+id/profile_name"
-					android:hint="@string/cc_name"
-					android:inputType="text"
-					android:maxLines="1"
-					android:maxLength="60"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content" />
-			</android.support.design.widget.TextInputLayout>
-			<android.support.design.widget.TextInputLayout
-				android:layout_gravity="center"
-				app:counterMaxLength="100"
-				app:counterEnabled="true"
-				android:layout_marginStart="@dimen/prof_edit_margin_starttext"
-				android:layout_marginEnd="@dimen/prof_edit_margin_starttext"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-				<EditText
-					android:id="@+id/profile_about"
-					android:maxLines="1"
-					android:inputType="text"
-					android:maxLength="100"
-					android:hint="@string/cc_about"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content" />
-			</android.support.design.widget.TextInputLayout>
-			<LinearLayout
-				android:layout_marginTop="@dimen/mg_top"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_marginEnd="@dimen/prof_edit_margin_starttext"
+				android:layout_marginStart="@dimen/prof_edit_margin_starttext"
+				app:counterEnabled="true"
+				app:counterMaxLength="60">
+
+				<EditText
+					android:id="@+id/profile_name"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/cc_name"
+					android:inputType="text"
+					android:maxLength="60"
+					android:maxLines="1"/>
+			</android.support.design.widget.TextInputLayout>
+
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_marginEnd="@dimen/prof_edit_margin_starttext"
+				android:layout_marginStart="@dimen/prof_edit_margin_starttext"
+				app:counterEnabled="true"
+				app:counterMaxLength="100">
+
+				<EditText
+					android:id="@+id/profile_about"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/cc_about"
+					android:inputType="text"
+					android:maxLength="100"
+					android:maxLines="1"/>
+			</android.support.design.widget.TextInputLayout>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/mg_top"
 				android:orientation="horizontal">
+
 				<ImageButton
-					android:contentDescription="@string/cc_cancel"
 					android:id="@+id/cancel_button_profile_upload"
+					style="?attr/borderlessButtonStyle"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/prof_edit_cancel_margin_top"
+					android:layout_weight="1"
+					android:background="?attr/selectableItemBackgroundBorderless"
+					android:contentDescription="@string/cc_cancel"
+					android:elevation="@dimen/prof_edit_cancel_elevation"
+					android:paddingBottom="@dimen/prof_edit_cancel_padding_bottom"
+					android:paddingEnd="@dimen/prof_edit_cancel_padding_right"
 					android:paddingLeft="@dimen/prof_edit_cancel_padding_left"
+					android:paddingRight="@dimen/prof_edit_cancel_padding_right"
 					android:paddingStart="@dimen/prof_edit_cancel_padding_left"
 					android:paddingTop="@dimen/prof_edit_cancel_padding_top"
-					android:elevation="@dimen/prof_edit_cancel_elevation"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:tint="@android:color/holo_red_dark"
-					android:layout_height="wrap_content"
 					android:src="@drawable/ic_cancel_black_24dp"
-					android:layout_marginTop="@dimen/prof_edit_cancel_margin_top"
-					android:paddingBottom="@dimen/prof_edit_cancel_padding_bottom"
-					android:paddingRight="@dimen/prof_edit_cancel_padding_right"
-					android:paddingEnd="@dimen/prof_edit_cancel_padding_right"
-					android:background="?attr/selectableItemBackgroundBorderless"
-					style="?attr/borderlessButtonStyle"/>
+					android:tint="@android:color/holo_red_dark"/>
+
 				<ImageButton
-					android:tint="@android:color/holo_green_dark"
 					android:id="@+id/finish_button_profile_upload"
+					style="?attr/borderlessButtonStyle"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/prof_edit_ok_margin_top"
+					android:layout_weight="1"
+					android:background="?attr/selectableItemBackgroundBorderless"
+					android:contentDescription="@string/submit_profile_pic_content_description"
+					android:elevation="@dimen/prof_edit_ok_elevation"
+					android:paddingBottom="@dimen/prof_edit_ok_padding_bottom"
+					android:paddingEnd="@dimen/prof_edit_ok_padding_right"
 					android:paddingLeft="@dimen/prof_edit_ok_padding_left"
+					android:paddingRight="@dimen/prof_edit_ok_padding_right"
 					android:paddingStart="@dimen/prof_edit_ok_padding_left"
 					android:paddingTop="5dp"
-					android:elevation="@dimen/prof_edit_ok_elevation"
-					android:contentDescription="@string/submit_profile_pic_content_description"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_marginTop="@dimen/prof_edit_ok_margin_top"
-					android:paddingBottom="@dimen/prof_edit_ok_padding_bottom"
-					android:paddingRight="@dimen/prof_edit_ok_padding_right"
-					android:paddingEnd="@dimen/prof_edit_ok_padding_right"
-					android:layout_height="wrap_content"
-					android:background="?attr/selectableItemBackgroundBorderless"
 					android:src="@drawable/ic_done_black_24dp"
-					style="?attr/borderlessButtonStyle"/>
+					android:tint="@android:color/holo_green_dark"/>
 			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>

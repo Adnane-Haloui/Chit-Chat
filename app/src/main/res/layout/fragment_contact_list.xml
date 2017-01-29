@@ -1,23 +1,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                tools:context="com.rajora.arun.chat.chit.chitchat.fragments.fragment_contact_list">
+                android:layout_height="match_parent">
+
 	<android.support.v4.widget.SwipeRefreshLayout
 		android:id="@+id/swipe_refresh_layout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
-		<LinearLayout android:layout_width="match_parent"
-		              android:layout_height="match_parent"
-		              android:orientation="vertical">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
 			<TextView
 				android:id="@+id/contact_list_empty"
-				android:text="@string/empty_contacts"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:textAlignment="center"
-				android:padding="@dimen/contact_list_padding"/>
+				android:padding="@dimen/contact_list_padding"
+				android:text="@string/empty_contacts"
+				android:textAlignment="center"/>
+
 			<android.support.v7.widget.RecyclerView
 				android:id="@+id/contact_recycler_view"
 				android:layout_width="match_parent"
@@ -25,22 +29,21 @@
 				android:layout_weight="1"/>
 		</LinearLayout>
 	</android.support.v4.widget.SwipeRefreshLayout>
+
 	<android.support.design.widget.FloatingActionButton
 		android:id="@+id/add_contact_fab"
-		android:src="@drawable/ic_add_black_24dp"
-		android:layout_margin="@dimen/contact_list_fab_margin"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/contact_list_fab_margin"
+		android:src="@drawable/ic_add_black_24dp"
 		android:tint="@android:color/white"
 		app:fabSize="normal"/>
+
 	<android.support.design.widget.FloatingActionButton
 		android:id="@+id/refresh_fab"
-		android:src="@drawable/refresh_icon"
-		app:fabSize="mini"
-		android:tint="@color/colorAccent"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_above="@id/add_contact_fab"
@@ -48,5 +51,8 @@
 		android:layout_alignParentRight="true"
 		android:layout_marginEnd="@dimen/contact_list_margin2"
 		android:layout_marginRight="@dimen/contact_list_margin2"
-		app:backgroundTint="@android:color/white"/>
+		android:src="@drawable/refresh_icon"
+		android:tint="@color/colorAccent"
+		app:backgroundTint="@android:color/white"
+		app:fabSize="mini"/>
 </RelativeLayout>

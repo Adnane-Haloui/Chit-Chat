@@ -28,15 +28,9 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.rajora.arun.chat.chit.chitchat.R;
-import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.adapter_sidebar_contact_item;
+import com.rajora.arun.chat.chit.chitchat.RecyclerViewAdapters.AdapterSidebarContacItem;
 import com.rajora.arun.chat.chit.chitchat.contentProviders.ChatContentProvider;
 import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractContacts;
 import com.rajora.arun.chat.chit.chitchat.dataModels.ContactDetailDataModel;
@@ -44,36 +38,29 @@ import com.rajora.arun.chat.chit.chitchat.dataModels.ContactItemDataModel;
 import com.rajora.arun.chat.chit.chitchat.dataModels.FirebaseBotsDataModel;
 import com.rajora.arun.chat.chit.chitchat.services.SendMessageService;
 import com.rajora.arun.chat.chit.chitchat.utils.ImageUtils;
-import com.rajora.arun.chat.chit.chitchat.utils.utils;
-import com.twitter.sdk.android.core.models.Card;
+import com.rajora.arun.chat.chit.chitchat.utils.Utils;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class ChatActivity extends AppCompatChatListenerActivity implements
-		LoaderManager.LoaderCallbacks<Cursor>, adapter_sidebar_contact_item.onItemClickListener {
+		LoaderManager.LoaderCallbacks<Cursor>, AdapterSidebarContacItem.onItemClickListener {
 
 	private static final int REQUEST_PLAY_SERVICES_RESOLUTION = 9000;
-
+	private static final int CURSOR_CONTACT_LIST_LOADER_ID = 300;
+	private static final int CURSOR_CONTACT_ITEM_LOADER_ID = 400;
 	private String my_ph_no;
 	private FirebaseBotsDataModel botData;
 	private ContactItemDataModel contactData;
-
-
 	private TextView chat_name_textview;
 	private ImageView chat_image_imageview;
 	private AlertDialog.Builder mAlertDialog;
 	private CardView chatImageViewHolder;
-
 	private HashSet<Integer> mOpenIndexSet;
-
 	private int mNotUserWarningProgress;
-
 	private RecyclerView mRecyclerView;
-	private adapter_sidebar_contact_item mAdapter;
+	private AdapterSidebarContacItem mAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
-	private static final int CURSOR_CONTACT_LIST_LOADER_ID = 300;
-	private static final int CURSOR_CONTACT_ITEM_LOADER_ID = 400;
 	private boolean mIsSidebarOpen = false;
 
 	@Override
@@ -85,10 +72,10 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		mNotUserWarningProgress=0;
-		chatImageViewHolder=(CardView) findViewById(R.id.chat_image_container);
-		chat_name_textview= (TextView) findViewById(R.id.chat_name);
-		chat_image_imageview= (ImageView) findViewById(R.id.chat_image);
+		mNotUserWarningProgress = 0;
+		chatImageViewHolder = (CardView) findViewById(R.id.chat_image_container);
+		chat_name_textview = (TextView) findViewById(R.id.chat_name);
+		chat_image_imageview = (ImageView) findViewById(R.id.chat_image);
 		findViewById(R.id.go_back).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -104,11 +91,12 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 				((DrawerLayout) findViewById(R.id.sidebar_drawer)).openDrawer(GravityCompat.START, false);
 			}
 			savedInstanceState.getInt("NotUserWarningProgress");
-		}
-		else if (extras != null) {
+		} else if (extras != null) {
 			restoreValuesFromBundle(extras);
 		}
-		if(mOpenIndexSet==null) {mOpenIndexSet=new HashSet<Integer>();}
+		if (mOpenIndexSet == null) {
+			mOpenIndexSet = new HashSet<Integer>();
+		}
 		findViewById(R.id.chat_image_container).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -122,8 +110,8 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 				}
 				ActivityOptionsCompat options = ActivityOptionsCompat.
 						makeSceneTransitionAnimation(ChatActivity.this,
-								(View)chatImageViewHolder, ChatActivity.this.getString(R.string.pic_transition_name));
-				startActivity(intent,options.toBundle());
+								(View) chatImageViewHolder, ChatActivity.this.getString(R.string.pic_transition_name));
+				startActivity(intent, options.toBundle());
 			}
 		});
 
@@ -153,7 +141,7 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		mLayoutManager = new LinearLayoutManager(this);
 		mRecyclerView.setLayoutManager(mLayoutManager);
 		getSupportLoaderManager().initLoader(CURSOR_CONTACT_LIST_LOADER_ID, null, this);
-		mAdapter = new adapter_sidebar_contact_item(this, this, null, ContractContacts._ID,mOpenIndexSet);
+		mAdapter = new AdapterSidebarContacItem(this, this, null, ContractContacts._ID, mOpenIndexSet);
 		mRecyclerView.setAdapter(mAdapter);
 
 	}
@@ -163,21 +151,21 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		if (bundle.getString("type").equals("bot_data_model")) {
 			botData = bundle.getParcelable("data");
 			chat_name_textview.setText(botData.getName());
-			contactData=new ContactItemDataModel(botData.getGid(),true);
-			if(botData.getImage_url()!=null){
+			contactData = new ContactItemDataModel(botData.getGid(), true);
+			if (botData.getImage_url() != null) {
 				Glide.with(this)
 						.using(new FirebaseImageLoader())
 						.load(FirebaseStorage.getInstance().getReference(botData.getImage_url()))
 						.into(chat_image_imageview);
-				chat_name_textview.setContentDescription("Chat bot - "+botData.getName());
-				chat_image_imageview.setContentDescription("Profile picture of chat bot - "+botData.getName());
+				chat_name_textview.setContentDescription(String.format(getString(R.string.chatbot_cd), botData.getName()));
+				chat_image_imageview.setContentDescription(String.format(getString(R.string.pp_chat_bot_cd), botData.getName()));
 			}
 		} else {
 			contactData = bundle.getParcelable("data");
-			getSupportLoaderManager().initLoader(CURSOR_CONTACT_ITEM_LOADER_ID,null,this);
+			getSupportLoaderManager().initLoader(CURSOR_CONTACT_ITEM_LOADER_ID, null, this);
 		}
-		if(bundle.containsKey("openindex")){
-			mOpenIndexSet= (HashSet<Integer>) bundle.getSerializable("openindex");
+		if (bundle.containsKey("openindex")) {
+			mOpenIndexSet = (HashSet<Integer>) bundle.getSerializable("openindex");
 		}
 
 	}
@@ -199,10 +187,10 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 			outState.putString("type", "contact_data_model");
 			outState.putParcelable("data", contactData);
 		}
-		if(mOpenIndexSet!=null){
-			outState.putSerializable("openindex",mOpenIndexSet);
+		if (mOpenIndexSet != null) {
+			outState.putSerializable("openindex", mOpenIndexSet);
 		}
-		outState.putInt("NotUserWarningProgress",mNotUserWarningProgress);
+		outState.putInt("NotUserWarningProgress", mNotUserWarningProgress);
 
 	}
 
@@ -246,7 +234,7 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 							ContractContacts.COLUMN_PIC_URI,
 							ContractContacts.COLUMN_PIC_URL,
 							ContractContacts.COLUMN_IS_USER},
-					ContractContacts.COLUMN_IS_BOT+" = ? ", new String[]{"0"},
+					ContractContacts.COLUMN_IS_BOT + " = ? ", new String[]{"0"},
 					ContractContacts.COLUMN_IS_USER + " DESC , " +
 							ContractContacts.COLUMN_NAME + " COLLATE NOCASE ");
 		}
@@ -259,8 +247,8 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 							ContractContacts.COLUMN_PIC_URI,
 							ContractContacts.COLUMN_IS_USER,
 							ContractContacts.COLUMN_IS_BOT},
-					ContractContacts.COLUMN_CONTACT_ID+" = ? AND "+ContractContacts.COLUMN_IS_BOT+" = ? ",
-					new String[]{contactData.getContact_id(),contactData.is_bot()?"1":"0"},null);
+					ContractContacts.COLUMN_CONTACT_ID + " = ? AND " + ContractContacts.COLUMN_IS_BOT + " = ? ",
+					new String[]{contactData.getContact_id(), contactData.is_bot() ? "1" : "0"}, null);
 		}
 		return null;
 	}
@@ -269,24 +257,22 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 		if (loader.getId() == CURSOR_CONTACT_LIST_LOADER_ID) {
 			mAdapter.swapCursor(data);
-		}
-		else if(loader.getId() == CURSOR_CONTACT_ITEM_LOADER_ID && utils.canCursorMoveToFirst(data)){
+		} else if (loader.getId() == CURSOR_CONTACT_ITEM_LOADER_ID && Utils.canCursorMoveToFirst(data)) {
 			processCursor(data);
 		}
 	}
 
-	private void processCursor(Cursor cursor){
-		if(utils.canCursorMoveToFirst(cursor)) {
+	private void processCursor(Cursor cursor) {
+		if (Utils.canCursorMoveToFirst(cursor)) {
 			ContactDetailDataModel item = new ContactDetailDataModel(cursor);
-			if(mNotUserWarningProgress!=2 && mAlertDialog==null){
-				if(item.is_bot && !item.is_user){
+			if (mNotUserWarningProgress != 2 && mAlertDialog == null) {
+				if (item.is_bot && !item.is_user) {
 					showBotDeletedDialog();
-				}
-				else if(!item.is_bot && !item.is_user){
+				} else if (!item.is_bot && !item.is_user) {
 					showUserNotActivatedDialog();
 				}
 			}
-			ImageUtils.loadImageIntoView(this,item,chat_image_imageview);
+			ImageUtils.loadImageIntoView(this, item, chat_image_imageview);
 			if (item.name == null || item.name.isEmpty()) {
 				chat_name_textview.setText(item.contact_id);
 				if (item.is_bot) {
@@ -318,20 +304,19 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 
 
 	@Override
-	public void onSendClick(int position, ContactDetailDataModel item, adapter_sidebar_contact_item.VH holder) {
+	public void onSendClick(int position, ContactDetailDataModel item, AdapterSidebarContacItem.VH holder) {
 		String to_id = item.contact_id;
 		SendMessageService.startSendTextMessage(this, "+" + my_ph_no, to_id,
-				holder.mMessage.getText().toString(), "text", false, utils.getCurrentTimestamp());
+				holder.mMessage.getText().toString(), "text", false, Utils.getCurrentTimestamp());
 		holder.mMessage.setText("");
 	}
 
 	@Override
-	public void onContactClick(int position, adapter_sidebar_contact_item.VH holder, Set<Integer> openIndexes) {
-		if(openIndexes.contains(position)){
+	public void onContactClick(int position, AdapterSidebarContacItem.VH holder, Set<Integer> openIndexes) {
+		if (openIndexes.contains(position)) {
 			openIndexes.remove(position);
 			holder.sidebarPanel.setVisibility(View.GONE);
-		}
-		else{
+		} else {
 			openIndexes.add(position);
 			holder.sidebarPanel.setVisibility(View.VISIBLE);
 		}
@@ -362,58 +347,59 @@ public class ChatActivity extends AppCompatChatListenerActivity implements
 		return true;
 	}
 
-	private void showBotDeletedDialog(){
-		mNotUserWarningProgress=1;
-		mAlertDialog=new AlertDialog.Builder(this);
+	private void showBotDeletedDialog() {
+		mNotUserWarningProgress = 1;
+		mAlertDialog = new AlertDialog.Builder(this);
 		mAlertDialog.setCancelable(false);
 		mAlertDialog.setTitle(R.string.cc_bd_title);
 		mAlertDialog.setMessage(R.string.cc_bd_message);
 		mAlertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-				mNotUserWarningProgress=2;
+				mNotUserWarningProgress = 2;
 				dialogInterface.dismiss();
 			}
 		});
 		mAlertDialog.setNegativeButton("GO BACK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-				mNotUserWarningProgress=2;
+				mNotUserWarningProgress = 2;
 				dialogInterface.dismiss();
 				supportFinishAfterTransition();
 			}
 		});
 		mAlertDialog.create().show();
 	}
-	private void showUserNotActivatedDialog(){
-		mNotUserWarningProgress=1;
-		mAlertDialog=new AlertDialog.Builder(this);
+
+	private void showUserNotActivatedDialog() {
+		mNotUserWarningProgress = 1;
+		mAlertDialog = new AlertDialog.Builder(this);
 		mAlertDialog.setCancelable(false);
 		mAlertDialog.setTitle(R.string.cc_user_nr_title);
 		mAlertDialog.setMessage(R.string.cc_user_nr_warning);
 		mAlertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-				mNotUserWarningProgress=2;
+				mNotUserWarningProgress = 2;
 				dialogInterface.dismiss();
 			}
 		});
 		mAlertDialog.setNegativeButton("Invite", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-				mNotUserWarningProgress=2;
+				mNotUserWarningProgress = 2;
 				dialogInterface.dismiss();
 				Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.cc_invitation_title))
 						.setMessage(String.format("%s%s%s", getString(R.string.cc_invitation_message), my_ph_no, getString(R.string.cc_deep_link_url)))
 						.setDeepLink(Uri.parse(getString(R.string.cc_deep_link_url)))
 						.build();
-				startActivityForResult(intent,1023);
+				startActivityForResult(intent, 1023);
 			}
 		});
 		mAlertDialog.setNeutralButton("GO BACK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-				mNotUserWarningProgress=2;
+				mNotUserWarningProgress = 2;
 				dialogInterface.dismiss();
 				supportFinishAfterTransition();
 			}

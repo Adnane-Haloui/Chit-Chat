@@ -2,48 +2,51 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.rajora.arun.chat.chit.authenticator.login.Fragments.SplashFragments.PermissionsSplashFragment"
-                android:background="@color/colorPrimary">
-    <TextView
-        android:id="@+id/splash_permission_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_alignParentTop="true"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:layout_margin="@dimen/lib_perm_margin"
-        android:text="@string/chit_chat_needs_permission"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/lib_perm_textsize"
-        android:layout_marginBottom="@dimen/lib_perm_margin_bottom"/>
-    <TextView
-	    android:id="@+id/splash_permission_subtext"
-	    android:layout_below="@id/splash_permission_text"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_centerInParent="true"
-	    android:textAlignment="center"
-	    android:textAllCaps="false"
-	    android:text="@string/permission_reason"
-	    android:textColor="@android:color/white"
-	    android:textSize="@dimen/lib_perm_title_textsize"
-	    android:paddingStart="@dimen/lib_perm_title_paddingstart"
-	    android:paddingEnd="@dimen/lib_perm_title_paddding_end"
-	    android:layout_marginBottom="@dimen/lib_perm_title_margin_bottom"
-	    android:paddingLeft="@dimen/lib_perm_title_paddingstart"
-	    android:paddingRight="@dimen/lib_perm_title_paddding_end"/>
-    <Button
-        android:id="@+id/splash_permission_button"
-        android:layout_below="@id/splash_permission_subtext"
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/give_permissions"
-        android:padding="@dimen/lib_perm_button_padding"
-        android:elevation="@dimen/lib_perm_button_elevation"
-        android:textSize="@dimen/lib_perm_button_textsize"
-        android:textColor="@android:color/white"
-        android:background="?attr/selectableItemBackground"/>
+                android:background="@color/colorPrimary"
+                tools:context="com.rajora.arun.chat.chit.authenticator.login.Fragments.SplashFragments.PermissionsSplashFragment">
+
+	<TextView
+		android:id="@+id/splash_permission_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_centerInParent="true"
+		android:layout_margin="@dimen/lib_perm_margin"
+		android:layout_marginBottom="@dimen/lib_perm_margin_bottom"
+		android:text="@string/chit_chat_needs_permission"
+		android:textAlignment="center"
+		android:textAllCaps="false"
+		android:textColor="@android:color/white"
+		android:textSize="@dimen/lib_perm_textsize"/>
+
+	<TextView
+		android:id="@+id/splash_permission_subtext"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/splash_permission_text"
+		android:layout_centerInParent="true"
+		android:layout_marginBottom="@dimen/lib_perm_title_margin_bottom"
+		android:paddingEnd="@dimen/lib_perm_title_paddding_end"
+		android:paddingLeft="@dimen/lib_perm_title_paddingstart"
+		android:paddingRight="@dimen/lib_perm_title_paddding_end"
+		android:paddingStart="@dimen/lib_perm_title_paddingstart"
+		android:text="@string/permission_reason"
+		android:textAlignment="center"
+		android:textAllCaps="false"
+		android:textColor="@android:color/white"
+		android:textSize="@dimen/lib_perm_title_textsize"/>
+
+	<Button
+		android:id="@+id/splash_permission_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/splash_permission_subtext"
+		android:layout_centerInParent="true"
+		android:background="?attr/selectableItemBackground"
+		android:elevation="@dimen/lib_perm_button_elevation"
+		android:padding="@dimen/lib_perm_button_padding"
+		android:text="@string/give_permissions"
+		android:textColor="@android:color/white"
+		android:textSize="@dimen/lib_perm_button_textsize"/>
 
 </RelativeLayout>

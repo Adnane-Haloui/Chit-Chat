@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="pick_image_option_list_array">
-        <item>Camera</item>
-        <item>Gallery</item>
-    </array>
-    <array name="pick_video_option_list_array">
-        <item>Camera</item>
-        <item>Gallery</item>
-    </array>
+	<array name="pick_image_option_list_array">
+		<item>Camera</item>
+		<item>Gallery</item>
+	</array>
+	<array name="pick_video_option_list_array">
+		<item>Camera</item>
+		<item>Gallery</item>
+	</array>
 </resources>

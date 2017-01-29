@@ -11,10 +11,10 @@ import com.rajora.arun.chat.chit.chitchat.services.FetchNewChatData;
  */
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-    @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
-        super.onMessageReceived(remoteMessage);
-        Intent intent=new Intent(this,FetchNewChatData.class);
-        startService(intent);
-    }
+	@Override
+	public void onMessageReceived(RemoteMessage remoteMessage) {
+		super.onMessageReceived(remoteMessage);
+		Intent intent = new Intent(this, FetchNewChatData.class);
+		startService(intent);
+	}
 }

@@ -11,6 +11,17 @@ import com.rajora.arun.chat.chit.chitchat.dataBase.Contracts.ContractNotificatio
  */
 
 public class NotificationDataModel implements Parcelable {
+	public static final Parcelable.Creator<NotificationDataModel> CREATOR = new Parcelable.Creator<NotificationDataModel>() {
+		@Override
+		public NotificationDataModel createFromParcel(Parcel source) {
+			return new NotificationDataModel(source);
+		}
+
+		@Override
+		public NotificationDataModel[] newArray(int size) {
+			return new NotificationDataModel[size];
+		}
+	};
 	public String contact_id;
 	public boolean is_bot;
 	public String name;
@@ -34,35 +45,46 @@ public class NotificationDataModel implements Parcelable {
 		this.message_timestamp = message_timestamp;
 	}
 
-	public NotificationDataModel(Cursor cursor){
-		if(cursor!=null){
-			if(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID)>=0){
-				contact_id=cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
+
+	public NotificationDataModel(Cursor cursor) {
+		if (cursor != null) {
+			if (cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID) >= 0) {
+				contact_id = cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
 			}
-			if(cursor.getColumnIndex(ContractNotificationList.COLUMN_IS_BOT)>=0){
-				is_bot=cursor.getInt(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID))!=0;
+			if (cursor.getColumnIndex(ContractNotificationList.COLUMN_IS_BOT) >= 0) {
+				is_bot = cursor.getInt(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID)) != 0;
 			}
-			if(cursor.getColumnIndex(ContractNotificationList.COLUMN_NAME)>=0){
-				name=cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
+			if (cursor.getColumnIndex(ContractNotificationList.COLUMN_NAME) >= 0) {
+				name = cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
 			}
-			if(cursor.getColumnIndex(ContractNotificationList.COLUMN_PIC_URI)>=0){
-				pic_uri=cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
+			if (cursor.getColumnIndex(ContractNotificationList.COLUMN_PIC_URI) >= 0) {
+				pic_uri = cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
 			}
-			if(cursor.getColumnIndex(ContractNotificationList.COLUMN_PIC_URL)>=0){
-				pic_url=cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
+			if (cursor.getColumnIndex(ContractNotificationList.COLUMN_PIC_URL) >= 0) {
+				pic_url = cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
 			}
-			if(cursor.getColumnIndex(ContractNotificationList.COLUMN_MESSAGE)>=0){
-				message=cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
+			if (cursor.getColumnIndex(ContractNotificationList.COLUMN_MESSAGE) >= 0) {
+				message = cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
 			}
-			if(cursor.getColumnIndex(ContractNotificationList.COLUMN_MESSAGE_TYPE)>=0){
-				message_type=cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
+			if (cursor.getColumnIndex(ContractNotificationList.COLUMN_MESSAGE_TYPE) >= 0) {
+				message_type = cursor.getString(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
 			}
-			if(cursor.getColumnIndex(ContractNotificationList.COLUMN_MESSAGE_TIMESTAMP)>=0){
-				message_timestamp=cursor.getLong(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
+			if (cursor.getColumnIndex(ContractNotificationList.COLUMN_MESSAGE_TIMESTAMP) >= 0) {
+				message_timestamp = cursor.getLong(cursor.getColumnIndex(ContractNotificationList.COLUMN_CONTACT_ID));
 			}
 		}
 	}
 
+	protected NotificationDataModel(Parcel in) {
+		this.contact_id = in.readString();
+		this.is_bot = in.readByte() != 0;
+		this.name = in.readString();
+		this.pic_url = in.readString();
+		this.pic_uri = in.readString();
+		this.message = in.readString();
+		this.message_type = in.readString();
+		this.message_timestamp = in.readLong();
+	}
 
 	@Override
 	public int describeContents() {
@@ -80,27 +102,4 @@ public class NotificationDataModel implements Parcelable {
 		dest.writeString(this.message_type);
 		dest.writeLong(this.message_timestamp);
 	}
-
-	protected NotificationDataModel(Parcel in) {
-		this.contact_id = in.readString();
-		this.is_bot = in.readByte() != 0;
-		this.name = in.readString();
-		this.pic_url = in.readString();
-		this.pic_uri = in.readString();
-		this.message = in.readString();
-		this.message_type = in.readString();
-		this.message_timestamp = in.readLong();
-	}
-
-	public static final Parcelable.Creator<NotificationDataModel> CREATOR = new Parcelable.Creator<NotificationDataModel>() {
-		@Override
-		public NotificationDataModel createFromParcel(Parcel source) {
-			return new NotificationDataModel(source);
-		}
-
-		@Override
-		public NotificationDataModel[] newArray(int size) {
-			return new NotificationDataModel[size];
-		}
-	};
 }

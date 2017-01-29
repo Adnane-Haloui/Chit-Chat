@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/menu_edit_profile"
-        android:icon="@drawable/account_icon"
-        android:title="@string/cc_menu_profile"
-	    app:showAsAction="withText"/>
-    <item
-        android:id="@+id/menu_add_contact"
-        android:icon="@drawable/ic_person_add_white_24dp"
-        android:title="@string/cc_menu_add_contact"
-	    app:showAsAction="withText|ifRoom"/>
-    <item
-        android:id="@+id/menu_about"
-        android:title="@string/cc_menu_about"/>
+	<item
+		android:id="@+id/menu_edit_profile"
+		android:icon="@drawable/account_icon"
+		android:title="@string/cc_menu_profile"
+		app:showAsAction="withText"/>
+	<item
+		android:id="@+id/menu_add_contact"
+		android:icon="@drawable/ic_person_add_white_24dp"
+		android:title="@string/cc_menu_add_contact"
+		app:showAsAction="withText|ifRoom"/>
+	<item
+		android:id="@+id/menu_about"
+		android:title="@string/cc_menu_about"/>
 </menu>

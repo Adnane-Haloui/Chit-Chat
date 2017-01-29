@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                xmlns:tools="http://schemas.android.com/tools">
-    <android.support.v7.widget.CardView
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="100dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginLeft="@dimen/chat_item_margin"
-        android:layout_marginStart="@dimen/chat_item_margin"
-        android:layout_marginTop="@dimen/chat_item_margin"
-        android:layout_marginBottom="@dimen/chat_item_margin"
-        app:cardCornerRadius="@dimen/chat_item_corner_radius"
-        app:elevation="@dimen/chat_item_card_elevation">
-        <LinearLayout
-            android:layout_margin="@dimen/chat_item_linearlayout_margin"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-	            tools:text="text message"
-                android:id="@+id/text_message"
-                android:layout_gravity="start"
-                android:textSize="@dimen/chat_item_text_size"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                tools:text="time"
-                android:textSize="@dimen/chat_message_sub_text_size"
-                android:id="@+id/text_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart"
-                android:layout_gravity="start"/>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+                android:layout_height="wrap_content">
+
+	<android.support.v7.widget.CardView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:layout_marginBottom="@dimen/chat_item_margin"
+		android:layout_marginEnd="100dp"
+		android:layout_marginLeft="@dimen/chat_item_margin"
+		android:layout_marginRight="100dp"
+		android:layout_marginStart="@dimen/chat_item_margin"
+		android:layout_marginTop="@dimen/chat_item_margin"
+		app:cardCornerRadius="@dimen/chat_item_corner_radius"
+		app:elevation="@dimen/chat_item_card_elevation">
+
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/chat_item_linearlayout_margin"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/text_message"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="start"
+				android:textSize="@dimen/chat_item_text_size"
+				tools:text="text message"/>
+
+			<TextView
+				android:id="@+id/text_time"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="start"
+				android:textAlignment="viewStart"
+				android:textSize="@dimen/chat_message_sub_text_size"
+				tools:text="time"/>
+		</LinearLayout>
+	</android.support.v7.widget.CardView>
 </RelativeLayout>

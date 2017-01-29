@@ -1,85 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/chat_item_root_layout"
-    android:padding="@dimen/chatlist_padding"
-    android:clickable="true"
-    android:background="?android:attr/selectableItemBackground">
-    <android.support.v7.widget.CardView
-	    android:transitionName="@string/pic_transition_name"
-        android:id="@+id/chat_item_image_container"
-        android:layout_margin="@dimen/chatlist_image_container_margin"
-        app:cardCornerRadius="@dimen/cardview_corner_radius_small"
-        android:layout_gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ImageView
-	        android:contentDescription="@string/cc_ppic_contact"
-            android:id="@+id/chat_item_image"
-            android:layout_width="@dimen/imageview_circular_small"
-            android:layout_height="@dimen/imageview_circular_small"
-            android:src="@drawable/empty_profile_pic"/>
-    </android.support.v7.widget.CardView>
-        <LinearLayout
-	        android:layout_gravity="center_vertical"
-	        android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                tools:text="Contact Name"
-                android:layout_width="match_parent"
-                android:textSize="@dimen/chatlist_name_textsize"
-                android:id="@+id/chat_item_name"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"/>
-            <TextView
-                tools:text="last message here"
-                android:id="@+id/chat_item_last_message"
-                android:layout_marginTop="@dimen/chatlist_about_margin_top"
-                android:paddingLeft="@dimen/chatlist_about_padding_left"
-                android:paddingStart="@dimen/chatlist_about_padding_left"
-                android:paddingRight="0dp"
-                android:paddingEnd="0dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-	        android:layout_gravity="bottom"
-	        android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-	        <TextView
-		        android:layout_marginTop="@dimen/contactlist_about_margin_top"
-		        android:id="@+id/chat_unread_count"
-		        android:paddingLeft="@dimen/unread_count_padding"
-		        android:paddingStart="@dimen/unread_count_padding"
-		        android:paddingRight="@dimen/unread_count_padding"
-		        android:paddingEnd="@dimen/unread_count_padding"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:background="@drawable/badge"
-		        android:textColor="@android:color/white"
-		        tools:text="1103"/>
-	        <TextView
-		        android:layout_gravity="bottom"
-                tools:text="6:02 pm\n9 dec 2016"
-                android:paddingRight="@dimen/chatlist_time_padding_right"
-		        android:paddingEnd="@dimen/chatlist_time_padding_right"
-		        android:paddingLeft="0dp"
-		        android:paddingStart="0dp"
-		        android:maxLines="2"
-                android:gravity="top"
-                android:textAlignment="center"
-                android:id="@+id/chat_item_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/chat_item_root_layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?android:attr/selectableItemBackground"
+              android:clickable="true"
+              android:orientation="horizontal"
+              android:padding="@dimen/chatlist_padding">
+
+	<android.support.v7.widget.CardView
+		android:id="@+id/chat_item_image_container"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:layout_margin="@dimen/chatlist_image_container_margin"
+		android:transitionName="@string/pic_transition_name"
+		app:cardCornerRadius="@dimen/cardview_corner_radius_small">
+
+		<ImageView
+			android:id="@+id/chat_item_image"
+			android:layout_width="@dimen/imageview_circular_small"
+			android:layout_height="@dimen/imageview_circular_small"
+			android:contentDescription="@string/cc_ppic_contact"
+			android:src="@drawable/empty_profile_pic"/>
+	</android.support.v7.widget.CardView>
+
+	<LinearLayout
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_vertical"
+		android:layout_weight="1"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/chat_item_name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:ellipsize="end"
+			android:maxLines="1"
+			android:textSize="@dimen/chatlist_name_textsize"
+			tools:text="Contact Name"/>
+
+		<TextView
+			android:id="@+id/chat_item_last_message"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/chatlist_about_margin_top"
+			android:ellipsize="end"
+			android:maxLines="1"
+			android:paddingEnd="0dp"
+			android:paddingLeft="@dimen/chatlist_about_padding_left"
+			android:paddingRight="0dp"
+			android:paddingStart="@dimen/chatlist_about_padding_left"
+			tools:text="last message here"/>
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/chat_unread_count"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/contactlist_about_margin_top"
+			android:background="@drawable/badge"
+			android:paddingEnd="@dimen/unread_count_padding"
+			android:paddingLeft="@dimen/unread_count_padding"
+			android:paddingRight="@dimen/unread_count_padding"
+			android:paddingStart="@dimen/unread_count_padding"
+			android:textColor="@android:color/white"
+			tools:text="1103"/>
+
+		<TextView
+			android:id="@+id/chat_item_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom"
+			android:gravity="top"
+			android:maxLines="2"
+			android:paddingEnd="@dimen/chatlist_time_padding_right"
+			android:paddingLeft="0dp"
+			android:paddingRight="@dimen/chatlist_time_padding_right"
+			android:paddingStart="0dp"
+			android:textAlignment="center"
+			tools:text="6:02 pm\n9 dec 2016"/>
+	</LinearLayout>
 </LinearLayout>
