@@ -1,9 +1,9 @@
 # Chit-Chat
-it is an android app to chat with people. it has support for chat bots in two forms-2nd person and assistant chat bots.
+>it is an android app to chat with people. it has support for chat bots in two forms-2nd person and assistant chat bots.
 
-### this project has 2 apps and 1 library. the apps are in "app","chitchatdevelopers" directory and the library is in "authenticator" library.
+>### this project has 2 apps and 1 library. the apps are in "app","chitchatdevelopers" directory and the library is in "authenticator" library.
 
-### the apks can be found in apk directory.
+>### the apks can be found in apk directory.
 
 ## Steps to build the project-
 
@@ -25,3 +25,4 @@ it is an android app to chat with people. it has support for chat bots in two fo
 2) a service account credential json file is received.
 3)save this file in projects "server" directory.
 4) in the same "server" directory there is a "config.json" file.add the file name you just downloaded in this file's "service_account_file_name" field. example if the file name is "abc.json"(without quotes) enter "abc.json" in the "service_account_file_name_field".
+
